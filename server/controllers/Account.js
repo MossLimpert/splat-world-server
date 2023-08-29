@@ -109,22 +109,22 @@ const changePassword = async (req, res) => {
 };
 
 // allows the user unlimited access to the app
-const buyPremium = async (req, res) => {
-  try {
+// const buyPremium = async (req, res) => {
+//   try {
 
-    return await Account.buyPremium(req.session.account._id, (acknowledged) => {
-      if (!acknowledged) {
-        res.status(500).json({error: 'Error updating account!'});
-      }
+//     return await Account.buyPremium(req.session.account._id, (acknowledged) => {
+//       if (!acknowledged) {
+//         res.status(500).json({error: 'Error updating account!'});
+//       }
 
-      return res.redirect('/home');
-    });
+//       return res.redirect('/home');
+//     });
 
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: 'Error retrieving user!' });
-  }
-};
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({ error: 'Error retrieving user!' });
+//   }
+// };
 
 module.exports = {
   loginPage,
