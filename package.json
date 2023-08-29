@@ -1,5 +1,5 @@
 {
-  "name": "bubbles",
+  "name": "Splat World",
   "version": "1.0.0",
   "description": "A simple status based social media app",
   "main": "./server/app.js",
