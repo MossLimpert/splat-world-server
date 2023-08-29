@@ -1,0 +1,61 @@
+{
+  "name": "bubbles",
+  "version": "1.0.0",
+  "description": "A simple status based social media app",
+  "main": "./server/app.js",
+  "scripts": {
+    "webpack": "webpack",
+    "webpackWatch": "webpack watch",
+    "nodemon": "nodemon -e js,html,css --watch ./server --watch ./hosted ./server/app.js",
+    "start": "node ./server/app.js",
+    "pretest": "eslint ./server --fix",
+    "test": "echo \"Tests complete\"",
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "heroku-postbuild": "webpack"
+  },
+  "keywords": [
+    "Node",
+    "MVC",
+    "Redis",
+    "Login"
+  ],
+  "author": "Moss Limpert",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-react": "^7.18.6",
+    "babel-loader": "^9.1.2",
+    "eslint": "^8.36.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.27.5",
+    "gulp": "^4.0.2",
+    "gulp-eslint-new": "^1.7.2",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-sass": "^5.1.0",
+    "nodemon": "^2.0.21",
+    "sass": "^1.62.0",
+    "webpack": "^5.76.2",
+    "webpack-cli": "^5.0.2",
+    "webpack-stream": "^7.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "connect-redis": "^7.0.1",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-handlebars": "^7.0.4",
+    "express-session": "^1.17.3",
+    "helmet": "^6.0.1",
+    "mongoose": "^7.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "redis": "^4.6.5",
+    "serve-favicon": "^2.5.0",
+    "underscore": "^1.13.6"
+  }
+}

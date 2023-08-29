@@ -1,0 +1,183 @@
+@font-face {
+    font-family: "JelleeBold";
+    src: url("/assets/fonts/Jellee-Bold.woff") format('woff');
+}
+  
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'JelleeBold';
+}
+
+main {
+    padding: 0 5vw;
+}
+
+#logo {
+    height: 40px;
+    width: 40;
+    padding-top: 5px;
+    float:left;
+    border-radius: 8px;
+}
+
+nav {
+    width: 100%;
+    height: 50px;
+    background-color: rgb(137, 161, 239);
+}
+
+nav:nth-child(1) {
+    padding-left: 25px;
+}
+
+.navlink {
+    padding: 5px;
+    padding-top: 12px;
+    padding-left: 20px;
+    color: white;
+    font-size: 1.3em;
+    float: left;
+}
+
+.navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
+    color: white;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+    background-color: rgb(137, 161, 239);
+    transition: background-color 0.4s ease;
+}
+
+.navlink a:hover {
+    transition: background-color 0.8s ease;
+    background-color: rgb(106, 126, 191);
+}
+
+.mainForm {
+    height: 300px;
+    width: 420px;
+    margin: 0 auto;
+    padding-top: 200px;
+    font-size: 1.2em;
+}
+
+#signupForm {
+    width: 450px;
+}
+
+.mainForm h3 {
+    text-align: center;
+}
+
+.mainForm span {
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+#loginForm label {
+    width: 180px;
+}
+#joinBubbleForm label {
+    width: 210px;
+}
+#signupForm label {
+    width: 220px;
+}
+
+.mainForm label {
+    display: inline-block;
+    font-size: 1.2em;
+}
+.mainForm input {
+    display: inline-block;
+}
+
+.formSubmit {
+    transition: background-color 0.4s ease;
+    display: block;
+    text-align: center;
+    margin: 0 150px;
+    margin-top: 14px;
+    font-size: 1.2em;
+    width: 150px;
+    background-color: rgb(137, 161, 239);
+    border-radius: 2px;
+    border-color: rgb(137, 161, 239);
+    padding: 3px 0px;
+    color: white;
+    text-decoration: none;
+}
+
+.formSubmit:link, .formSubmit:visited, .formSubmit:hover, .formSubmit:active {
+    color: white;
+}
+
+.formSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: rgb(137, 161, 239);
+}
+
+#user, #pass, #pass2 {
+    text-align: center;
+    font-size: 1.1em;
+    width: 180px;
+    border-radius: 6px;
+}
+
+#user:focus, #pass:focus, #pass2:focus {
+    outline: none;
+    box-shadow: 0px 0px 1px 1px rgb(137, 161, 239);
+}
+
+.hidden {
+    display: none;
+}
+
+#message {
+    top: 250px;
+}
+
+
+#speech {
+    height: 120px;
+    width: 250px;
+    z-index:300;
+}
+
+#errorMessage {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: red;
+    font-style: italic;
+}
+
+/* MOSS ADDITIONS STARTING HERE */
+
+.bubblesList {
+    
+}
+#bubbles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+.bubble {
+    margin: 10px;
+    overflow: scroll;
+}
+.bubble h2 {
+    padding: 0 150px;
+}
+
+#statusList {
+    width: auto;
+}
+#statuses {
+    display: inline-flex;
+    flex-wrap: wrap;
+}

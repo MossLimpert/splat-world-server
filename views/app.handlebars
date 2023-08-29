@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  {{!-- Author: Moss Limpert --}}
+  <meta charset="utf-8"/>
+  <title>Bubbles</title>
+
+  <link rel="shortcut icon" href="/assets/img/bubbles.png"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+</head>
+<body>
+  <nav><a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a>
+    <div class="navlink"><a id="joinButton" href="/join-bubble">Join Bubble</a></div>
+    <div class="navlink"><a id="createButton" href="/create-bubble">Create Bubble</a></div>
+    <div class="navlink"><a href="/logout">Log out</a></div>
+    <div class="navlink" id="changePass"><a href="/change-password">Change Password</a></div>
+    <div class="navlink"><a href="/buy-premium" id="buyPremium">Buy Premium</a></div>
+    <div class="navlink"><a href="/docs" id="docs">Documentation</a></div>
+  </nav>
+  <main>
+    <div id="message" class='hidden'>
+    <h3><span id="errorMessage"></span></h3>
+    </div>
+    <section id="currentStatus">
+
+    </section>
+    <section id="makeStatus">
+
+    </section>
+    <section id="pastStatus">
+
+    </section>
+    <section id="allBubbles">
+      
+    </section>
+
+    <section id="test">
+
+    </section>
+  </main>
+  
+  <script src="/assets/appBundle.js"></script>
+</body>
+</html>
