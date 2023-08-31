@@ -52,6 +52,8 @@
     "express-session": "^1.17.3",
     "helmet": "^6.0.1",
     "mongoose": "^7.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "redis": "^4.6.5",
