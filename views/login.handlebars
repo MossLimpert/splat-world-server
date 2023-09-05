@@ -2,23 +2,35 @@
 <head>
   {{!-- Author: Moss Limpert --}}
   <meta charset="utf-8"/>
-  <title>Bubbles</title>
+  <title>Splat World</title>
 
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/jellee-typeface" type="text/css" crossorigin="anonymous"/> 
-  <link rel="shortcut icon" href="/assets/img/bubbles.png"/>
+  {{!-- <link rel="shortcut icon" href="/assets/img/bubbles.png"/> --}}
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
 <body> 
-  <nav><a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a>
+   <nav>{{!--<a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a> --}}
     <div class="navlink"><a id="loginButton" href="/login">Login</a></div>
-    <div class="navlink"><a id="signupButton" href="/signup">Sign up</a></div>
   </nav>
   <main>
-    <div id="message" class='hidden'>
-    <h3><span id="errorMessage"></span></h3>
-    </div>
+    <h3>Server Admin Data Registration</h3>
     <section id="content">
-
+      <h4>Add user to DB</h4>
+      <form name="add user" action="/addUser" method="post">
+         <span><label htmlFor="username">Username: </label>
+         <input type="text" name="username" id="user" placeholder="username"></span>
+         <br>
+         <span><label htmlFor="userpass">Password: </label><input type="password" name="userpass" id="userpass"></span>
+         <br>
+         <input className="formSubmit" type="submit" value="newUser">
+      </form>
+      <br><br>
+      <h4>Add crew to DB </h4>
+      <form name="add crew" action="">
+        <span><label htmlFor="crew-name">Crew Name: </label><input type="text" name="crew-name" id="crew-name"></span>
+        <br>
+        <span><label htmlFor="crewpass">Crew Password:</label><input type="password" name="crewpass" id="crewpass"></span>
+        
+      </form>
     </section>
   </main>
 

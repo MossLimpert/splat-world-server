@@ -1,8 +1,3 @@
-@font-face {
-    font-family: "JelleeBold";
-    src: url("/assets/fonts/Jellee-Bold.woff") format('woff');
-}
-  
 html, body {
     height: 100%;
     width: 100%;
@@ -59,7 +54,7 @@ nav:nth-child(1) {
 
 .mainForm {
     height: 300px;
-    width: 420px;
+    width: 600px;
     margin: 0 auto;
     padding-top: 200px;
     font-size: 1.2em;

@@ -6,6 +6,9 @@ const mysql = require('mysql2')
 const { Account } = models;
 
 const loginPage = (req, res) => {
+  //
+  // SQL
+  //
   let sql = "SELECT * FROM TEST";
   let connection = mysql.createConnection({
     host: 'localhost',
@@ -16,7 +19,10 @@ const loginPage = (req, res) => {
   connection.query(sql, (err, results) => {
     if (err) console.log(err);
     console.log(results);
-  })
+  });
+  //
+  // SQL
+  //
   res.render('login');
 };            // login 
 const buyPremiumPage = (req, res) => res.render('buy-premium'); // buy premium page
