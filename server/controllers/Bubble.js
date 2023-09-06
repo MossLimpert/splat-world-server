@@ -5,6 +5,13 @@ const mongoose = require('mongoose');
 
 const { Bubble, Account, Status } = models;
 
+// splat world
+// add crew
+const addCrew = async (req, res) => {
+    
+}
+
+
 // directs user to join / create bubble page
 const joinPage = (req, res) => res.render('join-bubble');
 

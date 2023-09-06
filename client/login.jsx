@@ -8,6 +8,39 @@ const ReactDOM = require('react-dom');
 // event handlers
 //
 
+const addUser = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const username = e.target.querySelector('#user').value;
+    const pass = e.target.querySelector('#userpass').value;
+    
+    if (!username || !pass) {
+        helper.handleError('Username or password is empty!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {username, pass});
+}
+
+const addCrew = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const name = e.target.querySelector('#crew-name').value;
+    const pass = e.target.querySelector('#crewpass').value;
+    let hexColor = e.target.querySelector('#color').value;
+    const ownerID = e.target.querySelector('#owner');
+
+    const color = helper.convertHexRGB(hexColor);
+
+    if (!name || !pass || !ownerID) {
+        helper.handleError('Crew name, password, or owner ID missing!');
+    }
+
+    
+}
+
 // sends login request from login form
 const handleLogin = (e) => {
     e.preventDefault();
@@ -48,52 +81,6 @@ const handleSignup = (e) => {
     helper.sendPost(e.target.action, {username, pass, pass2});
 
     return false;
-};
-
-//
-// react components
-//
-
-// login form
-const LoginWindow = (props) => {
-    return (
-        <form id="loginForm"
-            name="loginForm"
-            onSubmit={handleLogin}
-            action="/login"
-            method="POST"
-            className="mainForm"
-        >
-            <span><label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username" /></span>
-            <br />
-            <span><label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password" /></span>
-            <br />
-            <input className="formSubmit" type="submit" value="Sign in" />
-        </form>
-    )
-};
-
-// signup form
-const SignupWindow = (props) => {
-    return (
-        <form id="signupForm"
-            name="signupForm"
-            onSubmit={handleSignup}
-            action="/signup"
-            method="POST"
-            className="mainForm"
-        >
-            <span><label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username" /></span>
-            <span><label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password" /></span>
-            <span><label htmlFor="pass2">Retype Password: </label>
-            <input id="pass2" type="password" name="pass2" placeholder="retype password" /></span>
-            <input className="formSubmit" type="submit" value="Sign up" />
-        </form>
-    )
 };
 
 

@@ -4,6 +4,13 @@ const controllers = require('./controllers');
 const mid = require('./middleware');
 
 const router = (app) => {
+
+  // splat world
+  // add test user data
+  app.post('/add-user', mid.requiresSecure, controllers.Account.addUser);
+
+
+
   // change password
   app.get('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassPage);
   app.post('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassword);

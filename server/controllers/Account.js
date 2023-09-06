@@ -1,22 +1,49 @@
 // Author: Moss Limpert
 
 const models = require('../models');
-const mysql = require('mysql2')
+const db = require('../database.js');
 
 const { Account } = models;
+
+// splat world
+// add user
+const addUser = async (req, res) => {
+  const username = `${req.body.username}`;
+  const pass = `${req.body.pass}`;
+
+  // try catch w pass hash
+  try {
+    const hash = await Account.generateHash(pass);
+
+    db.query('INSERT INTO user SET ?', {
+      username: username,
+      password: hash
+    },
+    (err) => {
+      if (err) console.log(err);
+      console.log('Successfully inserted 1 user.');
+      res.end();
+    });
+
+    return res.json({redirect: '/login'});
+  } catch (err) {
+    console.log(err);
+    // failed to create/update
+    if (err.code === 1004) {
+      return res.status(500).json({ error: 'Failed to create new user'});
+    }
+
+    return res.status(500).json({ error: 'An error occured!' });
+  }
+};
 
 const loginPage = (req, res) => {
   //
   // SQL
   //
   let sql = "SELECT * FROM TEST";
-  let connection = mysql.createConnection({
-    host: 'localhost',
-    database: 'splat_world',
-    user: 'root',
-    password: 'V-8BhthTn9vjMU$E'
-  });
-  connection.query(sql, (err, results) => {
+  
+  db.query(sql, (err, results) => {
     if (err) console.log(err);
     console.log(results);
   });
@@ -155,5 +182,6 @@ module.exports = {
   changePassword,
   buyPremiumPage,
   buyPremium,
-  docPage
+  docPage,
+  addUser
 };
