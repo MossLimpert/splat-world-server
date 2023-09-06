@@ -15,7 +15,7 @@
     <h3>Server Admin Data Registration</h3>
     <section id="content">
       <h4>Add user to DB</h4>
-      <form name="add user" action="/addUser" method="post">
+      <form name="add user" action="/add-user" method="post">
          <span><label htmlFor="username">Username: </label>
          <input type="text" name="username" id="user" placeholder="username"></span>
          <br>
@@ -25,12 +25,22 @@
       </form>
       <br><br>
       <h4>Add crew to DB </h4>
-      <form name="add crew" action="">
+      <form name="add crew" action="/add-crew">
         <span><label htmlFor="crew-name">Crew Name: </label><input type="text" name="crew-name" id="crew-name"></span>
         <br>
         <span><label htmlFor="crewpass">Crew Password:</label><input type="password" name="crewpass" id="crewpass"></span>
-        
+        <br>
+        <span><label htmlFor="color">Color (You can change this later): </label><input type="color" name="color" id="color"></span>
+        <br>
+        <span><label htmlFor="owner">Owner's User ID: </label><input type="text" name="owner" id="owner"></span>
       </form>
+      <br><br>
+      <form name="add tag" action="/add-tag">
+        <span><label htmlFor="user-attrib">User Id: </label><input type="text" name="user-attrib" id="user-attrib" pattern="[\d]{1,}"></span>
+        <br>
+        <span><label htmlFor="crew-attrib">Crew Id:</label><input type="text" name="crew-attrib" id="crew-attrib"></span>
+      </form>
+
     </section>
   </main>
 
