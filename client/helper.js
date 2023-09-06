@@ -40,6 +40,7 @@ const hideError = () => {
     document.getElementById('message').classList.add('hidden');
 }
 
+// https://stackoverflow.com/questions/30970648/changing-hex-codes-to-rgb-values-with-javascript
 const convertHexRGB = (hex) => {
     let m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
     return {
@@ -47,7 +48,6 @@ const convertHexRGB = (hex) => {
         g: parseInt(m[2], 16),
         b: parseInt(m[3], 16)
     };
-
 };
 
 module.exports = {

@@ -1,13 +1,12 @@
 // Author: Moss Limpert
 
 const helper = require('./helper.js');
-const React = require('react');
-const ReactDOM = require('react-dom');
 
 //
 // event handlers
 //
 
+// add test user
 const addUser = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -23,87 +22,79 @@ const addUser = (e) => {
     helper.sendPost(e.target.action, {username, pass});
 }
 
+// add test crew
 const addCrew = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    const name = e.target.querySelector('#crew-name').value;
+    const name = e.target.querySelector('.crewname').value;
     const pass = e.target.querySelector('#crewpass').value;
     let hexColor = e.target.querySelector('#color').value;
-    const ownerID = e.target.querySelector('#owner');
+    const ownerID = e.target.querySelector('#owner').value;
 
     const color = helper.convertHexRGB(hexColor);
 
+    
+
     if (!name || !pass || !ownerID) {
         helper.handleError('Crew name, password, or owner ID missing!');
+        return false;
     }
 
-    
+    const body = {
+        name: name,
+        pass: pass,
+        owner: ownerID,
+        color_r: color.r,
+        color_g: color.g,
+        color_b: color.b
+    };
+
+    console.log(body);
+
+    helper.sendPost(e.target.action, body)
 }
 
-// sends login request from login form
-const handleLogin = (e) => {
+// add test tag
+const addTag = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    const username = e.target.querySelector('#user').value;
-    const pass = e.target.querySelector('#pass').value;
+    const uID = e.target.querySelector('#userid').value;
+    const cID = e.target.querySelector('#crewid').value;
 
-    if(!username || !pass) {
-        helper.handleError('Username or password is empty!');
+    if (!uID || !cID) {
+        helper.handleError('User ID or Crew ID field is empty!');
         return false;
     }
-
-    helper.sendPost(e.target.action, {username, pass});
-
-    return false;
-};
-
-// sends signup request from signup form
-const handleSignup = (e) => {
-    e.preventDefault();
-    helper.hideError();
-
-    const username = e.target.querySelector('#user').value;
-    const pass = e.target.querySelector('#pass').value;
-    const pass2 = e.target.querySelector('#pass2').value;
-
-    if (!username || !pass || !pass2) {
-        helper.handleError('All fields are required!');
-        return false;
-    }
-
-    if (pass !== pass2) {
-        helper.handleError('Passwords do not match!');
-        return false;
-    }
-
-    helper.sendPost(e.target.action, {username, pass, pass2});
-
-    return false;
-};
+    
+    helper.sendPost(e.target.action, {
+        author_ref: parseInt(uID),
+        crew: parseInt(cID),
+    });
+}
 
 
 const init = () => {
-    const loginButton = document.getElementById('loginButton');
-    const signupButton = document.getElementById('signupButton');
+    const addUserForm = document.getElementById('add-user-form');
+    const addCrewForm = document.getElementById('add-crew-form');
+    const addTagForm = document.getElementById('add-tag-form');
 
-    loginButton.addEventListener('click', (e) => {
+    addUserForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        ReactDOM.render(<LoginWindow />,
-            document.getElementById('content'));
-        return false;
+        addUser(e);
     });
-
-    signupButton.addEventListener('click', (e) => {
+    addCrewForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        ReactDOM.render(<SignupWindow />,
-            document.getElementById('content'));
-        return false;
+        addCrew(e);
     });
+    addTagForm.addEventListener('submit',(e) => {
+        e.preventDefault();
+        addTag(e);
+    })
 
-    ReactDOM.render(<LoginWindow />,
-        document.getElementById('content'));
+    
+
 };
 
 window.onload = init;

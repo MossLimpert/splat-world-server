@@ -9,43 +9,49 @@
 </head>
 <body> 
    <nav>{{!--<a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a> --}}
-    <div class="navlink"><a id="loginButton" href="/login">Login</a></div>
   </nav>
+
   <main>
+    <div id="message" class='hidden'>
+    <h3><span id="errorMessage"></span></h3>
+    </div>
     <h3>Server Admin Data Registration</h3>
+
     <section id="content">
       <h4>Add user to DB</h4>
-      <form name="add user" action="/add-user" method="post">
+      <form name="add user" action="/add-user" method="post" id="add-user-form">
          <span><label htmlFor="username">Username: </label>
          <input type="text" name="username" id="user" placeholder="username"></span>
          <br>
          <span><label htmlFor="userpass">Password: </label><input type="password" name="userpass" id="userpass"></span>
          <br>
-         <input className="formSubmit" type="submit" value="newUser">
+         <input className="formSubmit" type="submit" value="Create New User" id="add-user-button">
       </form>
       <br><br>
       <h4>Add crew to DB</h4>
-      <form name="add crew" action="/add-crew">
-        <span><label htmlFor="crew-name">Crew Name: </label><input type="text" name="crew-name" id="crew-name"></span>
+      <form name="add crew" action="/add-crew" method="post" id="add-crew-form">
+        <span><label htmlFor="crewname">Crew Name: </label><input type="text" name="crewname" id="crewname" class="crewname"></span>
         <br>
         <span><label htmlFor="crewpass">Crew Password:</label><input type="password" name="crewpass" id="crewpass"></span>
         <br>
         <span><label htmlFor="color">Color (You can change this later): </label><input type="color" name="color" id="color"></span>
         <br>
         <span><label htmlFor="owner">Owner's User ID: </label><input type="text" name="owner" id="owner"></span>
+        <br>
+        <input className="formSubmit" type="submit" value="Create New Crew" id="add-crew-button">
       </form>
       <br><br>
       <h4>Add tag</h4>
-      <form name="add tag" action="/add-tag">
-        <span><label htmlFor="user-attrib">User Id: </label><input type="text" name="user-attrib" id="user-attrib" pattern="[\d]{1,}"></span>
+      <form name="add tag" action="/add-tag" method="post" id="add-tag-form">
+        <span><label htmlFor="userid">User Id: </label><input type="text" name="userid" id="userid" ></span>
         <br>
-        <span><label htmlFor="crew-attrib">Crew Id:</label><input type="text" name="crew-attrib" id="crew-attrib"></span>
+        <span><label htmlFor="crewid">Crew Id:</label><input type="text" name="crewid" id="crewid" ></span>
+        <br>
+        <input className="formSubmit" type="submit" value="Create New Tag" id="add-tag-btn">
       </form>
-
     </section>
   </main>
 
-  
   <script src="/assets/loginBundle.js"></script>
 </body>
 </html>

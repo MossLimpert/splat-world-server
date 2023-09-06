@@ -3,6 +3,7 @@
   "rules": {
     "no-underscore-dangle" : "off",
     "no-plusplus": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "camelcase": "off"
   }
 }

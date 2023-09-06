@@ -8,8 +8,10 @@ const router = (app) => {
   // splat world
   // add test user data
   app.post('/add-user', mid.requiresSecure, controllers.Account.addUser);
-
-
+  // add test crew data
+  app.post('/add-crew', mid.requiresSecure, controllers.Bubble.addCrew);
+  // add test tag data
+  app.post('/add-tag', mid.requiresSecure, controllers.Status.addTag);
 
   // change password
   app.get('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassPage);
@@ -37,12 +39,6 @@ const router = (app) => {
   // documentation
   app.get('/docs', mid.requiresLogin, controllers.Account.docPage);
 
-  // create / join bubble
-  app.get('/join-bubble', mid.requiresSecure, mid.requiresLogin, controllers.Bubble.joinPage);
-  app.get('/create-bubble', mid.requiresSecure, mid.requiresLogin, controllers.Bubble.joinPage);
-  app.post('/join-bubble', mid.requiresSecure, mid.requiresLogin, controllers.Bubble.joinBubble);
-  app.post('/create-bubble', mid.requiresSecure, mid.requiresLogin, controllers.Bubble.createBubble);
-
   // monetization
   app.get('/buy-premium', mid.requiresSecure, mid.requiresLogin, controllers.Account.buyPremiumPage);
   app.post('/buy-premium', mid.requiresSecure, mid.requiresLogin, controllers.Account.buyPremium);
@@ -51,8 +47,6 @@ const router = (app) => {
   app.get('/get-current-status', mid.requiresSecure, mid.requiresLogin, controllers.Status.getCurrentUserStatus);
   // get all user statuses
   app.get('/get-user-statuses', mid.requiresSecure, mid.requiresLogin, controllers.Status.getUserStatuses);
-  // get a bubble
-  app.get('/get-bubbles', mid.requiresSecure, mid.requiresLogin, controllers.Bubble.getBubbles);
 };
 
 module.exports = router;

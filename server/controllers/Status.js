@@ -1,11 +1,41 @@
 // Author: Moss Limpert
 
 const models = require('../models');
+const db = require('../database.js');
 
 const { Status, Account } = models;
 
 // render homepage
 const home = async (req, res) => res.render('app');
+
+const addTag = async (req, res) => {
+    const author_ref = req.body.author_ref;
+    const crew = req.body.crew;
+
+    try {
+        db.query('INSERT INTO tag SET ?', {
+            author_ref: author_ref,
+            crew_ref: crew,
+        }, (err) => {
+            if (err) console.log(err);
+
+            res.end();
+        });
+
+        console.log('Successfully inserted 1 tag.');
+
+        return res.redirect('/home');
+    } catch (err) {
+        console.log(err);
+
+        // failed to create/update
+        if (err.code === 1004) {
+        return res.status(500).jso({       error: 'Failed to create new tag'});
+      }
+  
+      return res.status(500).json({ error: 'An error occured!' });
+    }
+}
 
 // get all statuses that belong to the user
 const getUserStatuses = async (req, res) => {
@@ -80,4 +110,5 @@ module.exports = {
     getUserStatuses,
     makeStatus,
     getCurrentUserStatus,
+    addTag,
 };

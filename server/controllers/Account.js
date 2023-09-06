@@ -21,11 +21,13 @@ const addUser = async (req, res) => {
     },
     (err) => {
       if (err) console.log(err);
-      console.log('Successfully inserted 1 user.');
+      
       res.end();
     });
 
-    return res.json({redirect: '/login'});
+    console.log('Successfully inserted 1 user.');
+
+    return res.redirect('/');
   } catch (err) {
     console.log(err);
     // failed to create/update
@@ -38,18 +40,6 @@ const addUser = async (req, res) => {
 };
 
 const loginPage = (req, res) => {
-  //
-  // SQL
-  //
-  let sql = "SELECT * FROM TEST";
-  
-  db.query(sql, (err, results) => {
-    if (err) console.log(err);
-    console.log(results);
-  });
-  //
-  // SQL
-  //
   res.render('login');
 };            // login 
 const buyPremiumPage = (req, res) => res.render('buy-premium'); // buy premium page
