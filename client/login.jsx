@@ -60,26 +60,30 @@ const addTag = (e) => {
     e.preventDefault();
     helper.hideError();
 
+    const title = e.target.querySelector('#title').value;
     const uID = e.target.querySelector('#userid').value;
     const cID = e.target.querySelector('#crewid').value;
 
-    if (!uID || !cID) {
-        helper.handleError('User ID or Crew ID field is empty!');
+    if (!uID || !cID || !title) {
+        helper.handleError('Title, User ID, or Crew ID field is empty!');
         return false;
     }
     
     helper.sendPost(e.target.action, {
         author_ref: parseInt(uID),
         crew: parseInt(cID),
+        title: title,
     });
 }
 
 
 const init = () => {
+    // form references
     const addUserForm = document.getElementById('add-user-form');
     const addCrewForm = document.getElementById('add-crew-form');
     const addTagForm = document.getElementById('add-tag-form');
 
+    // assigning event listeners
     addUserForm.addEventListener('submit', (e) => {
         e.preventDefault();
         addUser(e);
@@ -91,10 +95,7 @@ const init = () => {
     addTagForm.addEventListener('submit',(e) => {
         e.preventDefault();
         addTag(e);
-    })
-
-    
-
+    });
 };
 
 window.onload = init;

@@ -5,8 +5,6 @@ module.exports = {
         app: './client/maker.jsx',
         login: './client/login.jsx',
         reset: './client/resetPass.jsx',
-        bubble: './client/joinBubble.jsx',
-        buy: './client/buyPremium.jsx',
     },
     module: {
         rules: [

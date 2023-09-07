@@ -1,21 +1,21 @@
 // Author: Moss Limpert
 
-const models = require('../models');
 const db = require('../database.js');
-
-const { Status, Account } = models;
 
 // render homepage
 const home = async (req, res) => res.render('app');
 
+// add a test tag
 const addTag = async (req, res) => {
     const author_ref = req.body.author_ref;
     const crew = req.body.crew;
+    const title = req.body.title;
 
     try {
         db.query('INSERT INTO tag SET ?', {
             author_ref: author_ref,
             crew_ref: crew,
+            title: title,
         }, (err) => {
             if (err) console.log(err);
 
@@ -37,78 +37,43 @@ const addTag = async (req, res) => {
     }
 }
 
-// get all statuses that belong to the user
-const getUserStatuses = async (req, res) => {
-    const statuses = [];
-    try {
-        // find all statuses that have user's id
-        const myStatuses = await Status.find({ userid: req.session.account._id }).exec();
+// get a tag
+const getTag = async (req, res) => {
+    const id = null;
+    const title = null;
+    if (req.body.id) id = req.body.id;
+    if (req.body.title) title = req.body.title;
 
-        for (let i = 0; i < myStatuses.length; i++) {
-            statuses.push(myStatuses[i].text);
-        }
-
-        //console.log(statuses);
-        return res.json({ statuses: statuses });
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'Error retrieving statuses!' });
-    }
-};
-
-// get user's current status
-const getCurrentUserStatus = async (req, res) => {
-    try {
-        const user = await Account.findById(req.session.account._id).exec();
-        const status = await Status.findById(user.currentStatus).exec();
-
-        if (!status) {
-            return res.json({ status: 'No status yet' });
-        }
-        return res.json({ status: status.text });
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'Error retrieving status!' });
-    }
-};
-
-// create new user status
-const makeStatus = async (req, res) => {
-    if (!req.body.text) {
-        return res.status(400).json({ error: 'Status is required!' });
+    if (id === null && title === null) {
+        return res.status(400).json({ error: 'No id or title provided.'})
     }
 
-    // construct status object
-    const statusData = {
-        text: req.body.text,
-        userid: req.session.account._id,
-    };
-
-    try {
-        // add status to server
-        const newStatus = new Status(statusData);
-        await newStatus.save();
-
-        // add to account's current status field
-        return await Account.pushStatus(req.session.account._id, newStatus._id, (acknowledged) => {
-            if (!acknowledged) {
-                return res.status(500).json({ error: 'Error updating account!' });
-            }
+    if (id === null) {
+        let sql = 'SELECT title, crew_ref, active, author_ref FROM tag LIMIT 1';
+        try {
             
-            return res.status(201).json({ text: newStatus.text });
-        });
+        } catch (err) {
 
-       
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'An error occured making status!' });
+        }
+    } else if (title === null) {
+        let sql = '';
+        try {
+
+        } catch (err) {
+
+        }
+    } else {
+        let sql = '';
+        try {
+
+        } catch (err) {
+
+        }
     }
-};
+}
 
 module.exports = {
     home,
-    getUserStatuses,
-    makeStatus,
-    getCurrentUserStatus,
     addTag,
+    getTag
 };

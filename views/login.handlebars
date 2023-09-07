@@ -9,7 +9,7 @@
 </head>
 <body> 
    <nav>{{!--<a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a> --}}
-   <a href="/home">Retrieval</a>
+   <a class="navlink" href="/home">Retrieval</a>
   </nav>
 
   <main>
@@ -44,6 +44,8 @@
       <br><br>
       <h4>Add tag</h4>
       <form name="add tag" action="/add-tag" method="post" id="add-tag-form">
+        <span><label for="title">Title: </label><input type="text" name="title" id="title"></span>
+        <br>
         <span><label htmlFor="userid">User Id: </label><input type="text" name="userid" id="userid" ></span>
         <br>
         <span><label htmlFor="crewid">Crew Id:</label><input type="text" name="crewid" id="crewid" ></span>

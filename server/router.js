@@ -15,13 +15,7 @@ const router = (app) => {
 
   // homepage
   app.get('/home', controllers.Status.home);
-  // create status
-  app.post('/home', controllers.Status.makeStatus);
-  app.get('/maker', controllers.Status.home);
-  app.post('/maker', controllers.Status.makeStatus);
-  app.get('/app', controllers.Status.home);
-  app.post('/app', controllers.Status.makeStatus);
-
+  app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 
   // change password
   app.get('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassPage);
@@ -34,22 +28,6 @@ const router = (app) => {
   // logout
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
-  
-
-  // login / homepage
-  app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-
-  // documentation
-  app.get('/docs', mid.requiresLogin, controllers.Account.docPage);
-
-  // monetization
-  app.get('/buy-premium', mid.requiresSecure, mid.requiresLogin, controllers.Account.buyPremiumPage);
-  app.post('/buy-premium', mid.requiresSecure, mid.requiresLogin, controllers.Account.buyPremium);
-
-  // get current user status
-  app.get('/get-current-status', mid.requiresSecure, mid.requiresLogin, controllers.Status.getCurrentUserStatus);
-  // get all user statuses
-  app.get('/get-user-statuses', mid.requiresSecure, mid.requiresLogin, controllers.Status.getUserStatuses);
 };
 
 module.exports = router;
