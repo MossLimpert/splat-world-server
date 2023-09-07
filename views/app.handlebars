@@ -9,31 +9,41 @@
 </head>
 <body>
   <nav><a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a>
-    <div class="navlink"><a id="joinButton" href="/join-bubble">Join Bubble</a></div>
-    <div class="navlink"><a id="createButton" href="/create-bubble">Create Bubble</a></div>
     <div class="navlink"><a href="/logout">Log out</a></div>
-    <div class="navlink" id="changePass"><a href="/change-password">Change Password</a></div>
-    <div class="navlink"><a href="/buy-premium" id="buyPremium">Buy Premium</a></div>
-    <div class="navlink"><a href="/docs" id="docs">Documentation</a></div>
-  </nav>
   <main>
     <div id="message" class='hidden'>
     <h3><span id="errorMessage"></span></h3>
     </div>
-    <section id="currentStatus">
+    <h3>Retrieving Server Data</h3>
+    <h4>Get a User with Username <b>OR</b> ID</h4>
+    <form name="get user" method="get" id="get-user-form" action="/get-user">
+      <span><label for="username">Username (Case sensitive): </label><input type="text" name="username" id="username"></span>
+      <span><label for="uid">ID: </label><input type="text" name="uid" id="uid"></span>
+      <input type="button" value="Get User">
+    </form>
 
-    </section>
-    <section id="makeStatus">
+    <h4>Get a Crew with Crew Name</h4>
+    <form name="get crew" method="get" id="get-crew-form" action="/get-crew">
+      <span><label for="crew-name">Crew Name (Case sensitive): </label><input type="text" name="crew-name" id="crew-name"></span>
+      <input type="button" value="Get Crew">
+    </form>
 
-    </section>
-    <section id="pastStatus">
+    <h4>Get one Tag with ID</h4>
+    <form name="get tag" method="get" id="get-tag" action="/tag">
+      <span><label for="tid">ID: </label><input type="text" name="tid" id="tid"></span>
+      <input type="button" value="Get Tag">
+    </form>
 
-    </section>
-    <section id="allBubbles">
-      
-    </section>
+    <h4>Get all of a User's Tags with Username <b>OR</b> ID</h4>
+    <form action="/tags" method="get" name="get tags" id="get-tags">
+      <span><label for="uid">User ID: </label><input type="text" name="uid" id="uid"></span>
+      <span><label for="username"></label><input type="text" name="username" id="username"></span>
+      <input type="button" value="Get Tags">
+    </form>
 
-    <section id="test">
+    
+
+    <section id="result">
 
     </section>
   </main>

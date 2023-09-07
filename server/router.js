@@ -13,6 +13,16 @@ const router = (app) => {
   // add test tag data
   app.post('/add-tag', mid.requiresSecure, controllers.Status.addTag);
 
+  // homepage
+  app.get('/home', controllers.Status.home);
+  // create status
+  app.post('/home', controllers.Status.makeStatus);
+  app.get('/maker', controllers.Status.home);
+  app.post('/maker', controllers.Status.makeStatus);
+  app.get('/app', controllers.Status.home);
+  app.post('/app', controllers.Status.makeStatus);
+
+
   // change password
   app.get('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassPage);
   app.post('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassword);
@@ -24,14 +34,7 @@ const router = (app) => {
   // logout
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
-  // homepage
-  app.get('/home', mid.requiresLogin, controllers.Status.home);
-  // create status
-  app.post('/home', mid.requiresLogin, controllers.Status.makeStatus);
-  app.get('/maker', mid.requiresLogin, controllers.Status.home);
-  app.post('/maker', mid.requiresLogin, controllers.Status.makeStatus);
-  app.get('/app', mid.requiresLogin, controllers.Status.home);
-  app.post('/app', mid.requiresLogin, controllers.Status.makeStatus);
+  
 
   // login / homepage
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
