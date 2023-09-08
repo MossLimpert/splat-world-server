@@ -13,6 +13,9 @@ const router = (app) => {
   // add test tag data
   app.post('/add-tag', mid.requiresSecure, controllers.Status.addTag);
 
+  // retrieve test tag data
+  app.get('/tag', mid.requiresSecure, controllers.Status.getTag);
+
   // homepage
   app.get('/home', controllers.Status.home);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

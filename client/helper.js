@@ -35,6 +35,28 @@ const sendPost = async (url, data, handler) => {
     }
 };
 
+const sendGet = async (url, data, handler) => {
+    const response = await fetch (url + URLSearchParams(data), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    });
+
+    const result = await response.json();
+    hideError();
+
+    if (result.redirect) {
+        window.location = result.redirect;
+    }
+    if (result.error) {
+        handleError(result.error);
+    }
+    if (handler) {
+        handler(result);
+    }
+}
+
 // hides error message
 const hideError = () => {
     document.getElementById('message').classList.add('hidden');
@@ -54,5 +76,6 @@ module.exports = {
     handleError,
     sendPost,
     hideError,
-    convertHexRGB
+    convertHexRGB,
+    sendGet,
 };

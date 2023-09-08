@@ -23,7 +23,7 @@ const addTag = async (req, res) => {
         });
 
         console.log('Successfully inserted 1 tag.');
-
+        
         return res.redirect('/home');
     } catch (err) {
         console.log(err);
@@ -39,38 +39,85 @@ const addTag = async (req, res) => {
 
 // get a tag
 const getTag = async (req, res) => {
-    const id = null;
-    const title = null;
-    if (req.body.id) id = req.body.id;
-    if (req.body.title) title = req.body.title;
+    let id = null;
+    let title = null;
+    console.log(req.params);
+    if (req.params.tid) id = req.params.tid;
+    if (req.params.title) title = req.params.title;
 
     if (id === null && title === null) {
         return res.status(400).json({ error: 'No id or title provided.'})
     }
 
+    let sql = 'SELECT title, crew_ref, active, author_ref FROM tag LIMIT 1';
     if (id === null) {
-        let sql = 'SELECT title, crew_ref, active, author_ref FROM tag LIMIT 1';
         try {
-            
-        } catch (err) {
+            db.query(sql, {
+                title: title,
+            }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    res.end();
+                }
+                // https://www.youtube.com/watch?v=SnncAvMYxgY
+                res.render('login', {
+                    title: 'tag data retrieval',
+                    action: 'list',
+                    tag: data,
+                });
+                return res.json(data);
+            });
+            console.log('Successfully retrieved 1 tag');
 
+            return res.redirect('/home');
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to retrieve tag.'
+            });
         }
     } else if (title === null) {
-        let sql = '';
         try {
+            db.query(sql, {
+                id: id,
+            }, (err) => {
+                if (err) console.log(err);
 
+                res.end();
+            });
+            console.log('Successfully retrieved 1 tag');
+
+            return res.redirect('/home');
         } catch (err) {
+            console.log(err);
 
+            return res.status(500).json({
+                error: 'Failed to retrieve tag.'
+            });
         }
     } else {
-        let sql = '';
         try {
+            db.query(sql, {
+                id: id,
+                title: title,
+            }, (err) => {
+                if (err) console.log(err);
 
+                res.end();
+            });
+            console.log('Successfully retrieved 1 tag');
+
+            return res.redirect('/home');
         } catch (err) {
+            console.log(err);
 
+            return res.status(500).json({
+                error: 'Failed to retrieve tag.'
+            });
         }
     }
-}
+};
 
 module.exports = {
     home,

@@ -53,7 +53,13 @@
 
 
     <section id="result">
-
+    {{!-- Single Tag --}}
+    {{#if tag}}
+      <span><p>Title: {{tag.title}}</p></span>
+      <span><p>Crew ID: {{tag.crew_ref}}</p></span>
+      <span><p>Author ID: {{tag.author_ref}}</p></span>
+      <span><p>Active: {{tag.active}}</p></span>
+    {{/if}}
     </section>
   </main>
   

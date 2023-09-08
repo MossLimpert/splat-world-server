@@ -65,15 +65,15 @@ const getTag = (e) => {
     }
 
     if (tid && !title) {
-        helper.sendPost(e.target.method, {
+        helper.sendGet(e.target.method, {
             id: tid,
         });
     } else if (!tid && title) {
-        helper.sendPost(e.target.method, {
+        helper.sendGet(e.target.method, {
             title: title,
         });
     } else {
-        helper.sendPost(e.target.method, {
+        helper.sendGet(e.target.method, {
             id: tid,
             title: title,
         });
@@ -113,7 +113,7 @@ const init = () => {
     // form references
     const getUserForm = document.getElementById('get-user-form');
     const getCrewForm = document.getElementById('get-crew-form');
-    const getTagForm = document.getElementById('get-tag-form');
+    // const getTagForm = document.getElementById('get-tag-form');
     const getTagsForm = document.getElementById('get-tags-form');
 
     // assigning event listeners
@@ -125,10 +125,10 @@ const init = () => {
         e.preventDefault();
         getCrew(e);
     });
-    getTagForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        getTag(e);
-    });
+    // getTagForm.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    //     getTag(e);
+    // });
     getTagsForm.addEventListener('submit', (e) => {
         e.preventDefault();
         getTags(e);
