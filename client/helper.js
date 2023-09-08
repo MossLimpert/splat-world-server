@@ -36,7 +36,12 @@ const sendPost = async (url, data, handler) => {
 };
 
 const sendGet = async (url, data, handler) => {
-    const response = await fetch (url + URLSearchParams(data), {
+    let dir = '/tag';
+    let params = new URLSearchParams(data);
+    let fullUrl = dir + '?&' + params;
+    console.log(fullUrl);
+
+    const response = await fetch (fullUrl, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

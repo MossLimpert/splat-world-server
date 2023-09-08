@@ -38,36 +38,43 @@ const addTag = async (req, res) => {
 }
 
 // get a tag
-const getTag = async (req, res) => {
+const getTag = (req, res) => {
     let id = null;
     let title = null;
-    console.log(req.params);
-    if (req.params.tid) id = req.params.tid;
-    if (req.params.title) title = req.params.title;
+    
+    if (req.query.id) id = req.query.id;
+    if (req.query.title) title = req.query.title;
 
     if (id === null && title === null) {
         return res.status(400).json({ error: 'No id or title provided.'})
     }
 
-    let sql = 'SELECT title, crew_ref, active, author_ref FROM tag LIMIT 1';
+    let sql = 'SELECT title, crew_ref, active, author_ref FROM tag';
     if (id === null) {
         try {
-            db.query(sql, {
-                title: title,
-            }, (err, data) => {
-                if (err) {
-                    console.log(err);
-                    res.end();
-                }
-                // https://www.youtube.com/watch?v=SnncAvMYxgY
-                res.render('login', {
-                    title: 'tag data retrieval',
-                    action: 'list',
-                    tag: data,
-                });
-                return res.json(data);
+            let addition = ` WHERE title = ? LIMIT 1`;
+
+            db.execute(
+                sql+addition,
+                [title],
+                (err, results, fields) => {
+                    if (err) {
+                        console.log(err);
+                        res.end();
+                    }
+
+                    // https://www.youtube.com/watch?v=SnncAvMYxgY
+                    res.render('app', {
+                        title: 'tag data retrieval',
+                        action: 'list',
+                        tag: results,
+                    });
+
+                    //if (fields) console.log(fields);
+                    console.log("aaaaaaaaaaaaaaaaaaaaaa", results);
+                    return res.status(200);
             });
-            console.log('Successfully retrieved 1 tag');
+            console.log('Successfully retrieved 1 tag case 1');
 
             return res.redirect('/home');
         } catch (err) {
@@ -79,16 +86,25 @@ const getTag = async (req, res) => {
         }
     } else if (title === null) {
         try {
-            db.query(sql, {
-                id: id,
-            }, (err) => {
-                if (err) console.log(err);
+            let addition = ` WHERE id = ? LIMIT 1`;
+            db.execute(
+                sql+addition,
+                [id], 
+                (err, results, fields) => {
+                    if (err) console.log(err);
 
-                res.end();
+                    // res.render('app', {
+                    //     title: 'tag data retrieval',
+                    //     action: 'list',
+                    //     tag: JSON.stringify(results),
+                    // });
+                    console.log('aaaaaaaaaaaaaaaaaaaa', results);
+                    //if (fields) console.log(fields);
+                    
+                    return res.json(results);
             });
-            console.log('Successfully retrieved 1 tag');
+            console.log('Successfully retrieved 1 tag case 2');
 
-            return res.redirect('/home');
         } catch (err) {
             console.log(err);
 
@@ -98,15 +114,24 @@ const getTag = async (req, res) => {
         }
     } else {
         try {
-            db.query(sql, {
-                id: id,
-                title: title,
-            }, (err) => {
-                if (err) console.log(err);
+            let addition = ` WHERE id = ? OR title = ? LIMIT 1`;
+            db.execute(
+                sql+addition,
+                [id, title], 
+                (err, results, fields) => {
+                    if (err) console.log(err);
 
-                res.end();
+                    res.render('app', {
+                        title: 'tag data retrieval',
+                        action: 'list',
+                        tag: results,
+                    });
+                    
+                    //if (fields) console.log(fields);
+                    
+                    return res.status(200);
             });
-            console.log('Successfully retrieved 1 tag');
+            console.log('Successfully retrieved 1 tag case 3');
 
             return res.redirect('/home');
         } catch (err) {

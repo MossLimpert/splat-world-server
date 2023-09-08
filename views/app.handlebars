@@ -2,14 +2,14 @@
 <head>
   {{!-- Author: Moss Limpert --}}
   <meta charset="utf-8"/>
-  <title>Bubbles</title>
+  <title>Splat World</title>
 
   <link rel="shortcut icon" href="/assets/img/bubbles.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
 <body>
   <nav><a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a>
-    <div class="navlink"><a href="/logout">Log out</a></div>
+    <div class="navlink"><a href="/logout">Data Entry</a></div>
   </nav>
   <main>
     <div id="message" class='hidden'>
@@ -17,7 +17,7 @@
     </div>
     <h3>Retrieving Server Data</h3>
     <h4>Get a User with Username <b>OR</b> ID</h4>
-    <form name="get user" method="get" id="get-user-form" action="/get-user">
+    <form name="get user" method="get" id="get-user" action="/get-user">
       <span><label for="username">Username (Case sensitive): </label><input type="text" name="username" id="username"></span>
       <br>
       <span><label for="uid">ID: </label><input type="text" name="uid" id="uid"></span>
@@ -26,7 +26,7 @@
     </form>
 
     <h4>Get a Crew with Crew Name</h4>
-    <form name="get crew" method="get" id="get-crew-form" action="/get-crew">
+    <form name="get crew" method="get" id="get-crew" action="/get-crew">
       <span><label for="crew-name">Crew Name (Case sensitive): </label><input type="text" name="crew-name" id="crew-name"></span>
       <br>
       <input type="submit" value="Get Crew">

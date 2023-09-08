@@ -56,8 +56,8 @@ const getTag = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    const tid = e.target.querySelector('#tid');
-    const title = e.target.querySelector('#title');
+    const tid = e.target.querySelector('#tid').value;
+    const title = e.target.querySelector('#title').value;
 
     if (!tid && !title) {
         helper.handleError('No title and no tag id!');
@@ -111,10 +111,10 @@ const getTags = (e) => {
 
 const init = () => {
     // form references
-    const getUserForm = document.getElementById('get-user-form');
-    const getCrewForm = document.getElementById('get-crew-form');
-    // const getTagForm = document.getElementById('get-tag-form');
-    const getTagsForm = document.getElementById('get-tags-form');
+    const getUserForm = document.getElementById('get-user');
+    const getCrewForm = document.getElementById('get-crew');
+    const getTagForm = document.getElementById('get-tag');
+    const getTagsForm = document.getElementById('get-tags');
 
     // assigning event listeners
     getUserForm.addEventListener('submit', (e) => {
@@ -125,10 +125,10 @@ const init = () => {
         e.preventDefault();
         getCrew(e);
     });
-    // getTagForm.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     getTag(e);
-    // });
+    getTagForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        getTag(e);
+    });
     getTagsForm.addEventListener('submit', (e) => {
         e.preventDefault();
         getTags(e);
