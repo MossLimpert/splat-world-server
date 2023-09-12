@@ -30,7 +30,7 @@ const addTag = async (req, res) => {
 
         // failed to create/update
         if (err.code === 1004) {
-        return res.status(500).jso({       error: 'Failed to create new tag'});
+        return res.status(500).json({ error: 'Failed to create new tag'});
       }
   
       return res.status(500).json({ error: 'An error occured!' });
@@ -42,6 +42,8 @@ const getTag = (req, res) => {
     let id = null;
     let title = null;
     
+    //console.log(req.query);
+
     if (req.query.id) id = req.query.id;
     if (req.query.title) title = req.query.title;
 
@@ -57,26 +59,21 @@ const getTag = (req, res) => {
             db.execute(
                 sql+addition,
                 [title],
-                (err, results, fields) => {
+                (err, results) => {
                     if (err) {
                         console.log(err);
                         res.end();
                     }
 
-                    // https://www.youtube.com/watch?v=SnncAvMYxgY
-                    res.render('app', {
-                        title: 'tag data retrieval',
-                        action: 'list',
-                        tag: results,
-                    });
+                    //console.log(results);
 
-                    //if (fields) console.log(fields);
-                    console.log("aaaaaaaaaaaaaaaaaaaaaa", results);
-                    return res.status(200);
+                    //res.redirect('/home');
+                    return res.status(302).json({tag: results[0]});
             });
             console.log('Successfully retrieved 1 tag case 1');
 
-            return res.redirect('/home');
+            //return res.redirect('/home');
+            return res.status(200);
         } catch (err) {
             console.log(err);
 
@@ -90,21 +87,18 @@ const getTag = (req, res) => {
             db.execute(
                 sql+addition,
                 [id], 
-                (err, results, fields) => {
+                (err, results) => {
                     if (err) console.log(err);
-
-                    // res.render('app', {
-                    //     title: 'tag data retrieval',
-                    //     action: 'list',
-                    //     tag: JSON.stringify(results),
-                    // });
-                    console.log('aaaaaaaaaaaaaaaaaaaa', results);
-                    //if (fields) console.log(fields);
                     
-                    return res.json(results);
+                    //console.log(results);
+
+                    //res.redirect('/home');
+                    return res.status(302).json({tag: results[0]});
             });
             console.log('Successfully retrieved 1 tag case 2');
 
+            //return res.redirect('/home');
+            return res.status(200);
         } catch (err) {
             console.log(err);
 
@@ -118,22 +112,18 @@ const getTag = (req, res) => {
             db.execute(
                 sql+addition,
                 [id, title], 
-                (err, results, fields) => {
+                (err, results) => {
                     if (err) console.log(err);
 
-                    res.render('app', {
-                        title: 'tag data retrieval',
-                        action: 'list',
-                        tag: results,
-                    });
-                    
-                    //if (fields) console.log(fields);
-                    
-                    return res.status(200);
+                    //console.log(results);
+
+                    //res.redirect('/home');
+                    return res.status(302).json({tag: results[0]});
             });
             console.log('Successfully retrieved 1 tag case 3');
 
-            return res.redirect('/home');
+            //return res.redirect('/home');
+            return res.status(200);
         } catch (err) {
             console.log(err);
 

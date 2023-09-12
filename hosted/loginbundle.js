@@ -1,1 +1,207 @@
-(()=>{var e={603:e=>{const r=e=>{document.getElementById("errorMessage").textContent=e,document.getElementById("message").classList.remove("hidden")},t=()=>{document.getElementById("message").classList.add("hidden")};e.exports={handleError:r,sendPost:async(e,t,o)=>{const n=await fetch(e,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(t)}),a=await n.json();document.getElementById("message").classList.add("hidden"),a.redirect&&(window.location=a.redirect),a.error&&r(a.error),o&&o(a)},hideError:t,convertHexRGB:e=>{let r=e.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);return{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}},sendGet:async(e,o,n)=>{let a="/tag?&"+new URLSearchParams(o);console.log(a);const s=await fetch(a,{method:"GET",headers:{"Content-Type":"application/x-www-form-urlencoded"}}),d=await s.json();t(),d.redirect&&(window.location=d.redirect),d.error&&r(d.error),n&&n(d)}}}},r={};function t(o){var n=r[o];if(void 0!==n)return n.exports;var a=r[o]={exports:{}};return e[o](a,a.exports,t),a.exports}(()=>{const e=t(603);window.onload=()=>{const r=document.getElementById("add-user-form"),t=document.getElementById("add-crew-form"),o=document.getElementById("add-tag-form");r.addEventListener("submit",(r=>{r.preventDefault(),(r=>{r.preventDefault(),e.hideError();const t=r.target.querySelector("#user").value,o=r.target.querySelector("#userpass").value;if(!t||!o)return e.handleError("Username or password is empty!"),!1;e.sendPost(r.target.action,{username:t,pass:o})})(r)})),t.addEventListener("submit",(r=>{r.preventDefault(),(r=>{r.preventDefault(),e.hideError();const t=r.target.querySelector(".crewname").value,o=r.target.querySelector("#crewpass").value;let n=r.target.querySelector("#color").value;const a=r.target.querySelector("#owner").value,s=e.convertHexRGB(n);if(!t||!o||!a)return e.handleError("Crew name, password, or owner ID missing!"),!1;const d={name:t,pass:o,owner:a,color_r:s.r,color_g:s.g,color_b:s.b};console.log(d),e.sendPost(r.target.action,d)})(r)})),o.addEventListener("submit",(r=>{r.preventDefault(),(r=>{r.preventDefault(),e.hideError();const t=r.target.querySelector("#title").value,o=r.target.querySelector("#userid").value,n=r.target.querySelector("#crewid").value;if(!o||!n||!t)return e.handleError("Title, User ID, or Crew ID field is empty!"),!1;e.sendPost(r.target.action,{author_ref:parseInt(o),crew:parseInt(n),title:t})})(r)}))}})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/***/ ((module) => {
+
+/* Takes in an error message. Sets the error message up in html, and
+   displays it to the user. Will be hidden by other events that could
+   end in an error.
+*/
+const handleError = message => {
+  document.getElementById('errorMessage').textContent = message;
+  document.getElementById('message').classList.remove('hidden');
+};
+
+/* Sends post requests to the server using fetch. Will look for various
+    entries in the response JSON object, and will handle them appropriately.
+*/
+const sendPost = async (url, data, handler) => {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  const result = await response.json();
+  document.getElementById('message').classList.add('hidden');
+  if (result.redirect) {
+    window.location = result.redirect;
+  }
+  if (result.error) {
+    handleError(result.error);
+  }
+  if (handler) {
+    handler(result);
+  }
+};
+const sendGet = async (url, data, handler) => {
+  let dir = '/tag';
+  let params = new URLSearchParams(data);
+  let fullUrl = dir + '?&' + params;
+  //console.log(fullUrl);
+
+  const response = await fetch(fullUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  });
+  const result = await response.json();
+  hideError();
+  if (result.redirect) {
+    window.location = result.redirect;
+  }
+  if (result.error) {
+    handleError(result.error);
+  }
+  if (handler) {
+    handler(result);
+  }
+};
+
+// hides error message
+const hideError = () => {
+  document.getElementById('message').classList.add('hidden');
+};
+
+// https://stackoverflow.com/questions/30970648/changing-hex-codes-to-rgb-values-with-javascript
+const convertHexRGB = hex => {
+  let m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
+  return {
+    r: parseInt(m[1], 16),
+    g: parseInt(m[2], 16),
+    b: parseInt(m[3], 16)
+  };
+};
+module.exports = {
+  handleError,
+  sendPost,
+  hideError,
+  convertHexRGB,
+  sendGet
+};
+
+/***/ })
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+// Author: Moss Limpert
+
+const helper = __webpack_require__(1);
+
+//
+// event handlers
+//
+
+// add test user
+const addUser = e => {
+  e.preventDefault();
+  helper.hideError();
+  const username = e.target.querySelector('#user').value;
+  const pass = e.target.querySelector('#userpass').value;
+  if (!username || !pass) {
+    helper.handleError('Username or password is empty!');
+    return false;
+  }
+  helper.sendPost(e.target.action, {
+    username,
+    pass
+  });
+};
+
+// add test crew
+const addCrew = e => {
+  e.preventDefault();
+  helper.hideError();
+  const name = e.target.querySelector('.crewname').value;
+  const pass = e.target.querySelector('#crewpass').value;
+  let hexColor = e.target.querySelector('#color').value;
+  const ownerID = e.target.querySelector('#owner').value;
+  const color = helper.convertHexRGB(hexColor);
+  if (!name || !pass || !ownerID) {
+    helper.handleError('Crew name, password, or owner ID missing!');
+    return false;
+  }
+  const body = {
+    name: name,
+    pass: pass,
+    owner: ownerID,
+    color_r: color.r,
+    color_g: color.g,
+    color_b: color.b
+  };
+  console.log(body);
+  helper.sendPost(e.target.action, body);
+};
+
+// add test tag
+const addTag = e => {
+  e.preventDefault();
+  helper.hideError();
+  const title = e.target.querySelector('#title').value;
+  const uID = e.target.querySelector('#userid').value;
+  const cID = e.target.querySelector('#crewid').value;
+  if (!uID || !cID || !title) {
+    helper.handleError('Title, User ID, or Crew ID field is empty!');
+    return false;
+  }
+  helper.sendPost(e.target.action, {
+    author_ref: parseInt(uID),
+    crew: parseInt(cID),
+    title: title
+  });
+};
+const init = () => {
+  // form references
+  const addUserForm = document.getElementById('add-user-form');
+  const addCrewForm = document.getElementById('add-crew-form');
+  const addTagForm = document.getElementById('add-tag-form');
+
+  // assigning event listeners
+  addUserForm.addEventListener('submit', e => {
+    e.preventDefault();
+    addUser(e);
+  });
+  addCrewForm.addEventListener('submit', e => {
+    e.preventDefault();
+    addCrew(e);
+  });
+  addTagForm.addEventListener('submit', e => {
+    e.preventDefault();
+    addTag(e);
+  });
+};
+window.onload = init;
+})();
+
+/******/ })()
+;

@@ -6,6 +6,7 @@
 
   <link rel="shortcut icon" href="/assets/img/bubbles.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  
 </head>
 <body>
   <nav><a href="/login"><img id="logo" src="/assets/img/bubbles.png" alt="face logo"/></a>
@@ -50,19 +51,26 @@
       <input type="submit" value="Get Tags">
     </form>
 
-
-
-    <section id="result">
-    {{!-- Single Tag --}}
-    {{#if tag}}
-      <span><p>Title: {{tag.title}}</p></span>
-      <span><p>Crew ID: {{tag.crew_ref}}</p></span>
-      <span><p>Author ID: {{tag.author_ref}}</p></span>
-      <span><p>Active: {{tag.active}}</p></span>
-    {{/if}}
-    </section>
   </main>
   
+  <section id="res-tag" class="hidden">
+    <span><p>Title: <span id="res-title"></span></p></span>
+    <span><p>Crew ID: <span id="res-crewref"></span></p></span>
+    <span><p>Author ID: <span id="res-authorref"></span></p></span>
+    <span><p>Active: <span id="res-active"></span></p></span>
+  </section>
+  <section id="res-user" class="hidden">
+    <span><p>Username: <span id="username"></span></p></span>
+    <span><p>Join Date: <span id="join"></span></p></span>
+  </section>
+  <section id="res-crew" class="hidden">
+    <span><p>Name: <span id="res-crewname"></span></p></span>
+    <span><p>Join Code: <span id="res-joincode"></span></p></span>
+    <span><p>Owner: <span id="res-owner"></span></p></span>
+  </section>
+  <section id="result" class="hidden">
+    <p id="output"></p>
+  </section>
   <script src="/assets/appBundle.js"></script>
 </body>
 </html>

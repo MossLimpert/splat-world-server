@@ -1,6 +1,52 @@
 // Author: Moss Limpert
 
 const helper = require('./helper.js');
+const handlebars = require('handlebars');
+
+//
+// helpers
+//
+const hideAllResultBoxes = () => {
+    document.querySelector('#res-tag').classList.add('hidden');
+    document.querySelector('#res-user').classList.add('hidden');
+    document.querySelector('#res-crew').classList.add('hidden');
+    document.querySelector('#result').classList.add('hidden');
+}
+
+
+//
+// response handlers
+//
+
+const displayInfo = (json) => {
+
+}
+
+// fill handlebar template with tag info
+const displayTag = (res) => {
+    hideAllResultBoxes();
+    console.log(res);
+    // const data = {
+    //     tag: {
+    //         title: "",
+    //         crew_ref: 0,
+    //         author_ref: 0,
+    //         active: 0,
+    //     },
+    // };
+
+    // make section visible
+    document.querySelector('#res-tag').classList.remove('hidden');
+
+    // set fields
+    document.querySelector('#res-title').innerHTML = res.tag.title;
+    document.querySelector('#res-crewref').innerHTML = res.tag.crew_ref;
+    document.querySelector('#res-authorref').innerHTML = res.tag.author_ref;
+    document.querySelector('#res-active').innerHTML = res.tag.active;
+
+}
+
+
 
 
 //
@@ -67,16 +113,16 @@ const getTag = (e) => {
     if (tid && !title) {
         helper.sendGet(e.target.method, {
             id: tid,
-        });
+        }, displayTag);
     } else if (!tid && title) {
         helper.sendGet(e.target.method, {
             title: title,
-        });
+        }, displayTag);
     } else {
         helper.sendGet(e.target.method, {
             id: tid,
             title: title,
-        });
+        }, displayTag);
     }
 }
 
