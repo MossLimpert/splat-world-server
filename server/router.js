@@ -21,6 +21,8 @@ const router = (app) => {
   app.get('/get-crew', mid.requiresSecure, controllers.Bubble.getCrew);
   // retrieve tags by user
   app.get('/tags', mid.requiresSecure, controllers.Status.getTags);
+  // save tag to saved tags
+  app.post('/save-tag', mid.requiresSecure, controllers.Status.saveTag);
 
   // homepage
   app.get('/home', controllers.Status.home);

@@ -168,6 +168,35 @@ const getTag = (e) => {
     }
 }
 
+// save a tag to saved tags
+const saveTag = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const id = e.target.querySelector('#save-tid').value;
+    const title = e.target.querySelector('#save-title').value;
+
+    if (!id && !title) {
+        helper.handleError('No title and no id!');
+        return false;
+    }
+
+    if (id && !title) {
+        helper.sendPost(e.target.action, {
+            id: id,
+        }, displayInfo);
+    } else if (!id && title) {
+        helper.sendPost(e.target.action, {
+            title: title,
+        }, displayInfo);
+    } else {
+        helper.sendPost(e.target.action, {
+            id: id,
+            title: title
+        }, displayInfo);
+    }
+}
+
 // get all of a user's tags
 const getTags = (e) => {
     e.preventDefault();
@@ -203,6 +232,7 @@ const init = () => {
     const getCrewForm = document.getElementById('get-crew');
     const getTagForm = document.getElementById('get-tag');
     const getTagsForm = document.getElementById('get-tags');
+    const saveTagForm = document.getElementById('save-tag');
 
     // assigning event listeners
     getUserForm.addEventListener('submit', (e) => {
@@ -221,7 +251,10 @@ const init = () => {
         e.preventDefault();
         getTags(e);
     });
-
+    saveTagForm.addEventListener('submit', (e)=> {
+        e.preventDefault();
+        saveTag(e);
+    });
 };
 
 window.onload = init;

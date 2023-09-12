@@ -127,7 +127,7 @@ const getUser = (req, res) => {
       });
     }
   }
-}
+};
 
 const loginPage = (req, res) => {
   res.render('login');

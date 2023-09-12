@@ -47,10 +47,19 @@
       <span><label for="tags-uid">User ID: </label><input type="text" name="uid" id="tags-uid"></span>
       <br>
       <span><label for="tags-cid">Crew ID: </label><input type="text" name="tags-cid" id="tags-cid"></span>
+      <br>
       {{!-- <span><label for="username">Username: </label><input type="text" name="username" id="username"></span> --}}
       <input type="submit" value="Get Tags">
     </form>
 
+    <h4>Add a Tag to Saved Tags with ID <b>OR</b> Title</h4>
+    <form name="save tag" method="post" id="save-tag" action="/save-tag">
+      <span><label for="save-tag-id">Tag ID: </label><input type="text" name="save-tid" id="save-tid"></span>
+      <br>
+      <span><label for="save-title">Tag title: </label><input type="text" name="save-title" id="save-title"></span>
+      <br>
+      <input type="submit" value="Save Tag">
+    </form>
 
     <section id="res-tag" class="hidden">
       <h4>Get Tag Result</h4>

@@ -35,7 +35,7 @@ const addTag = async (req, res) => {
   
       return res.status(500).json({ error: 'An error occured!' });
     }
-}
+};
 
 // get a tag
 const getTag = (req, res) => {
@@ -217,11 +217,100 @@ const getTags = (req, res) => {
             });
         }
     } 
-}
+};
+
+// save a tag (add to saved tags)
+const saveTag = (req, res) => {
+    let id = null;
+    let title = null;
+
+    if (req.body.id) id = req.body.id;
+    if (req.body.title) title = req.body.title;
+
+    if (id === null && title === null) {
+        return res.status(400).json({error: 'No id or title.'});
+    }
+
+    let sql = 'UPDATE tag SET saved = 1'
+    if (id === null) {
+        try {
+            let addition = ' WHERE title = ?';
+            db.execute(
+                sql+addition,
+                [title],
+                (err, results) => {
+                  if (err) console.log(err);
+        
+                  //console.log(results);
+        
+                  if (results.length !== 0) return res.status(302).json(results);
+                  else return res.status(404).json({ error: 'No tag found.'});
+                });
+                console.log('Successfully updated 1 tag: case 1');
+        
+                return res.status(200);
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to update tag.'
+            });
+        }
+    } else if (title === null) {
+        try {
+            let addition = ' WHERE id = ?'
+            db.execute(
+                sql+addition,
+                [id],
+                (err, results) => {
+                  if (err) console.log(err);
+        
+                  //console.log(results);
+        
+                  if (results.length !== 0) return res.status(302).json(results);
+                  else return res.status(404).json({ error: 'No tag found.'});
+                });
+                console.log('Successfully updated 1 tag: case 2');
+        
+                return res.status(200);
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to update tag.'
+            });
+        }
+    } else {
+        try {
+            let addition = ' WHERE id = ? OR title = ?'
+            db.execute(
+                sql+addition,
+                [id,title],
+                (err, results) => {
+                  if (err) console.log(err);
+        
+                  //console.log(results);
+        
+                  if (results.length !== 0) return res.status(302).json(results);
+                  else return res.status(404).json({ error: 'No tag found.'});
+                });
+                console.log('Successfully updated 1 tag: case 3');
+        
+                return res.status(200);
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to update tag.'
+            });
+        }
+    }
+};
 
 module.exports = {
     home,
     addTag,
     getTag,
     getTags,
+    saveTag
 };
