@@ -39,6 +39,96 @@ const addUser = async (req, res) => {
   }
 };
 
+// get a user
+const getUser = (req, res) => {
+  let username = null; 
+  let id = null;
+
+  if (req.query.id) id = req.query.id;
+  if (req.query.username) username = req.query.username;
+
+  //console.log(id, username);
+
+  if (id === null && username === null) {
+    return res.status(400).json({ error: 'No id or username provided.'});
+  }
+
+  let sql = 'SELECT username FROM user';
+  if (id === null) {
+    try {
+      let addition = ' WHERE username = ?';
+      db.execute(
+        sql+addition,
+        [username],
+        (err, results) => {
+          if (err) console.log(err);
+
+          //console.log(results);
+
+          if (results.length !== 0) return res.status(302).json({user: results[0]});
+          else return res.status(404).json({ error: 'No user found.'});
+        });
+        console.log('Successfully retrieved 1 user: case 1');
+
+        return res.status(200);
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).json({
+          error: 'Failed to retrieve user.'
+      });
+    }
+  } else if (username === null) {
+    try { 
+      let addition = ' WHERE id = ?';
+      db.execute(
+        sql+addition,
+        [id],
+        (err, results) => {
+          if (err) console.log(err);
+
+          //console.log(results);
+
+          if (results.length !== 0) return res.status(302).json({user: results[0]});
+          else return res.status(404).json({ error: 'No user found.'});
+        });
+        console.log('Successfully retrieved 1 user: case 2');
+
+        return res.status(200);
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).json({
+          error: 'Failed to retrieve user.'
+      });
+    }
+  } else {
+    try {
+      let addition = ' WHERE id = ? OR username = ?';
+      db.execute(
+        sql+addition,
+        [id,username],
+        (err, results) => {
+          if (err) console.log(err);
+
+          //console.log(results);
+
+          if (results.length !== 0) return res.status(302).json({user: results[0]});
+          else return res.status(404).json({ error: 'No user found.'});
+        });
+        console.log('Successfully retrieved 1 user: case 3');
+
+        return res.status(200);
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).json({
+          error: 'Failed to retrieve user.'
+      });
+    }
+  }
+}
+
 const loginPage = (req, res) => {
   res.render('login');
 };            // login 
@@ -173,5 +263,6 @@ module.exports = {
   buyPremiumPage,
   buyPremium,
   docPage,
-  addUser
+  addUser,
+  getUser
 };

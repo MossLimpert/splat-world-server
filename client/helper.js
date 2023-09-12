@@ -36,9 +36,10 @@ const sendPost = async (url, data, handler) => {
 };
 
 const sendGet = async (url, data, handler) => {
-    let dir = '/tag';
+    //console.log(url);
+    //let dir = '/tag';
     let params = new URLSearchParams(data);
-    let fullUrl = dir + '?&' + params;
+    let fullUrl = url + '?&' + params;
     //console.log(fullUrl);
 
     const response = await fetch (fullUrl, {

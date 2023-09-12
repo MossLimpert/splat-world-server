@@ -48,7 +48,7 @@ const getTag = (req, res) => {
     if (req.query.title) title = req.query.title;
 
     if (id === null && title === null) {
-        return res.status(400).json({ error: 'No id or title provided.'})
+        return res.status(400).json({ error: 'No id or title provided.'});
     }
 
     let sql = 'SELECT title, crew_ref, active, author_ref FROM tag';
@@ -68,7 +68,8 @@ const getTag = (req, res) => {
                     //console.log(results);
 
                     //res.redirect('/home');
-                    return res.status(302).json({tag: results[0]});
+                    if (results && results.length !== 0) return res.status(302).json({tag: results[0]});
+                    else return res.status(404).json({error: 'No tag found.'});
             });
             console.log('Successfully retrieved 1 tag case 1');
 
@@ -93,7 +94,8 @@ const getTag = (req, res) => {
                     //console.log(results);
 
                     //res.redirect('/home');
-                    return res.status(302).json({tag: results[0]});
+                    if (results && results.length !== 0) return res.status(302).json({tag: results[0]});
+                    else return res.status(404).json({error: 'No tag found.'});
             });
             console.log('Successfully retrieved 1 tag case 2');
 
@@ -118,7 +120,8 @@ const getTag = (req, res) => {
                     //console.log(results);
 
                     //res.redirect('/home');
-                    return res.status(302).json({tag: results[0]});
+                    if (results && results.length !== 0) return res.status(302).json({tag: results[0]});
+                    else return res.status(404).json({error: 'No tag found.'});
             });
             console.log('Successfully retrieved 1 tag case 3');
 
@@ -134,8 +137,91 @@ const getTag = (req, res) => {
     }
 };
 
+// get multiple tags
+const getTags = (req, res) => {
+    let cid = null;
+    let id = null;
+
+    if (req.query.cid) cid = req.query.cid;
+    if (req.query.id) id = req.query.id;
+
+    if (id === null && cid === null) {
+        return res.status(400).json({error: 'No user id or crew id provided'});
+    }
+
+    let sql = 'SELECT * FROM tag'
+    if (id === null) {
+        try {
+            let addition = ' WHERE crew_ref = ?';
+            db.execute(
+                sql+addition,
+                [cid],
+                (err, results) => {
+                    if (err) console.log(err);
+
+                    if (results && results.length !== 0) return res.status(302).json({tags: results});
+                    else return res.status(404).json({error: 'No tags found.'});
+            });
+            console.log('Successfully retrieved tags: case 1');
+
+            return res.status(200);
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to retrieve tags.'
+            });
+        }
+    } else if (cid === null) {
+        try {
+            let addition = ' WHERE author_ref = ?';
+            db.execute(
+                sql+addition,
+                [id],
+                (err, results) => {
+                    if (err) console.log(err);
+
+                    if (results && results.length !== 0) return res.status(302).json({tags: results});
+                    else return res.status(404).json({error: 'No tags found.'});
+            });
+            console.log('Successfully retrieved tags: case 2');
+
+            return res.status(200);
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to retrieve tags.'
+            });
+        }
+    } else {
+        try {
+            let addition = 'WHERE crew_ref = ? OR author_ref = ?';
+            db.execute(
+                sql+addition,
+                [cid, id],
+                (err, results) => {
+                    if (err) console.log(err);
+
+                    if (results && results.length !== 0) return res.status(302).json({tags: results});
+                    else return res.status(404).json({error: 'No tags found.'});
+            });
+            console.log('Successfully retrieved tags: case 3');
+
+            return res.status(200);
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                error: 'Failed to retrieve tags.'
+            });
+        }
+    } 
+}
+
 module.exports = {
     home,
     addTag,
-    getTag
+    getTag,
+    getTags,
 };

@@ -15,6 +15,12 @@ const router = (app) => {
 
   // retrieve test tag data
   app.get('/tag', mid.requiresSecure, controllers.Status.getTag);
+  //retrieve test user data
+  app.get('/get-user', mid.requiresSecure, controllers.Account.getUser);
+  // retrieve test crew data
+  app.get('/get-crew', mid.requiresSecure, controllers.Bubble.getCrew);
+  // retrieve tags by user
+  app.get('/tags', mid.requiresSecure, controllers.Status.getTags);
 
   // homepage
   app.get('/home', controllers.Status.home);

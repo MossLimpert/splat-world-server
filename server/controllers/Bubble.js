@@ -46,10 +46,48 @@ const addCrew = async (req, res) => {
     }
 }
 
+// get crew
+const getCrew = (req, res) => {
+    let name = null;
+
+    if (req.query.name) name = req.query.name;
+
+    if (name === null) return res.status(400).json({error: "No name provided."});
+
+    let sql = 'SELECT name, joincode, owner FROM crew WHERE name = ?';
+    try {
+        db.execute(
+            sql,
+            [name],
+            (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.end();
+                }
+
+                if (results.length !== 0 && results.length === 1) {
+                    return res.status(302).json({crew: results[0]});
+                } else if (results.length !== 0 && results.length > 1) {
+                    return res.status(302).json({crews: results});
+                } else return res.status(404).json({error: 'No crew found.'});
+        });
+        console.log('Successfully retrieved crew(s)');
+
+        return res.status(200);
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).json({
+            error: 'Failed to retrieve crew.'
+        });
+    }
+}
+
 // const addCrewMember = () => {
 
 // }
 
 module.exports = {
-    addCrew
+    addCrew,
+    getCrew
 }

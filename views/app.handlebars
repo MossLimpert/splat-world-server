@@ -42,35 +42,41 @@
       <input type="submit" value="Get Tag">
     </form>
 
-    <h4>Get all of a User's Tags with Username <b>OR</b> ID</h4>
+    <h4>Get all of a User's Tags with User ID <b>OR</b> Crew ID</h4>
     <form action="/tags" method="get" name="get tags" id="get-tags">
-      <span><label for="uid">User ID: </label><input type="text" name="uid" id="uid"></span>
+      <span><label for="tags-uid">User ID: </label><input type="text" name="uid" id="tags-uid"></span>
       <br>
-      <span><label for="username">Username: </label><input type="text" name="username" id="username"></span>
-      <br>
+      <span><label for="tags-cid">Crew ID: </label><input type="text" name="tags-cid" id="tags-cid"></span>
+      {{!-- <span><label for="username">Username: </label><input type="text" name="username" id="username"></span> --}}
       <input type="submit" value="Get Tags">
     </form>
 
+
+    <section id="res-tag" class="hidden">
+      <h4>Get Tag Result</h4>
+      <span><p>Title: <span id="res-title"></span></p></span>
+      <span><p>Crew ID: <span id="res-crewref"></span></p></span>
+      <span><p>Author ID: <span id="res-authorref"></span></p></span>
+      <span><p>Active: <span id="res-active"></span></p></span>
+    </section>
+    <section id="res-user" class="hidden">
+      <h4>Get User Result</h4>
+      <span><p>Username: <span id="res-username"></span></p></span>
+      <span><p>Join Date: <span id="res-join"></span></p></span>
+    </section>
+    <section id="res-crew" class="hidden">
+      <h4>Get Crew Result</h4>
+      <span><p>Name: <span id="res-crewname"></span></p></span>
+      <span><p>Join Code: <span id="res-joincode"></span></p></span>
+      <span><p>Owner: <span id="res-owner"></span></p></span>
+    </section>
+    <section id="result" class="hidden">
+      <h4>Result</h4>
+      <p id="output"></p>
+    </section>
   </main>
   
-  <section id="res-tag" class="hidden">
-    <span><p>Title: <span id="res-title"></span></p></span>
-    <span><p>Crew ID: <span id="res-crewref"></span></p></span>
-    <span><p>Author ID: <span id="res-authorref"></span></p></span>
-    <span><p>Active: <span id="res-active"></span></p></span>
-  </section>
-  <section id="res-user" class="hidden">
-    <span><p>Username: <span id="username"></span></p></span>
-    <span><p>Join Date: <span id="join"></span></p></span>
-  </section>
-  <section id="res-crew" class="hidden">
-    <span><p>Name: <span id="res-crewname"></span></p></span>
-    <span><p>Join Code: <span id="res-joincode"></span></p></span>
-    <span><p>Owner: <span id="res-owner"></span></p></span>
-  </section>
-  <section id="result" class="hidden">
-    <p id="output"></p>
-  </section>
+  
   <script src="/assets/appBundle.js"></script>
 </body>
 </html>

@@ -37,9 +37,10 @@ const sendPost = async (url, data, handler) => {
   }
 };
 const sendGet = async (url, data, handler) => {
-  let dir = '/tag';
+  //console.log(url);
+  //let dir = '/tag';
   let params = new URLSearchParams(data);
-  let fullUrl = dir + '?&' + params;
+  let fullUrl = url + '?&' + params;
   //console.log(fullUrl);
 
   const response = await fetch(fullUrl, {
@@ -5065,12 +5066,53 @@ const hideAllResultBoxes = () => {
 // response handlers
 //
 
-const displayInfo = json => {};
+// puts stuff in result box
+const displayInfo = res => {
+  hideAllResultBoxes();
 
-// fill handlebar template with tag info
+  // make results sectino visible
+  document.querySelector('#result').classList.remove('hidden');
+  // put info in
+  document.querySelector('#result p').innerHTML = JSON.stringify(JSON.stringify(res));
+};
+
+// for crew results
+const displayCrew = json => {
+  hideAllResultBoxes();
+
+  //console.log(json);
+  // set fields
+  if (json.crews) {
+    // make section visible
+    document.querySelector('#result').classList.remove('hidden');
+    // put info in
+    document.querySelector('#result p').innerHTML = JSON.stringify(json.crews);
+  } else {
+    // make section visible
+    document.querySelector('#res-crew').classList.remove('hidden');
+    // info in
+    document.querySelector('#res-crewname').innerHTML = json.crew.name;
+    document.querySelector('#res-joincode').innerHTML = json.crew.joincode;
+    document.querySelector('#res-owner').innerHTML = json.crew.owner;
+  }
+};
+
+// fill template with user info
+const displayUser = res => {
+  hideAllResultBoxes();
+
+  // make section visible
+  document.querySelector('#res-user').classList.remove('hidden');
+
+  // set fields
+  document.querySelector('#res-username').innerHTML = res.user.username;
+  document.querySelector('#res-join').innerHTML = res.user.join;
+};
+
+// fill template with tag info
 const displayTag = res => {
   hideAllResultBoxes();
-  console.log(res);
+  //console.log(res);
   // const data = {
   //     tag: {
   //         title: "",
@@ -5098,25 +5140,28 @@ const displayTag = res => {
 const getUser = e => {
   e.preventDefault();
   helper.hideError();
-  const username = e.target.querySelector('#username');
-  const uid = e.target.querySelector('#uid');
+  const username = e.target.querySelector('#username').value;
+  const uid = e.target.querySelector('#uid').value;
+
+  //console.log(username, uid);
+
   if (!username && !uid) {
     helper.handleError('No username and no user id!');
     return false;
   }
   if (username && !uid) {
-    helper.sendPost(e.target.method, {
+    helper.sendGet(e.target.action, {
       username: username
-    });
+    }, displayUser);
   } else if (!username && uid) {
-    helper.sendPost(e.target.method, {
+    helper.sendGet(e.target.action, {
       id: uid
-    });
+    }, displayUser);
   } else {
-    helper.sendPost(e.target.method, {
+    helper.sendGet(e.target.action, {
       username: username,
       id: uid
-    });
+    }, displayUser);
   }
 };
 
@@ -5124,14 +5169,14 @@ const getUser = e => {
 const getCrew = e => {
   e.preventDefault();
   helper.hideError();
-  const crewName = e.target.querySelector('#crew-name');
+  const crewName = e.target.querySelector('#crew-name').value;
   if (!crewName) {
     helper.handleError('No crew name entered!');
     return false;
   }
-  helper.sendPost(e.target.method, {
+  helper.sendGet(e.target.action, {
     name: crewName
-  });
+  }, displayCrew);
 };
 
 // get a tag using id or title
@@ -5145,15 +5190,15 @@ const getTag = e => {
     return false;
   }
   if (tid && !title) {
-    helper.sendGet(e.target.method, {
+    helper.sendGet(e.target.action, {
       id: tid
     }, displayTag);
   } else if (!tid && title) {
-    helper.sendGet(e.target.method, {
+    helper.sendGet(e.target.action, {
       title: title
     }, displayTag);
   } else {
-    helper.sendGet(e.target.method, {
+    helper.sendGet(e.target.action, {
       id: tid,
       title: title
     }, displayTag);
@@ -5164,25 +5209,25 @@ const getTag = e => {
 const getTags = e => {
   e.preventDefault();
   helper.hideError();
-  const username = e.target.querySelector('#username');
-  const uid = e.target.querySelector('#uid');
-  if (!username && !uid) {
-    helper.handleError('No username and no user id!');
+  const uid = e.target.querySelector('#tags-uid').value;
+  const cid = e.target.querySelector('#tags-cid').value;
+  if (!cid && !uid) {
+    helper.handleError('No user id or crew id!');
     return false;
   }
-  if (username && !uid) {
-    helper.sendPost(e.target.method, {
-      username: username
-    });
+  if (cid && !uid) {
+    helper.sendGet(e.target.action, {
+      cid: cid
+    }, displayInfo);
   } else if (!username && uid) {
-    helper.sendPost(e.target.method, {
+    helper.sendGet(e.target.action, {
       id: uid
-    });
+    }, displayInfo);
   } else {
-    helper.sendPost(e.target.method, {
-      username: username,
+    helper.sendGet(e.target.action, {
+      cid: cid,
       id: uid
-    });
+    }, displayInfo);
   }
 };
 const init = () => {
