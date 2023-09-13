@@ -58,8 +58,6 @@ redisClient.connect().then(() => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  // default connect key is connect.sid which implies we are using
-  // express connect module which is bad security practice
   app.use(session({
     key: 'sessionid',
     store: new RedisStore({
