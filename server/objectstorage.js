@@ -3,7 +3,7 @@ const minio = require('minio');
 const minioClient = new minio.Client({
     endPoint: '127.0.0.1',
     port: 9000,
-    useSSL: true,
+    useSSL: false,
     accessKey: 'mosslimpert',
     secretKey: 'Monster-Salad4'
 });
