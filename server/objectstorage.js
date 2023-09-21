@@ -10,13 +10,15 @@ const minioClient = new minio.Client({
 
 //let file = '../hosted/img/bubbles.png';
 
-const tryGetBuckets = async () => {
-    try {
-        const buckets = await minioClient.listBuckets();
-        console.log('Success ', buckets);
-    } catch (err) {
-        console.log(err.message);
-    }
-};
+// const tryGetBuckets = async () => {
+//     try {
+//         const buckets = await minioClient.listBuckets();
+//         console.log('Success ', buckets);
+//     } catch (err) {
+//         console.log(err.message);
+//     }
+// };
 
-tryGetBuckets();
+// tryGetBuckets();
+
+module.exports = minioClient;
