@@ -16,7 +16,7 @@ const addCrew = async (req, res) => {
     const color_b = req.body.color_b;
 
     try {
-        db.query('INSERT INTO crew SET ?', {
+        db.query('INSERT INTO splatworld.crew SET ?', {
             name: crewName,
             joincode: password,
             owner: owner,
@@ -54,7 +54,7 @@ const getCrew = (req, res) => {
 
     if (name === null) return res.status(400).json({error: "No name provided."});
 
-    let sql = 'SELECT name, joincode, owner FROM crew WHERE name = ?';
+    let sql = 'SELECT name, joincode, owner FROM splatworld.crew WHERE name = ?';
     try {
         db.execute(
             sql,

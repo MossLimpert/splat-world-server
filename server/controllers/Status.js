@@ -12,7 +12,7 @@ const addTag = async (req, res) => {
     const title = req.body.title;
 
     try {
-        db.query('INSERT INTO tag SET ?', {
+        db.query('INSERT INTO splatworld.tag SET ?', {
             author_ref: author_ref,
             crew_ref: crew,
             title: title,
@@ -51,7 +51,7 @@ const getTag = (req, res) => {
         return res.status(400).json({ error: 'No id or title provided.'});
     }
 
-    let sql = 'SELECT title, crew_ref, active, author_ref FROM tag';
+    let sql = 'SELECT title, crew_ref, active, author_ref FROM splatworld.tag';
     if (id === null) {
         try {
             let addition = ` WHERE title = ? LIMIT 1`;
@@ -149,7 +149,7 @@ const getTags = (req, res) => {
         return res.status(400).json({error: 'No user id or crew id provided'});
     }
 
-    let sql = 'SELECT * FROM tag'
+    let sql = 'SELECT * FROM splatworld.tag'
     if (id === null) {
         try {
             let addition = ' WHERE crew_ref = ?';
@@ -231,7 +231,7 @@ const saveTag = (req, res) => {
         return res.status(400).json({error: 'No id or title.'});
     }
 
-    let sql = 'UPDATE tag SET saved = 1'
+    let sql = 'UPDATE splatworld.tag SET saved = 1'
     if (id === null) {
         try {
             let addition = ' WHERE title = ?';

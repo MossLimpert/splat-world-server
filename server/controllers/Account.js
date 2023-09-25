@@ -15,7 +15,7 @@ const addUser = async (req, res) => {
   try {
     const hash = await Account.generateHash(pass);
 
-    db.query('INSERT INTO user SET ?', {
+    db.query('INSERT INTO splatworld.user SET ?', {
       username: username,
       password: hash
     },
@@ -53,7 +53,7 @@ const getUser = (req, res) => {
     return res.status(400).json({ error: 'No id or username provided.'});
   }
 
-  let sql = 'SELECT username FROM user';
+  let sql = 'SELECT username FROM splatworld.user';
   if (id === null) {
     try {
       let addition = ' WHERE username = ?';
