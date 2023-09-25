@@ -138,7 +138,7 @@ const changePassPage = (req, res) => res.render('reset');       // change passwo
 
 // logs a user out of their account.
 const logout = (req, res) => {
-  req.session.destroy();
+  //req.session.destroy();
   return res.redirect('/');
 };
 
@@ -157,7 +157,7 @@ const login = (req, res) => {
     }
 
     // session variables
-    req.session.account = Account.toAPI(account);
+    //req.session.account = Account.toAPI(account);
 
     return res.json({ redirect: '/home' });
   });
@@ -183,7 +183,7 @@ const signup = async (req, res) => {
     await newAccount.save();
 
     // session variables
-    req.session.account = Account.toAPI(newAccount);
+    //req.session.account = Account.toAPI(newAccount);
 
     return res.json({ redirect: '/home' });
   } catch (err) {
@@ -204,7 +204,7 @@ const signup = async (req, res) => {
 // allows a current user to change their password
 const changePassword = async (req, res) => {
   // req.session.account.username
-  const { username } = req.session.account;
+  //const { username } = req.session.account;
   const oldPass = `${req.body.oldPass}`;
   const pass2 = `${req.body.pass2}`;
   const pass3 = `${req.body.pass3}`;
@@ -226,7 +226,7 @@ const changePassword = async (req, res) => {
       const hash = await Account.generateHash(pass2);
       await Account.updateOne({ username }, { password: hash });
 
-      req.session.account = Account.toAPI(account);
+      //req.session.account = Account.toAPI(account);
       return res.json({ redirect: '/home' });
     });
   } catch (err) {
@@ -236,22 +236,22 @@ const changePassword = async (req, res) => {
 };
 
 // allows the user unlimited access to the app
-const buyPremium = async (req, res) => {
-  try {
+// const buyPremium = async (req, res) => {
+//   try {
 
-    return await Account.buyPremium(req.session.account._id, (acknowledged) => {
-      if (!acknowledged) {
-        res.status(500).json({error: 'Error updating account!'});
-      }
+//     return await Account.buyPremium(req.session.account._id, (acknowledged) => {
+//       if (!acknowledged) {
+//         res.status(500).json({error: 'Error updating account!'});
+//       }
 
-      return res.redirect('/home');
-    });
+//       return res.redirect('/home');
+//     });
 
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: 'Error retrieving user!' });
-  }
-};
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({ error: 'Error retrieving user!' });
+//   }
+// };
 
 module.exports = {
   loginPage,
@@ -261,7 +261,6 @@ module.exports = {
   changePassPage,
   changePassword,
   buyPremiumPage,
-  buyPremium,
   docPage,
   addUser,
   getUser
