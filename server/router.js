@@ -7,35 +7,35 @@ const router = (app) => {
 
   // splat world
   // add test user data
-  app.post('/add-user', mid.requiresSecure, controllers.Account.addUser);
+  app.post('/add-user', controllers.Account.addUser);
   // add test crew data
-  app.post('/add-crew', mid.requiresSecure, controllers.Bubble.addCrew);
+  app.post('/add-crew', controllers.Bubble.addCrew);
   // add test tag data
-  app.post('/add-tag', mid.requiresSecure, controllers.Status.addTag);
+  app.post('/add-tag', controllers.Status.addTag);
 
   // retrieve test tag data
-  app.get('/tag', mid.requiresSecure, controllers.Status.getTag);
+  app.get('/tag', controllers.Status.getTag);
   //retrieve test user data
-  app.get('/get-user', mid.requiresSecure, controllers.Account.getUser);
+  app.get('/get-user', controllers.Account.getUser);
   // retrieve test crew data
-  app.get('/get-crew', mid.requiresSecure, controllers.Bubble.getCrew);
+  app.get('/get-crew', controllers.Bubble.getCrew);
   // retrieve tags by user
-  app.get('/tags', mid.requiresSecure, controllers.Status.getTags);
+  app.get('/tags', controllers.Status.getTags);
   // save tag to saved tags
-  app.post('/save-tag', mid.requiresSecure, controllers.Status.saveTag);
+  app.post('/save-tag', controllers.Status.saveTag);
 
   // homepage
   app.get('/home', controllers.Status.home);
-  app.get('/', mid.requiresSecure, controllers.Account.loginPage);
+  app.get('/', controllers.Account.loginPage);
 
   // change password
-  app.get('/change-password', mid.requiresSecure, controllers.Account.changePassPage);
-  app.post('/change-password', mid.requiresSecure, controllers.Account.changePassword);
+  app.get('/change-password', controllers.Account.changePassPage);
+  app.post('/change-password', controllers.Account.changePassword);
   // login
-  app.get('/login', mid.requiresSecure, controllers.Account.loginPage);
-  app.post('/login', mid.requiresSecure, controllers.Account.login);
+  app.get('/login', controllers.Account.loginPage);
+  app.post('/login', controllers.Account.login);
   // signup
-  app.post('/signup', mid.requiresSecure, controllers.Account.signup);
+  app.post('/signup', controllers.Account.signup);
   // logout
   app.get('/logout', controllers.Account.logout);
 
