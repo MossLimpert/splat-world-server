@@ -53,7 +53,7 @@ const getUser = (req, res) => {
     return res.status(400).json({ error: 'No id or username provided.'});
   }
 
-  let sql = 'SELECT username FROM splatworld.user';
+  let sql = 'SELECT username, join_date FROM splatworld.user';
   if (id === null) {
     try {
       let addition = ' WHERE username = ?';
