@@ -26,18 +26,18 @@ const router = (app) => {
 
   // homepage
   app.get('/home', controllers.Status.home);
-  app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  app.get('/', mid.requiresSecure, controllers.Account.loginPage);
 
   // change password
-  app.get('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassPage);
-  app.post('/change-password', mid.requiresSecure, mid.requiresLogin, controllers.Account.changePassword);
+  app.get('/change-password', mid.requiresSecure, controllers.Account.changePassPage);
+  app.post('/change-password', mid.requiresSecure, controllers.Account.changePassword);
   // login
-  app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-  app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
+  app.get('/login', mid.requiresSecure, controllers.Account.loginPage);
+  app.post('/login', mid.requiresSecure, controllers.Account.login);
   // signup
-  app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
+  app.post('/signup', mid.requiresSecure, controllers.Account.signup);
   // logout
-  app.get('/logout', mid.requiresLogin, controllers.Account.logout);
+  app.get('/logout', controllers.Account.logout);
 
 };
 

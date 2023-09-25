@@ -7,9 +7,9 @@ const bodyParser = require('body-parser');
 //const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
-const session = require('express-session');
-const RedisStore = require('connect-redis').default;
-const redis = require('redis');
+//const session = require('express-session');
+//const RedisStore = require('connect-redis').default;
+//const redis = require('redis');
 const fileUpload = require('express-fileupload');
 const connection = require('./database.js');
 
@@ -42,40 +42,42 @@ connection.connect( (err) => {
 //   console.log('Database connected!');
 // });
 
-const redisClient = redis.createClient({
-  url: process.env.REDISCLOUD_URL,
-});
-redisClient.on('error', (err) => console.log('Redis Client Error', err));
+// const redisClient = redis.createClient({
+//   url: process.env.REDISCLOUD_URL,
+// });
+// redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
-redisClient.connect().then(() => {
-  const app = express();
+// redisClient.connect().then(() => {
+  
+// });
 
-  app.use(helmet());
-  app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
-  app.use(favicon(`${__dirname}/../hosted/img/bubbles.png`));
-  app.use(compression());
-  app.use(fileUpload());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+const app = express();
 
-  app.use(session({
-    key: 'sessionid',
-    store: new RedisStore({
-      client: redisClient,
-    }),
-    secret: 'splat',
-    resave: false,
-    saveUninitialized: false,
-  }));
+app.use(helmet());
+app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
+app.use(favicon(`${__dirname}/../hosted/img/bubbles.png`));
+app.use(compression());
+app.use(fileUpload());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-  app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
-  app.set('view engine', 'handlebars');
-  app.set('views', `${__dirname}/../views`);
+// app.use(session({
+//   key: 'sessionid',
+//   store: new RedisStore({
+//     client: redisClient,
+//   }),
+//   secret: 'splat',
+//   resave: false,
+//   saveUninitialized: false,
+// }));
 
-  router(app);
+app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
+app.set('view engine', 'handlebars');
+app.set('views', `${__dirname}/../views`);
 
-  app.listen(port, (err) => {
-    if (err) { throw err; }
-    console.log(`Listening on port ${port}`);
-  });
+router(app);
+
+app.listen(port, (err) => {
+  if (err) { throw err; }
+  console.log(`Listening on port ${port}`);
 });
