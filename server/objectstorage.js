@@ -1,5 +1,5 @@
 const minio = require('minio');
-console.log(process.env.ENDPOINT);
+//console.log(process.env.ENDPOINT);
 const minioClient = new minio.Client({
     endPoint: process.env.ENDPOINT,
     port: process.env.MINIO_PORT,
@@ -8,7 +8,7 @@ const minioClient = new minio.Client({
     secretKey: process.env.SECRET_KEY
 });
 
-let file = '../hosted/img/bubbles.png';
+//let file = '../hosted/img/bubbles.png';
 
 const tryGetBuckets = async () => {
     try {

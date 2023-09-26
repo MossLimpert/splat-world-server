@@ -2,6 +2,7 @@
 
 const models = require('../models');
 const db = require('../database.js');
+const bcrypt = require('bcrypt');
 
 const { Account } = models;
 
@@ -11,11 +12,12 @@ const addUser = async (req, res) => {
   const username = `${req.body.username}`;
   const pass = `${req.body.pass}`;
 
+  console.log(req.body);
   // try catch w pass hash
   try {
     const hash = await Account.generateHash(pass);
 
-    db.query('INSERT INTO splatworld.user SET ?', {
+    db.query('INSERT INTO ' + process.env.DATABASE + '.user SET ?', {
       username: username,
       password: hash
     },
@@ -53,7 +55,7 @@ const getUser = (req, res) => {
     return res.status(400).json({ error: 'No id or username provided.'});
   }
 
-  let sql = 'SELECT username, join_date FROM splatworld.user';
+  let sql = 'SELECT username, join_date FROM ' + process.env.DATABASE + '.user';
   if (id === null) {
     try {
       let addition = ' WHERE username = ?';
@@ -63,7 +65,7 @@ const getUser = (req, res) => {
         (err, results) => {
           if (err) console.log(err);
 
-          //console.log(results);
+          console.log(results);
 
           if (results.length !== 0) return res.status(302).json({user: results[0]});
           else return res.status(404).json({ error: 'No user found.'});
@@ -87,7 +89,7 @@ const getUser = (req, res) => {
         (err, results) => {
           if (err) console.log(err);
 
-          //console.log(results);
+          console.log(results);
 
           if (results.length !== 0) return res.status(302).json({user: results[0]});
           else return res.status(404).json({ error: 'No user found.'});
@@ -111,7 +113,7 @@ const getUser = (req, res) => {
         (err, results) => {
           if (err) console.log(err);
 
-          //console.log(results);
+          console.log(results);
 
           if (results.length !== 0) return res.status(302).json({user: results[0]});
           else return res.status(404).json({ error: 'No user found.'});
@@ -126,6 +128,52 @@ const getUser = (req, res) => {
           error: 'Failed to retrieve user.'
       });
     }
+  }
+};
+
+// verify account
+const verifyUser = async (req, res) => {
+  let sql = 'SELECT username, password, id FROM ' + process.env.DATABASE + '.user WHERE username = ?';
+  let username = null;
+  let password = null;
+
+  // add de-encryption step for password
+  //console.log(`${req.body.username}`);
+  //console.log(`${req.body.password}`);
+  if (`${req.body.username}`) username = `${req.body.username}`;
+  if (`${req.body.password}`) password = `${req.body.password}`;
+
+  if (username === null || password == null) {
+    return res.status(400).json({error: "Either username or password is missing. You need both to login."});
+  }
+
+  try {
+    db.execute(
+      sql,
+      [username],
+      async (err, results) => {
+        if (err) console.log(err);
+
+        //console.log(results);
+
+        if (results.length !== 0) {
+          const match = await bcrypt.compare(password, results[0].password);
+
+          if (match) {
+            return res.status(202).json({user: {
+              username: results[0].username,
+              id: results[0].id
+            }});
+          } else return res.status(400).json({error: 'Username or password incorrect'});
+        } else return res.status(404).json({ error: 'User not found.'});
+      });
+
+    console.log('Successfully retrieved user to compare.');
+    return res.status(200);
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({error: 'Failed to log in user.'});
   }
 };
 
@@ -202,38 +250,38 @@ const signup = async (req, res) => {
 };
 
 // allows a current user to change their password
-const changePassword = async (req, res) => {
-  // req.session.account.username
-  //const { username } = req.session.account;
-  const oldPass = `${req.body.oldPass}`;
-  const pass2 = `${req.body.pass2}`;
-  const pass3 = `${req.body.pass3}`;
+// const changePassword = async (req, res) => {
+//   // req.session.account.username
+//   //const { username } = req.session.account;
+//   const oldPass = `${req.body.oldPass}`;
+//   const pass2 = `${req.body.pass2}`;
+//   const pass3 = `${req.body.pass3}`;
 
-  if (!username || !oldPass || !pass2 || !pass3) {
-    return res.status(400).json({ error: 'All fields are required!' });
-  }
+//   if (!username || !oldPass || !pass2 || !pass3) {
+//     return res.status(400).json({ error: 'All fields are required!' });
+//   }
 
-  if (pass2 !== pass3) {
-    return res.status(400).json({ error: 'Passwords do not match!' });
-  }
+//   if (pass2 !== pass3) {
+//     return res.status(400).json({ error: 'Passwords do not match!' });
+//   }
 
-  try {
-    return await Account.authenticate(username, oldPass, async (err, account) => {
-      if (err || !account) {
-        return res.status(401).json({ error: 'Old password is incorrect!' });
-      }
+//   try {
+//     return await Account.authenticate(username, oldPass, async (err, account) => {
+//       if (err || !account) {
+//         return res.status(401).json({ error: 'Old password is incorrect!' });
+//       }
 
-      const hash = await Account.generateHash(pass2);
-      await Account.updateOne({ username }, { password: hash });
+//       const hash = await Account.generateHash(pass2);
+//       await Account.updateOne({ username }, { password: hash });
 
-      //req.session.account = Account.toAPI(account);
-      return res.json({ redirect: '/home' });
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: 'An error occured!' });
-  }
-};
+//       //req.session.account = Account.toAPI(account);
+//       return res.json({ redirect: '/home' });
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({ error: 'An error occured!' });
+//   }
+// };
 
 // allows the user unlimited access to the app
 // const buyPremium = async (req, res) => {
@@ -259,9 +307,9 @@ module.exports = {
   logout,
   signup,
   changePassPage,
-  changePassword,
   buyPremiumPage,
   docPage,
   addUser,
-  getUser
+  getUser,
+  verifyUser
 };

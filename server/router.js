@@ -1,7 +1,6 @@
 // Author: Moss Limpert
 
 const controllers = require('./controllers');
-const mid = require('./middleware');
 
 const router = (app) => {
 
@@ -30,10 +29,9 @@ const router = (app) => {
 
   // change password
   app.get('/change-password', controllers.Account.changePassPage);
-  app.post('/change-password', controllers.Account.changePassword);
   // login
   app.get('/login', controllers.Account.loginPage);
-  app.post('/login', controllers.Account.login);
+  app.post('/login', controllers.Account.verifyUser);
   // signup
   app.post('/signup', controllers.Account.signup);
   // logout

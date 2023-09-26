@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+//const db = require('../database.js');
 
 const saltRounds = 11;
 
@@ -69,23 +70,7 @@ AccountSchema.statics.authenticate = async (username, password, callback) => {
   }
 };
 
-AccountSchema.statics.buyPremium = async (userid, callback) => {
-  try {
-    const res = await AccountModel.updateOne({_id: userid}, {premiumMembership: true}).exec();
-    return callback(res.acknowledged);
-  } catch (err) {
-    return callback(err);
-  }
-};
 
-AccountSchema.statics.pushStatus = async (userid, statusId, callback) => {
-  try {
-    const res = await AccountModel.updateOne({ _id: userid }, { currentStatus: statusId }).exec();
-    return callback(res.acknowledged);
-  } catch (err) {
-    return callback(err);
-  }
-};
 
 AccountModel = mongoose.model('Account', AccountSchema);
 module.exports = AccountModel;

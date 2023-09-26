@@ -5069,11 +5069,12 @@ const hideAllResultBoxes = () => {
 // puts stuff in result box
 const displayInfo = res => {
   hideAllResultBoxes();
-
-  // make results sectino visible
-  document.querySelector('#result').classList.remove('hidden');
-  // put info in
-  document.querySelector('#result p').innerHTML = JSON.stringify(JSON.stringify(res));
+  if (res.error) helper.handleError(res.error);else {
+    // make results sectino visible
+    document.querySelector('#result').classList.remove('hidden');
+    // put info in
+    document.querySelector('#result p').innerHTML = JSON.stringify(JSON.stringify(res));
+  }
 };
 
 // for crew results
@@ -5106,7 +5107,7 @@ const displayUser = res => {
 
   // set fields
   document.querySelector('#res-username').innerHTML = res.user.username;
-  document.querySelector('#res-join').innerHTML = res.user.join;
+  document.querySelector('#res-join_date').innerHTML = res.user.join_date;
 };
 
 // fill template with tag info
@@ -5163,6 +5164,27 @@ const getUser = e => {
       id: uid
     }, displayUser);
   }
+};
+
+// log in a user
+const login = e => {
+  e.preventDefault();
+  helper.hideError();
+  console.log(e.target);
+  const username = e.target.querySelector('#login-username').value;
+  const password = e.target.querySelector('#login-password').value;
+  console.log(username, password);
+
+  //return false;
+  // need both to log in
+  if (!username || !password) {
+    helper.handleError('No username or no password.');
+    return false;
+  }
+  helper.sendPost(e.target.action, {
+    username: username,
+    password: password
+  }, displayInfo);
 };
 
 // get a crew using crew name
@@ -5263,6 +5285,8 @@ const init = () => {
   const getTagForm = document.getElementById('get-tag');
   const getTagsForm = document.getElementById('get-tags');
   const saveTagForm = document.getElementById('save-tag');
+  const loginForm = document.getElementById('login');
+  console.log(loginForm);
 
   // assigning event listeners
   getUserForm.addEventListener('submit', e => {
@@ -5284,6 +5308,10 @@ const init = () => {
   saveTagForm.addEventListener('submit', e => {
     e.preventDefault();
     saveTag(e);
+  });
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    login(e);
   });
 };
 window.onload = init;
