@@ -1,0 +1,8 @@
+node_modules
+.circleci
+sql
+LICENSE
+README.md 
+.eslintrc
+.gitignore
+.babelrc
