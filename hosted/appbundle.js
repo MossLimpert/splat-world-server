@@ -5170,10 +5170,13 @@ const getUser = e => {
 const login = e => {
   e.preventDefault();
   helper.hideError();
-  console.log(e.target);
+
+  //console.log(e.target)
+
   const username = e.target.querySelector('#login-username').value;
   const password = e.target.querySelector('#login-password').value;
-  console.log(username, password);
+
+  //console.log(username, password);
 
   //return false;
   // need both to log in
@@ -5286,7 +5289,6 @@ const init = () => {
   const getTagsForm = document.getElementById('get-tags');
   const saveTagForm = document.getElementById('save-tag');
   const loginForm = document.getElementById('login');
-  console.log(loginForm);
 
   // assigning event listeners
   getUserForm.addEventListener('submit', e => {
