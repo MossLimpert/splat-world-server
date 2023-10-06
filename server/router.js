@@ -10,21 +10,21 @@ const router = (app) => {
   // add test crew data
   app.post('/add-crew', controllers.Bubble.addCrew);
   // add test tag data
-  app.post('/add-tag', controllers.Status.addTag);
+  app.post('/add-tag', controllers.Tag.addTag);
 
   // retrieve test tag data
-  app.get('/tag', controllers.Status.getTag);
+  app.get('/tag', controllers.Tag.getTag);
   //retrieve test user data
   app.get('/get-user', controllers.Account.getUser);
   // retrieve test crew data
   app.get('/get-crew', controllers.Bubble.getCrew);
   // retrieve tags by user
-  app.get('/tags', controllers.Status.getTags);
+  app.get('/tags', controllers.Tag.getTags);
   // save tag to saved tags
-  app.post('/save-tag', controllers.Status.saveTag);
+  app.post('/save-tag', controllers.Tag.saveTag);
 
   // homepage
-  app.get('/home', controllers.Status.home);
+  app.get('/home', controllers.Tag.home);
   app.get('/', controllers.Account.loginPage);
 
   // change password
