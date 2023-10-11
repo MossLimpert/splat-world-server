@@ -214,8 +214,10 @@ const login = (req, res) => {
 // allows a user to sign up for Bubbles
 const signup = async (req, res) => {
   const username = `${req.body.username}`;
-  const pass = `${req.body.pass}`;
-  const pass2 = `${req.body.pass2}`;
+  const pass = `${req.body.password}`;
+  const pass2 = `${req.body.retype}`;
+
+  console.log(req.body.username, req.body.password, req.body.retype);
 
   if (!username || !pass || !pass2) {
     return res.status(400).json({ error: 'All fields are required!' });
@@ -240,10 +242,10 @@ const signup = async (req, res) => {
       return res.status(400).json({ error: 'Username already in use!' });
     }
 
-    if (err.errors.username) {
-      //console.log(err.errors.username);
-      return res.status(500).json({ error: err.errors.username.properties.message });
-    }
+    // if (err.errors.username) {
+    //   //console.log(err.errors.username);
+    //   return res.status(500).json({ error: err.errors.username.properties.message });
+    // }
 
     return res.status(500).json({ error: 'An error occured!' });
   }
