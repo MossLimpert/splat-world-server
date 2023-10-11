@@ -91,7 +91,7 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results.length !== 0) return res.status(302).json({user: results[0]});
+          if (results && results.length !== 0) return res.status(302).json({user: results[0]});
           else return res.status(404).json({ error: 'No user found.'});
         });
         console.log('Successfully retrieved 1 user: case 2');
@@ -115,7 +115,7 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results.length !== 0) return res.status(302).json({user: results[0]});
+          if (results && results.length !== 0) return res.status(302).json({user: results[0]});
           else return res.status(404).json({ error: 'No user found.'});
         });
         console.log('Successfully retrieved 1 user: case 3');
@@ -156,7 +156,7 @@ const verifyUser = async (req, res) => {
 
         //console.log(results);
 
-        if (results.length !== 0) {
+        if (results && results.length !== 0) {
           const match = await bcrypt.compare(password, results[0].password);
 
           if (match) {
@@ -195,7 +195,9 @@ const login = (req, res) => {
   const username = `${req.body.username}`;
   const pass = `${req.body.pass}`;
 
-  if (!username || !pass) return res.status(400).json({ error: 'Allfields are required!' });
+  if (!username || !pass) {
+    return res.status(400).json({ error: 'Allfields are required!' });
+  }
 
   return Account.authenticate(username, pass, (err, account) => {
     if (err || !account) {
