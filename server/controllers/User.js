@@ -229,8 +229,8 @@ const signup = async (req, res) => {
 
   try {
     const hash = await Account.generateHash(pass);
-    const newAccount = new Account({ username, password: hash });
-    await newAccount.save();
+    //const newAccount = new Account({ username, password: hash });
+    //await newAccount.save();
 
     // session variables
     //req.session.account = Account.toAPI(newAccount);
