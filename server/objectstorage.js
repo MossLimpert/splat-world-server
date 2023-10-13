@@ -1,4 +1,5 @@
 const minio = require('minio');
+const fs = require('fs');
 
 const minioClient = new minio.Client({
   endPoint: process.env.ENDPOINT,
@@ -14,7 +15,9 @@ const tagImg = 'tag-img';
 const tag = 'tag';
 const userHeader = 'user-header';
 const userPfp = 'user-pfp';
+console.log(crewHeader,tagImg,tag,userHeader); // so i dont get lint errors
 
+// file for testing
 const file = '../hosted/img/bubbles.png';
 
 // get list of buckets
@@ -28,7 +31,7 @@ const getBuckets = async () => {
 };
 
 // send test image to user pfp from file location
-const testSendImage = async () => {
+const testSendFromFilePath = async () => {
   try {
     const metaData = {
       test: 'value',
@@ -47,9 +50,51 @@ const testSendImage = async () => {
   }
 };
 
+// send test image to user pfp from buffer
+const testSendFromBuffer = async () => {
+    try {
+        const metaData = {
+            test: 'value',
+        };
+        let fileStream = fs.createReadStream(file);
+        // check make sure file exists, get statistics about it
+        fs.stat(
+            file,
+            async (err, stats) => {
+                if (err) {
+                    console.log(err);
+                    return {error: err};
+                }
+
+                // send buffer to server
+                const result = await minioClient.putObject(
+                    userPfp,
+                    fileStream,
+                    'test-from-buffer',
+                    metaData,
+                    (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return {error: err};
+                        }
+                        console.log('Success!', result.etag, result.versionId);
+                    });
+
+                console.log(result.etag);
+                return result.etag;
+            });
+    } catch (err) {
+        console.log(err);
+        return { error: err };
+    }
+};
+
+testSendFromBuffer();
+
 module.exports = {
-  minioClient,
-  getBuckets,
-  testSendImage,
+    minioClient,
+    getBuckets,
+    testSendFromFilePath,
+    testSendFromBuffer,
 
 };
