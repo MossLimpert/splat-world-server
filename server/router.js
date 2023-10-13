@@ -3,7 +3,6 @@
 const controllers = require('./controllers');
 
 const router = (app) => {
-
   // splat world
   // add test user data
   app.post('/add-user', controllers.Account.addUser);
@@ -14,7 +13,7 @@ const router = (app) => {
 
   // retrieve test tag data
   app.get('/tag', controllers.Tag.getTag);
-  //retrieve test user data
+  // retrieve test user data
   app.get('/get-user', controllers.User.getUser);
   // retrieve test crew data
   app.get('/get-crew', controllers.Crew.getCrew);
@@ -36,7 +35,6 @@ const router = (app) => {
   app.post('/signup', controllers.User.signup);
   // logout
   app.get('/logout', controllers.User.logout);
-
 };
 
 module.exports = router;

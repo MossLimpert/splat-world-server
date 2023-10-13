@@ -3,6 +3,7 @@ const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const webpack = require('webpack-stream');
 const nodemon = require('gulp-nodemon');
+const eslint = require('gulp-eslint-new');
 const webpackConfig = require('./webpack.config.js');
 
 
@@ -21,8 +22,17 @@ const jsTask = (done) => {
     done();
 }
 
+const lintTask = (done) => {
+    gulp.src('./server/**/*.js')
+        .pipe(eslint({fix: true}))
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+    
+    done();
+}
 
-const build = jsTask;
+//const build = jsTask;
+const build = gulp.parallel( jsTask, lintTask);
 
 
 const watch = (done) => {

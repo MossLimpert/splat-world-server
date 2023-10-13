@@ -185,10 +185,8 @@ const docPage = (req, res) => res.render('docs');               // documentation
 const changePassPage = (req, res) => res.render('reset');       // change password page
 
 // logs a user out of their account.
-const logout = (req, res) => {
+const logout = (req, res) => res.redirect('/');
   //req.session.destroy();
-  return res.redirect('/');
-};
 
 // logs a user in to their account
 const login = (req, res) => {

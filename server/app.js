@@ -4,12 +4,12 @@ const express = require('express');
 const compression = require('compression');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
-//const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
-//const session = require('express-session');
-//const RedisStore = require('connect-redis').default;
-//const redis = require('redis');
+// const session = require('express-session');
+// const RedisStore = require('connect-redis').default;
+// const redis = require('redis');
 const fileUpload = require('express-fileupload');
 const connection = require('./database.js');
 
@@ -18,9 +18,9 @@ const router = require('./router.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 // NEW SQL STUFF
-connection.connect( (err) => {
+connection.connect((err) => {
   if (err) console.log(err);
-  console.log('Database connected.')
+  console.log('Database connected.');
 });
 // const dbURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/Splat-World';
 // mongoose.connect(dbURI).catch((err) => {
@@ -30,7 +30,7 @@ connection.connect( (err) => {
 //   }
 // });
 
-//const dbURI = process.env.MONGODB_URI ||
+// const dbURI = process.env.MONGODB_URI ||
 // const connection = mysql.createConnection({
 //   host: 'localhost',
 //   database: 'splat_world',
@@ -48,7 +48,7 @@ connection.connect( (err) => {
 // redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
 // redisClient.connect().then(() => {
-  
+
 // });
 
 const app = express();

@@ -2,7 +2,7 @@
 
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-//const db = require('../database.js');
+// const db = require('../database.js');
 
 const saltRounds = 11;
 
@@ -69,8 +69,6 @@ AccountSchema.statics.authenticate = async (username, password, callback) => {
     return callback(err);
   }
 };
-
-
 
 AccountModel = mongoose.model('Account', AccountSchema);
 module.exports = AccountModel;
