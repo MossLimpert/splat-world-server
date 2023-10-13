@@ -226,7 +226,7 @@ const signup = async (req, res) => {
   }
 
   try {
-    const hash = await Account.generateHash(pass);
+    //const hash = await Account.generateHash(pass);
     //const newAccount = new Account({ username, password: hash });
     //await newAccount.save();
 

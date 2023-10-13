@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const minioClient = new minio.Client({
   endPoint: process.env.ENDPOINT,
-  port: parseInt(process.env.MINIO_PORT),
+  port: parseInt(process.env.MINIO_PORT, 10),
   useSSL: false,
   accessKey: process.env.ACCESS_KEY,
   secretKey: process.env.SECRET_KEY,
@@ -36,14 +36,20 @@ const testSendFromFilePath = async () => {
     const metaData = {
       test: 'value',
     };
-    const result = await minioClient.fPutObject(userPfp, 'test', file, metaData, (err, result) => {
+
+    // send image to server using filepath
+    const result = await minioClient.fPutObject(userPfp, 'test', file, metaData, (err, objInfo) => {
       if (err) {
         console.log(err);
         return { error: err };
       }
-      console.log('Success!', result.etag, result.versionId);
+
+      console.log('Success!', objInfo.etag, objInfo.versionId);
+      return objInfo;
     });
+
     console.log(result.etag);
+    return result;
   } catch (err) {
     console.log(err);
     return { error: err };
@@ -56,15 +62,20 @@ const testSendFromBuffer = async () => {
         const metaData = {
             test: 'value',
         };
+        // open filestream
         let fileStream = fs.createReadStream(file);
+
         // check make sure file exists, get statistics about it
-        fs.stat(
+        const object = fs.stat(
             file,
             async (err, stats) => {
                 if (err) {
                     console.log(err);
                     return {error: err};
                 }
+                
+                // print file stats
+                console.log(stats);
 
                 // send buffer to server
                 const result = await minioClient.putObject(
@@ -72,17 +83,20 @@ const testSendFromBuffer = async () => {
                     fileStream,
                     'test-from-buffer',
                     metaData,
-                    (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            return {error: err};
+                    (error, objInfo) => {
+                        if (error) {
+                            console.log(error);
+                            return {error: error};
                         }
-                        console.log('Success!', result.etag, result.versionId);
+
+                        console.log('Success!', objInfo.etag, objInfo.versionId);
+                        return objInfo;
                     });
 
                 console.log(result.etag);
                 return result.etag;
             });
+        return object;
     } catch (err) {
         console.log(err);
         return { error: err };
