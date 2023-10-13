@@ -81,7 +81,7 @@ const testSendFromBuffer = async () => {
                 const result = await minioClient.putObject(
                     userPfp,
                     fileStream,
-                    'test-from-buffer',
+                    'test_from_buffer',
                     metaData,
                     (error, objInfo) => {
                         if (error) {
