@@ -93,9 +93,10 @@ const testSendFromBuffer = async () => {
                         return objInfo;
                     });
 
-                console.log(result.etag);
-                return result.etag;
+                //console.log(result.etag);
+                return result;
             });
+        console.log(object.etag);
         return object;
     } catch (err) {
         console.log(err);
