@@ -212,7 +212,7 @@ const testGetObjectBuffer = async () => {
   let size = 0;
 
   try {
-    const stream = await minioClient.getObject(userPfp, 'test.png', async (err, dataStream) => {
+    const stream = await minioClient.getObject(userPfp, 'test', async (err, dataStream) => {
       if (err) {
         console.log(err);
         return {error: err};
