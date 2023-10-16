@@ -5,7 +5,7 @@ const controllers = require('./controllers');
 const router = (app) => {
   // splat world
   // add test user data
-  app.post('/add-user', controllers.Account.addUser);
+  app.post('/add-user', controllers.User.addUser);
   // add test crew data
   app.post('/add-crew', controllers.Crew.addCrew);
   // add test tag data
