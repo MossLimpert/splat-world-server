@@ -244,8 +244,6 @@ const testGetObjectBuffer = async () => {
 };
 
 const testGetObjectFileDownload = async () => {
-  let size = 0;
-
   try {
     const fileDownload = await minioClient.fGetObject(
       userPfp, 
@@ -262,7 +260,6 @@ const testGetObjectFileDownload = async () => {
     console.log(err);
     return {error: err};
   }
-
 }
 
 testGetObjectFileDownload();
@@ -272,5 +269,7 @@ module.exports = {
     getBuckets,
     sendFromFilePath,
     sendFromFileStreamBuffer,
-    sendFromStringBuffer
+    sendFromStringBuffer,
+    testGetObjectBuffer,
+    
 };
