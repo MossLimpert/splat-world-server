@@ -232,7 +232,8 @@ const testGetObjectBuffer = async () => {
         return {error: error};
       });
 
-      return dataStream;
+      console.log(stream);
+      return stream;
     });
 
     return stream;
