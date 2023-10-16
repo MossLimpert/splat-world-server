@@ -14,11 +14,11 @@ const minioClient = new minio.Client({
 // const tagImg = 'tag-img';
 // const tag = 'tag';
 // const userHeader = 'user-header';
-// const userPfp = 'user-pfp';
+const userPfp = 'user-pfp';
 // console.log(crewHeader,tagImg,tag,userHeader); // so i dont get lint errors
 
 // file for testing
-//const file = '../hosted/img/bubbles.png';
+const file = '../hosted/img/bubbles.png';
 
 // get list of buckets
 const getBuckets = async () => {
@@ -34,15 +34,20 @@ const getBuckets = async () => {
 const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
   try {
     // send image to server using filepath
-    const result = await minioClient.fPutObject(bucketName, objectName, filePath, metadata, (err, objInfo) => {
-      if (err) {
-        console.log(err);
-        return { error: err };
-      }
+    const result = await minioClient.fPutObject(
+      bucketName, 
+      objectName, 
+      filePath, 
+      metadata, 
+      (err, objInfo) => {
+        if (err) {
+          console.log(err);
+          return { error: err };
+        }
 
-      console.log('Success!', objInfo.etag, objInfo.versionId);
-      return objInfo;
-    });
+        console.log('Success!', objInfo.etag, objInfo.versionId);
+        return objInfo;
+      });
 
     console.log(result.etag);
     return result;
@@ -97,6 +102,7 @@ const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePa
 }
 };
 
+// send object to bucket from string buffer
 const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) => {
   try {
     // send buffer to server
@@ -131,7 +137,12 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 //     };
 
 //     // send image to server using filepath
-//     const result = await minioClient.fPutObject(userPfp, 'test', file, metaData, (err, objInfo) => {
+//     const result = await minioClient.fPutObject(
+  // userPfp, 
+  // 'test', 
+  // file, 
+  // metaData, 
+  // (err, objInfo) => {
 //       if (err) {
 //         console.log(err);
 //         return { error: err };
@@ -196,6 +207,42 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 //         return { error: err };
 //     }
 // };
+
+const testGetObjectBuffer = async () => {
+  let size = 0;
+
+  try {
+    const stream = await minioClient.getObject(userPfp, 'test.png', async (err, dataStream) => {
+      if (err) {
+        console.log(err);
+        return {error: err};
+      }
+
+      // keep track of size of object
+      dataStream.on('data', (chunk) => {
+        size += chunk.length;
+      });
+      // optional: report size to console
+      dataStream.on('end', () => {
+        console.log('End data stream. Total size = ', size);
+      });
+      // return error message as json
+      dataStream.on('error', (error) => {
+        console.log(error);
+        return {error: error};
+      });
+
+      return dataStream;
+    });
+
+    return stream;
+  } catch (err) {
+    console.log(err);
+    return {error: err};
+  }
+};
+
+testGetObjectBuffer();
 
 module.exports = {
     minioClient,
