@@ -3,7 +3,7 @@
 const controllers = require('./controllers');
 
 const router = (app) => {
-  // 
+  //
   // ADMIN SITE ROUTES
   //
   // add SQL entries
@@ -34,7 +34,7 @@ const router = (app) => {
   app.get('/login', controllers.User.loginPage);
   // change password
   app.get('/reset', controllers.User.changePassPage);
-  
+
   // minio
   app.post('/user-pfp', controllers.User.uploadPfp);
 

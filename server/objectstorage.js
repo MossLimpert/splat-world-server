@@ -35,10 +35,10 @@ const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
   try {
     // send image to server using filepath
     const result = await minioClient.fPutObject(
-      bucketName, 
-      objectName, 
-      filePath, 
-      metadata, 
+      bucketName,
+      objectName,
+      filePath,
+      metadata,
       (err, objInfo) => {
         if (err) {
           console.log(err);
@@ -47,7 +47,8 @@ const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
 
         console.log('Success!', objInfo.etag, objInfo.versionId);
         return objInfo;
-      });
+      },
+    );
 
     console.log(result.etag);
     return result;
@@ -61,45 +62,47 @@ const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
 const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePath) => {
   try {
     // open filestream
-    let fileStream = fs.createReadStream(filePath);
+    const fileStream = fs.createReadStream(filePath);
 
     // check make sure file exists, get statistics about it
     const object = fs.stat(
-        file,
-        async (err, stats) => {
-            if (err) {
-                console.log(err);
-                return {error: err};
+      file,
+      async (err, stats) => {
+        if (err) {
+          console.log(err);
+          return { error: err };
+        }
+
+        // print file stats
+        console.log(stats);
+
+        // send buffer to server
+        const result = await minioClient.putObject(
+          bucketName,
+          objectName,
+          fileStream,
+          metadata,
+          (error, objInfo) => {
+            if (error) {
+              console.log(error);
+              return { error };
             }
-            
-            // print file stats
-            console.log(stats);
 
-            // send buffer to server
-            const result = await minioClient.putObject(
-                bucketName,
-                objectName,
-                fileStream,
-                metadata,
-                (error, objInfo) => {
-                    if (error) {
-                        console.log(error);
-                        return {error: error};
-                    }
+            console.log('Success!', objInfo.etag, objInfo.versionId);
+            return objInfo;
+          },
+        );
 
-                    console.log('Success!', objInfo.etag, objInfo.versionId);
-                    return objInfo;
-                });
-
-            //console.log(result.etag);
-            return result;
-        });
+        // console.log(result.etag);
+        return result;
+      },
+    );
     console.log(object.etag);
     return object;
-} catch (err) {
+  } catch (err) {
     console.log(err);
     return { error: err };
-}
+  }
 };
 
 // send object to bucket from string buffer
@@ -107,26 +110,27 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
   try {
     // send buffer to server
     const result = await minioClient.putObject(
-        bucketName,
-        objectName,
-        buffer,
-        metadata,
-        (error, objInfo) => {
-          if (error) {
-              console.log(error);
-              return {error: error};
-          }
+      bucketName,
+      objectName,
+      buffer,
+      metadata,
+      (error, objInfo) => {
+        if (error) {
+          console.log(error);
+          return { error };
+        }
 
-          console.log('Success!', objInfo.etag, objInfo.versionId);
-          return objInfo;
-      });
+        console.log('Success!', objInfo.etag, objInfo.versionId);
+        return objInfo;
+      },
+    );
 
-    //console.log(result.etag);
+    // console.log(result.etag);
     return result;
-} catch (err) {
+  } catch (err) {
     console.log(err);
     return { error: err };
-}
+  }
 };
 
 // send test image to user pfp from file location
@@ -138,11 +142,11 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 
 //     // send image to server using filepath
 //     const result = await minioClient.fPutObject(
-  // userPfp, 
-  // 'test', 
-  // file, 
-  // metaData, 
-  // (err, objInfo) => {
+// userPfp,
+// 'test',
+// file,
+// metaData,
+// (err, objInfo) => {
 //       if (err) {
 //         console.log(err);
 //         return { error: err };
@@ -177,7 +181,7 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 //                     console.log(err);
 //                     return {error: err};
 //                 }
-                
+
 //                 // print file stats
 //                 console.log(stats);
 
@@ -216,7 +220,7 @@ const getObjectBuffer = async (bucketName, objectName) => {
     const stream = await minioClient.getObject(bucketName, objectName, async (err, dataStream) => {
       if (err) {
         console.log(err);
-        return {error: err};
+        return { error: err };
       }
 
       // keep track of size of object
@@ -230,7 +234,7 @@ const getObjectBuffer = async (bucketName, objectName) => {
       // return error message as json
       dataStream.on('error', (error) => {
         console.log(error);
-        return {error: error};
+        return { error };
       });
 
       console.log(stream);
@@ -240,7 +244,7 @@ const getObjectBuffer = async (bucketName, objectName) => {
     return stream;
   } catch (err) {
     console.log(err);
-    return {error: err};
+    return { error: err };
   }
 };
 
@@ -284,9 +288,9 @@ getObjectBuffer(userPfp, 'test');
 // const testGetObjectFileDownload = async () => {
 //   try {
 //     const fileDownload = await minioClient.fGetObject(
-//       userPfp, 
-//       'test', 
-//       '/hosted/download', 
+//       userPfp,
+//       'test',
+//       '/hosted/download',
 //       (err) => {
 //         console.log(err);
 //         return {error: err};
@@ -302,14 +306,12 @@ getObjectBuffer(userPfp, 'test');
 
 // testGetObjectFileDownload();
 
-
-
 module.exports = {
-    minioClient,
-    getBuckets,
-    sendFromFilePath,
-    sendFromFileStreamBuffer,
-    sendFromStringBuffer,
-    testGetObjectBuffer,
-    
+  minioClient,
+  getBuckets,
+  sendFromFilePath,
+  sendFromFileStreamBuffer,
+  sendFromStringBuffer,
+  getObjectBuffer,
+
 };

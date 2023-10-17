@@ -257,6 +257,8 @@ const signup = async (req, res) => {
 const uploadPfp = async (req, res) => {
   try {
     console.log(req.body);
+    sendFromFileStreamBuffer({}, 'user-pfp', 'pfptest', '../hosted/img/bubbles.png');
+    return res.redirect('/');
   } catch (err) {
     console.log(err);
     return res.json({error: err});
@@ -264,7 +266,7 @@ const uploadPfp = async (req, res) => {
 }
 
 // allows a current user to change their password
-// const changePassword = async (req, res) => {
+// const changePassword = async (req, res) =>npm {
 //   // req.session.account.username
 //   //const { username } = req.session.account;
 //   const oldPass = `${req.body.oldPass}`;
