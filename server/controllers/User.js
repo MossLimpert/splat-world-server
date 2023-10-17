@@ -226,26 +226,28 @@ const signup = async (req, res) => {
   }
 
   try {
-    //const hash = await Account.generateHash(pass);
-    //const newAccount = new Account({ username, password: hash });
-    //await newAccount.save();
+    const hash = await bcrypt.generateHash(pass);
+    
+    db.query('INSERT INTO ' + process.env.DATABASE + '.user SET ?', {
+      username: username,
+      password: hash
+    },
+    (err) => {
+      if (err) console.log(err);
+      
+      res.end();
+    });
 
-    // session variables
-    //req.session.account = Account.toAPI(newAccount);
+    console.log('Successfully inserted 1 user.');
 
-    return res.json({ redirect: '/home' });
+    return res.redirect('/');
   } catch (err) {
     //console.log(err.errors);
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Username already in use!' });
     }
 
-    // if (err.errors.username) {
-    //   //console.log(err.errors.username);
-    //   return res.status(500).json({ error: err.errors.username.properties.message });
-    // }
-
-    return res.status(500).json({ error: 'An error occured!' });
+    return res.status(500).json({ error: err });
   }
 };
 
