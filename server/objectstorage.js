@@ -248,7 +248,7 @@ const testGetObjectFileDownload = async () => {
     const fileDownload = await minioClient.fGetObject(
       userPfp, 
       'test', 
-      '/tmp/download.png', 
+      '/tmp/download', 
       (err) => {
         console.log(err);
         return {error: err};

@@ -3,7 +3,9 @@
 const controllers = require('./controllers');
 
 const router = (app) => {
-  // splat world
+  // 
+  // ADMIN SITE ROUTES
+  //
   // add test user data
   app.post('/add-user', controllers.User.addUser);
   // add test crew data
@@ -22,18 +24,22 @@ const router = (app) => {
   // save tag to saved tags
   app.post('/save-tag', controllers.Tag.saveTag);
 
+  // Page navigation
   // homepage
   app.get('/home', controllers.Tag.home);
   app.get('/', controllers.User.loginPage);
-
-  // change password
-  app.get('/change-password', controllers.User.changePassPage);
   // login
   app.get('/login', controllers.User.loginPage);
+  // change password
+  app.get('/reset', controllers.User.changePassPage);
+  
+  //
+  // UNITY ROUTES
+  //
   app.post('/login', controllers.User.verifyUser);
   // signup
   app.post('/signup', controllers.User.signup);
-  // logout
+  // logout - doesnt work bc of redis session removal
   app.get('/logout', controllers.User.logout);
 };
 
