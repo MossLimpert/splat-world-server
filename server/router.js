@@ -6,6 +6,7 @@ const router = (app) => {
   // 
   // ADMIN SITE ROUTES
   //
+  // add SQL entries
   // add test user data
   app.post('/add-user', controllers.User.addUser);
   // add test crew data
@@ -13,6 +14,7 @@ const router = (app) => {
   // add test tag data
   app.post('/add-tag', controllers.Tag.addTag);
 
+  // get SQL entries
   // retrieve test tag data
   app.get('/tag', controllers.Tag.getTag);
   // retrieve test user data
@@ -33,6 +35,9 @@ const router = (app) => {
   // change password
   app.get('/reset', controllers.User.changePassPage);
   
+  // minio
+  app.post('/user-pfp', controllers.User.uploadPfp);
+
   //
   // UNITY ROUTES
   //

@@ -208,11 +208,12 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 //     }
 // };
 
-const testGetObjectBuffer = async () => {
+// get buffer of object from server
+const getObjectBuffer = async (bucketName, objectName) => {
   let size = 0;
 
   try {
-    const stream = await minioClient.getObject(userPfp, 'test', async (err, dataStream) => {
+    const stream = await minioClient.getObject(bucketName, objectName, async (err, dataStream) => {
       if (err) {
         console.log(err);
         return {error: err};
@@ -243,26 +244,65 @@ const testGetObjectBuffer = async () => {
   }
 };
 
-const testGetObjectFileDownload = async () => {
-  try {
-    const fileDownload = await minioClient.fGetObject(
-      userPfp, 
-      'test', 
-      '/tmp/download', 
-      (err) => {
-        console.log(err);
-        return {error: err};
-      });
+getObjectBuffer(userPfp, 'test');
 
-      console.log(fileDownload);
-      return fileDownload;
-  } catch (err) {
-    console.log(err);
-    return {error: err};
-  }
-}
+// const testGetObjectBuffer = async () => {
+//   let size = 0;
 
-testGetObjectFileDownload();
+//   try {
+//     const stream = await minioClient.getObject(userPfp, 'test', async (err, dataStream) => {
+//       if (err) {
+//         console.log(err);
+//         return {error: err};
+//       }
+
+//       // keep track of size of object
+//       dataStream.on('data', (chunk) => {
+//         size += chunk.length;
+//       });
+//       // optional: report size to console
+//       dataStream.on('end', () => {
+//         console.log('End data stream. Total size = ', size);
+//       });
+//       // return error message as json
+//       dataStream.on('error', (error) => {
+//         console.log(error);
+//         return {error: error};
+//       });
+
+//       console.log(stream);
+//       return stream;
+//     });
+
+//     return stream;
+//   } catch (err) {
+//     console.log(err);
+//     return {error: err};
+//   }
+// };
+
+// const testGetObjectFileDownload = async () => {
+//   try {
+//     const fileDownload = await minioClient.fGetObject(
+//       userPfp, 
+//       'test', 
+//       '/hosted/download', 
+//       (err) => {
+//         console.log(err);
+//         return {error: err};
+//       });
+
+//       console.log(fileDownload);
+//       return fileDownload;
+//   } catch (err) {
+//     console.log(err);
+//     return {error: err};
+//   }
+// }
+
+// testGetObjectFileDownload();
+
+
 
 module.exports = {
     minioClient,

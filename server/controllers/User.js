@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 
 const { Account } = models;
 
+const { sendFromFileStreamBuffer } = require('../objectstorage.js');
+
 // splat world
 // add user
 const addUser = async (req, res) => {
@@ -251,6 +253,16 @@ const signup = async (req, res) => {
   }
 };
 
+// uploads a profile pic to the server that the user sends
+const uploadPfp = async (req, res) => {
+  try {
+    console.log(req.body);
+  } catch (err) {
+    console.log(err);
+    return res.json({error: err});
+  }
+}
+
 // allows a current user to change their password
 // const changePassword = async (req, res) => {
 //   // req.session.account.username
@@ -313,5 +325,6 @@ module.exports = {
   docPage,
   addUser,
   getUser,
-  verifyUser
+  verifyUser,
+  uploadPfp
 };
