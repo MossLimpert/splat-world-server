@@ -33938,7 +33938,11 @@ const displayInfo = res => {
 const getImage = e => {
   e.preventDefault();
   helper.hideError();
+
+  //const form = new FormData();
+
   console.log(e.target);
+
   //const file = e.target.querySelector
 };
 
@@ -33950,6 +33954,7 @@ const init = () => {
     e.preventDefault();
     getImage(e);
   });
+  displayInfo('wow');
 };
 window.onload = init;
 })();

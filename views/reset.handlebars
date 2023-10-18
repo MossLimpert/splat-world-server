@@ -2,7 +2,7 @@
 <head>
   {{!-- Author: Moss Limpert --}}
   <meta charset="utf-8"/>
-  <title>Bubbles</title>
+  <title>Splat World</title>
 
   <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/jellee-typeface" type="text/css" crossorigin="anonymous"/> 
   <link rel="shortcut icon" href="/assets/img/bubbles.png"/>
@@ -18,13 +18,29 @@
     <h3><span id="errorMessage"></span></h3>
     </div>
     <section id="content">
-      <form action="/user-pfp" method="post" class="image-upload">
+      <form action="/user-pfp" method="post" class="image-upload" enctype='multipart/form-data'>
+        <h2>Upload User Profile Picture</h2>
+        <label for="pfp-name">Profile picture name</label>
+        <input type="text" name="pfpname" id="pfpname">
+        <br>
+        <label for="profile-pic">Upload profile picture</label>
         <input type="file" name="profile-pic" id="profile-pic">
+        <br>
         <input type="submit" value="Upload Profile Pic">
       </form>
+
+      <form action="/user-pfp" method="get" class="image-download">
+        <h2>Download User Profile Picture</h2>
+        <label for="download-name">Profile picture name</label>
+        <input type="text" name="download-name" id="download-name">
+        <br>
+        <input type="submit" value="Download Profile Pic">
+      </form>
     </section>
-    <section class="output">
-      
+
+    <section id="output" class="hidden">
+      <p></p>
+      <img src="/assets/img/testDownload.png" alt="user's pfp" id="pfp-download">
     </section>
  </main>
 

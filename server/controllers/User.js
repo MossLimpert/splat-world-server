@@ -3,21 +3,21 @@
 const models = require('../models');
 const db = require('../database.js');
 const bcrypt = require('bcrypt');
-//const multer = require('multer');
+const multer = require('multer');
 
 const { Account } = models;
 
 const minio = require('../objectstorage.js');
 const { sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "tmp")
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, file.fieldname + '-' + Date.now() + '.jpg');
-//   }
-// });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "tmp")
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+  }
+});
 
 // console.log(storage);
 
@@ -269,8 +269,18 @@ const signup = async (req, res) => {
 // uploads a profile pic to the server that the user sends
 const uploadPfp = async (req, res) => {
   try {
-    console.log(req.body);
-    sendFromFileStreamBuffer({}, 'user-pfp', 'pfptest', '../hosted/img/bubbles.png');
+    console.log(req.body.pfpname);
+    let name = toString(req.body.pfpname);
+
+    sendFromFileStreamBuffer(
+      {
+        name: name,
+      }, 
+      'user-pfp', 
+      'pfptest', 
+      '../hosted/img/bubbles.png'
+    );
+
     return res.redirect('/reset');
   } catch (err) {
     console.log(err);
