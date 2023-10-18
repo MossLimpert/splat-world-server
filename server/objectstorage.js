@@ -1,13 +1,13 @@
 const minio = require('minio');
 const fs = require('fs');
 
-// const minioClient = new minio.Client({
-//   endPoint: process.env.ENDPOINT,
-//   port: parseInt(process.env.MINIO_PORT, 10),
-//   useSSL: false,
-//   accessKey: process.env.ACCESS_KEY,
-//   secretKey: process.env.SECRET_KEY,
-// });
+const minioClient = new minio.Client({
+  endPoint: process.env.ENDPOINT,
+  port: parseInt(process.env.MINIO_PORT, 10),
+  useSSL: false,
+  accessKey: process.env.ACCESS_KEY,
+  secretKey: process.env.SECRET_KEY,
+});
 
 // names of buckets:
 // const crewHeader = 'crew-header';
