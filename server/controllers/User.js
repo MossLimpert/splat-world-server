@@ -3,11 +3,23 @@
 const models = require('../models');
 const db = require('../database.js');
 const bcrypt = require('bcrypt');
+//const multer = require('multer');
 
 const { Account } = models;
 
 const minio = require('../objectstorage.js');
-const { sendFromFileStreamBuffer } = minio;
+const { sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "tmp")
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+//   }
+// });
+
+// console.log(storage);
 
 // splat world
 // add user
@@ -259,13 +271,25 @@ const uploadPfp = async (req, res) => {
   try {
     console.log(req.body);
     sendFromFileStreamBuffer({}, 'user-pfp', 'pfptest', '../hosted/img/bubbles.png');
+    return res.redirect('/reset');
+  } catch (err) {
+    console.log(err);
+    return res.json({error: err});
+  }
+};
+
+const downloadPfp = async (req, res) => {
+  try {
+    testGetObjectFileDownload();
     return res.redirect('/');
   } catch (err) {
     console.log(err);
     return res.json({error: err});
   }
 }
+// const getPfp = async (req, res) => {
 
+// };
 // allows a current user to change their password
 // const changePassword = async (req, res) =>npm {
 //   // req.session.account.username
@@ -329,5 +353,7 @@ module.exports = {
   addUser,
   getUser,
   verifyUser,
-  uploadPfp
+  uploadPfp,
+  downloadPfp,
+
 };

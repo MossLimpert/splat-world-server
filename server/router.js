@@ -37,6 +37,7 @@ const router = (app) => {
 
   // minio
   app.post('/user-pfp', controllers.User.uploadPfp);
+  app.get('/user-pfp', controllers.User.downloadPfp);
 
   //
   // UNITY ROUTES
