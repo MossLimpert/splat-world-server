@@ -53,9 +53,49 @@ const ReactDOM = require('react-dom');
 //     )
 // }
 
+//
+// helpers
+//
+
+// puts stuff in result box
+const displayInfo = (res) => {
+    hideAllResultBoxes();
+
+    if (res.error) helper.handleError(res.error);
+    else {
+        // make results sectino visible
+        document.querySelector('#result').classList.remove('hidden');
+        // put info in
+        document.querySelector('#result p').innerHTML = JSON.stringify(JSON.stringify(res));
+    }
+};
+
+//
+// response handlers
+// 
+
+
+
+//
+// event handlers
+//
+const getImage = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    console.log(e.target);
+    //const file = e.target.querySelector
+};
+
 const init = () => {
-    ReactDOM.render(<ChangePassWindow />, 
-        document.getElementById('content'));
-}
+    // ReactDOM.render(<ChangePassWindow />, 
+    //     document.getElementById('content'));
+    const uploadPfpForm = document.querySelector('image-upload');
+
+    uploadPfpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        getImage(e);
+    });
+};
 
 window.onload = init;

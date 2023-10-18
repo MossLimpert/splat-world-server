@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt');
 
 const { Account } = models;
 
-const { sendFromFileStreamBuffer } = require('../objectstorage.js');
+const minio = require('../objectstorage.js');
+const { sendFromFileStreamBuffer } = minio;
 
 // splat world
 // add user
