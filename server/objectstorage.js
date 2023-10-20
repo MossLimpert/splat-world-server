@@ -288,6 +288,21 @@ const testGetObjectFileDownload = async () => {
   }
 }
 
+const getObjectFileDownload = async (bucketName, objectName) => {
+  try {
+    return minioClient.fGetObject(
+      bucketName,
+      objectName,
+      path.resolve('hosted/downloads/pfp.png'),
+      (err) => {
+        
+      });
+  } catch (err) {
+    console.log(err);
+    return {error: err};
+  }
+}
+
 // const prommy = getObjectBuffer(userPfp, 'test');
 // prommy.then((stream) => {
 //   const writer = fs.createWriteStream(path.resolve('hosted/img'));

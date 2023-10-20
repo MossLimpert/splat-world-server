@@ -4,6 +4,7 @@ const models = require('../models');
 const db = require('../database.js');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
+const path = require('path');
 
 const { Account } = models;
 
@@ -12,12 +13,14 @@ const { sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "tmp")
+    cb(null, path.resolve('hosted/downloads')); 
   },
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + '.jpg');
   }
 });
+let upload = multer({storage:storage});
+console.log(upload);
 
 // console.log(storage);
 
@@ -290,8 +293,8 @@ const uploadPfp = async (req, res) => {
 
 const downloadPfp = async (req, res) => {
   try {
-    testGetObjectFileDownload();
-    return res.redirect('/');
+    let fileDownload = await testGetObjectFileDownload();
+    return res.download(fileDownload);
   } catch (err) {
     console.log(err);
     return res.json({error: err});
