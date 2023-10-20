@@ -281,7 +281,7 @@ const uploadPfp = async (req, res) => {
       }, 
       'user-pfp', 
       'pfptest', 
-      '../hosted/img/bubbles.png'
+      path.resolve('./hosted/img/bubbles.png')
     );
 
     return res.redirect('/reset');

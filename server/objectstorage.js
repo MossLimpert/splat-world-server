@@ -93,7 +93,7 @@ const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePa
               return { error };
             }
 
-            console.log('Success!', objInfo.etag, objInfo.versionId);
+            console.log('Success!', objInfo);
             return objInfo;
           },
         );
@@ -102,9 +102,9 @@ const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePa
         return result;
       },
     );
-    if (object.etag) {
-      console.log(object.etag);
-    }
+    // if (object.etag) {
+    //   console.log(object.etag);
+    // }
     
     return object;
   } catch (err) {
@@ -276,8 +276,8 @@ const testGetObjectFileDownload = async () => {
   try {
     return minioClient.fGetObject(
       userPfp,
-      'test',
-      path.resolve('hosted/img/testDownload'),
+      'pfptest',
+      path.resolve('./hosted/img/testDownload.png'),
       (err) => {
         console.log(err);
         return {error: err};
@@ -293,9 +293,10 @@ const getObjectFileDownload = async (bucketName, objectName) => {
     return minioClient.fGetObject(
       bucketName,
       objectName,
-      path.resolve('hosted/downloads/pfp.png'),
+      path.resolve("splat-world-server/hosted/downloads/pfp.png"),
       (err) => {
-        
+        console.log(err);
+        return {error: err};
       });
   } catch (err) {
     console.log(err);
@@ -354,5 +355,6 @@ module.exports = {
   sendFromStringBuffer,
   getPresignedUrl,
   testGetObjectFileDownload,
+  getObjectFileDownload,
 
 };
