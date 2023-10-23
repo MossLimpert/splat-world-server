@@ -277,7 +277,7 @@ const testGetObjectFileDownload = async () => {
     return minioClient.fGetObject(
       userPfp,
       'pfptest',
-      path.resolve('./hosted/img/testDownload.png'),
+      '/hosted/img/testDownload.png',
       (err) => {
         console.log(err);
         return {error: err};
@@ -293,7 +293,7 @@ const getObjectFileDownload = async (bucketName, objectName) => {
     return minioClient.fGetObject(
       bucketName,
       objectName,
-      path.resolve("splat-world-server/hosted/downloads/pfp.png"),
+      "splat-world-server/hosted/downloads/pfp.png",
       (err) => {
         console.log(err);
         return {error: err};

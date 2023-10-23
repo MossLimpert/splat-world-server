@@ -293,8 +293,9 @@ const uploadPfp = async (req, res) => {
 
 const downloadPfp = async (req, res) => {
   try {
-    let fileDownload = await testGetObjectFileDownload();
-    return res.download(fileDownload);
+    await testGetObjectFileDownload();
+    //console.log(fileDownload);
+    return res.download('/hosted/img/testDownload.png');
   } catch (err) {
     console.log(err);
     return res.json({error: err});
