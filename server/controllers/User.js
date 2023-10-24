@@ -274,7 +274,7 @@ const uploadPfp = async (req, res) => {
   try {
     console.log(req.body.pfpname);
     let name = toString(req.body.pfpname);
-
+    
     sendFromFileStreamBuffer(
       {
         name: name,
