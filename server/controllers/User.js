@@ -162,7 +162,7 @@ const verifyUser = async (req, res) => {
   if (`${req.body.password}`) password = `${req.body.password}`;
 
   if (username === null || password == null) {
-    return res.status(400).json({error: "Either username or password is missing. You need both to login."});
+    return res.status(400).send({error: "Either username or password is missing. You need both to login."});
   }
 
   try {
@@ -178,12 +178,12 @@ const verifyUser = async (req, res) => {
           const match = await bcrypt.compare(password, results[0].password);
 
           if (match) {
-            return res.status(202).json({user: {
+            return res.status(202).send({user: {
               username: results[0].username,
               id: results[0].id
             }});
-          } else return res.status(400).json({error: 'Username or password incorrect'});
-        } else return res.status(404).json({ error: 'User not found.'});
+          } else return res.status(400).send({error: 'Username or password incorrect'});
+        } else return res.status(404).send({ error: 'User not found.'});
       });
 
     console.log('Successfully retrieved user to compare.');
@@ -191,7 +191,7 @@ const verifyUser = async (req, res) => {
   } catch (err) {
     console.log(err);
 
-    return res.status(500).json({error: 'Failed to log in user.'});
+    return res.status(500).send({error: 'Failed to log in user.'});
   }
 };
 
