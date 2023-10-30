@@ -11,15 +11,22 @@ const { Account } = models;
 const minio = require('../objectstorage.js');
 const { sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
 
+// uploadUserPfp: (req, file, cb) => {
+//   console.log("path resolve: ", path.resolve("127.0.0.1:3000/user-pfp"));
+//   cb(null, path.resolve());
+// },
+// https://www.youtube.com/watch?v=wIOpe8S2Mk8
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    // USE SHARP HERE TO THUMBNAIL IT I THINK
     cb(null, path.resolve('hosted/downloads')); 
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+    console.log(file);
+    cb(null, file.fieldname + path.extname(file.originalname));
   }
 });
-let upload = multer({storage:storage});
+const upload = multer({storage:storage});
 console.log(upload);
 
 // console.log(storage);
@@ -273,8 +280,11 @@ const signup = async (req, res) => {
 const uploadPfp = async (req, res) => {
   try {
     console.log(req.body.pfpname);
-    let name = toString(req.body.pfpname);
+    let name = "testName";
+    name = toString(req.body.pfpname);
     
+    upload.single("image");
+
     sendFromFileStreamBuffer(
       {
         name: name,
