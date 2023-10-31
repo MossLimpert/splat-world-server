@@ -1,6 +1,21 @@
 // Author: Moss Limpert
 
 const controllers = require('./controllers');
+//const { multer } = controllers.User.multer;
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // USE SHARP HERE TO THUMBNAIL IT I THINK
+    console.log("Inside multer storage destination")
+    cb(null, path.resolve('hosted/downloads')); 
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    console.log("inside multer filename")
+    cb(null, file.fieldname + path.extname(file.originalname));
+  }
+});
+const upload = multer({storage:storage});
 
 const router = (app) => {
   //
@@ -36,7 +51,7 @@ const router = (app) => {
   app.get('/reset', controllers.User.changePassPage);
 
   // minio
-  app.post('/user-pfp', controllers.User.uploadPfp);
+  app.post('/user-pfp', upload.single("image"), controllers.User.uploadPfp);
   app.get('/user-pfp', controllers.User.downloadPfp);
 
   //

@@ -4,7 +4,6 @@ const express = require('express');
 const compression = require('compression');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
-// const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
 // const session = require('express-session');
@@ -17,18 +16,11 @@ const router = require('./router.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-// NEW SQL STUFF
+// SQL STUFF
 connection.connect((err) => {
   if (err) console.log(err);
   console.log('Database connected.');
 });
-// const dbURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/Splat-World';
-// mongoose.connect(dbURI).catch((err) => {
-//   if (err) {
-//     console.log('Could not connect to database');
-//     throw err;
-//   }
-// });
 
 // const dbURI = process.env.MONGODB_URI ||
 // const connection = mysql.createConnection({
