@@ -3,9 +3,9 @@
 const models = require('../models');
 const db = require('../database.js');
 const bcrypt = require('bcrypt');
-const multer = require('multer');
+//const multer = require('multer');
 const path = require('path');
-const sharp = require('sharp');
+//const sharp = require('sharp');
 
 const { Account } = models;
 
@@ -17,22 +17,22 @@ const { /*sendFromFileStreamBuffer,*/ testGetObjectFileDownload } = minio;
 //   cb(null, path.resolve());
 // },
 // https://www.youtube.com/watch?v=wIOpe8S2Mk8
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // USE SHARP HERE TO THUMBNAIL IT I THINK
-    console.log("Inside multer storage destination")
-    cb(null, path.resolve('hosted/downloads')); 
-  },
-  filename: (req, file, cb) => {
-    console.log(file);
-    console.log("inside multer filename")
-    cb(null, file.fieldname + path.extname(file.originalname));
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     // USE SHARP HERE TO THUMBNAIL IT I THINK
+//     console.log("Inside multer storage destination")
+//     cb(null, path.resolve('hosted/downloads')); 
+//   },
+//   filename: (req, file, cb) => {
+//     console.log(file);
+//     console.log("inside multer filename")
+//     cb(null, file.fieldname + path.extname(file.originalname));
+//   }
+// });
 
-const upload = multer({storage:storage});
+// const upload = multer({storage:storage});
 
-console.log(upload);
+// console.log(upload);
 
 // console.log(storage);
 
@@ -284,24 +284,24 @@ const signup = async (req, res) => {
 // uploads a profile pic to the server that the user sends
 const uploadPfp = async (req, res) => {
   try {
-    console.log(req.body.pfpname);
+    //console.log(req.body.pfpname);
     let name = "testName";
     name = toString(req.body.pfpname);
-    
-    upload.single("image");
+    //console.log(req.body.pfpname);
+    //upload.single("image");
 
-    // sharp(req.file.path).resize(100).jpeg({
-    //   quality: 80,
-    //   chromaSubsampling: '4:4:4'
-    // }).toFile(
-    //   path.join(__dirname, 'assets', 'downloads', name + '.jpeg'),
-    //   (err, info) => {
-    //     if (err) {
-    //       res.send(err);
-    //     } else {
-    //       res.send(info);
-    //     }
-    // });
+    sharp(req.file.path).resize(100).jpeg({
+      quality: 80,
+      chromaSubsampling: '4:4:4'
+    }).toFile(
+      path.join(__dirname, 'assets', 'downloads', name + '.jpeg'),
+      (err, info) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(info);
+        }
+    });
     // sendFromFileStreamBuffer(
     //   {
     //     name: name,
@@ -396,6 +396,5 @@ module.exports = {
   verifyUser,
   uploadPfp,
   downloadPfp,
-  multer: upload,
-  
+
 };

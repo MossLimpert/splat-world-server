@@ -3,13 +3,13 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const favicon = require('serve-favicon');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
 // const session = require('express-session');
 // const RedisStore = require('connect-redis').default;
 // const redis = require('redis');
-const fileUpload = require('express-fileupload');
+//const fileUpload = require('express-fileupload');
 const connection = require('./database.js');
 
 const router = require('./router.js');
@@ -49,9 +49,9 @@ app.use(helmet());
 app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
 app.use(favicon(`${__dirname}/../hosted/img/bubbles.png`));
 app.use(compression());
-app.use(fileUpload());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+//app.use(fileUpload());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 // app.use(session({
 //   key: 'sessionid',

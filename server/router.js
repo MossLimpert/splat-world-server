@@ -1,21 +1,29 @@
 // Author: Moss Limpert
 
 const controllers = require('./controllers');
-//const { multer } = controllers.User.multer;
 const multer = require('multer');
+const path = require('path');
+const mkdirp = require('mkdirp');
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // USE SHARP HERE TO THUMBNAIL IT I THINK
-    console.log("Inside multer storage destination")
-    cb(null, path.resolve('hosted/downloads')); 
+    cb(null, path.resolve(path.join(__dirname, '..', 'hosted', 'downloads'))); 
   },
   filename: (req, file, cb) => {
-    console.log(file);
-    console.log("inside multer filename")
-    cb(null, file.fieldname + path.extname(file.originalname));
+    console.log(req.body.pfpname + path.extname(file.originalname));
+    cb(null, req.body.pfpname + path.extname(file.originalname));
   }
 });
-const upload = multer({storage:storage});
+
+const upload = multer({
+  storage: storage,
+  onFileUploadStart: (file) => {
+    console.log('in file upload start');
+  }
+});
+//const upload = multer({dest: path.join(__dirname, 'hosted', 'downloads')});
+//const upload = multer({dest: path.join(__dirname, '/img')});
+//console.log(upload);
 
 const router = (app) => {
   //
