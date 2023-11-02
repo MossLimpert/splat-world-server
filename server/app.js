@@ -19,7 +19,7 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // SQL STUFF
 connection.connect((err) => {
   if (err) console.log(err);
-  console.log('Database connected.');
+  else console.log('Database connected.');
 });
 
 // const dbURI = process.env.MONGODB_URI ||

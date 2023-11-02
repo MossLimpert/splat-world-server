@@ -3,38 +3,25 @@
 const models = require('../models');
 const db = require('../database.js');
 const bcrypt = require('bcrypt');
-//const multer = require('multer');
 const path = require('path');
-//const sharp = require('sharp');
+const sharp = require('sharp');
 
 const { Account } = models;
 
 const minio = require('../objectstorage.js');
-const { /*sendFromFileStreamBuffer,*/ testGetObjectFileDownload } = minio;
+const { sendFromFilePath, sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
 
-// uploadUserPfp: (req, file, cb) => {
-//   console.log("path resolve: ", path.resolve("127.0.0.1:3000/user-pfp"));
-//   cb(null, path.resolve());
-// },
-// https://www.youtube.com/watch?v=wIOpe8S2Mk8
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     // USE SHARP HERE TO THUMBNAIL IT I THINK
-//     console.log("Inside multer storage destination")
-//     cb(null, path.resolve('hosted/downloads')); 
-//   },
-//   filename: (req, file, cb) => {
-//     console.log(file);
-//     console.log("inside multer filename")
-//     cb(null, file.fieldname + path.extname(file.originalname));
-//   }
-// });
-
-// const upload = multer({storage:storage});
-
-// console.log(upload);
-
-// console.log(storage);
+// uses sharp to get file metadata
+const getFileMetadata = async (path) => {
+  try {
+    const metaData = await sharp(path).metadata();
+    //console.log(metaData);
+    return metaData;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
 
 // splat world
 // add user
@@ -287,34 +274,69 @@ const uploadPfp = async (req, res) => {
     //console.log(req.body.pfpname);
     let name = "testName";
     name = toString(req.body.pfpname);
-    //console.log(req.body.pfpname);
-    //upload.single("image");
+    
+    // SHARP IMAGE COMPRESSION
+    let filePath = path.resolve(path.join(req.file.destination, req.file.filename))
+    let metadata = await getFileMetadata(filePath);
+    
+    //console.log(metadata.width, metadata.height);
 
-    sharp(req.file.path).resize(100).jpeg({
-      quality: 80,
-      chromaSubsampling: '4:4:4'
+    let minioInfo;
+    /*let sharpInfo = */sharp(req.file.path).resize(
+        Math.round(metadata.width / 2),
+        Math.round(metadata.height / 2)
+
+      ).jpeg({
+        quality: 80,
+        chromaSubsampling: '4:4:4'
+
     }).toFile(
-      path.join(__dirname, 'assets', 'downloads', name + '.jpeg'),
+      path.join(req.file.destination, "testing.jpg"),
       (err, info) => {
         if (err) {
-          res.send(err);
+          console.log(err);
+          return err;
         } else {
-          res.send(info);
+          return info;
+          //console.log(info);
         }
-    });
-    // sendFromFileStreamBuffer(
+    })
+
+    //console.log("sharp:", sharpInfo);
+
+    // minioInfo = sendFromFileStreamBuffer(
     //   {
     //     name: name,
-    //   }, 
-    //   'user-pfp', 
-    //   'pfptest', 
-    //   path.resolve('./hosted/img/bubbles.png')
+    //   },
+    //   'user-pfp',
+    //   'pfptest.jpg',
+    //   path.resolve(path.join(req.file.destination, "testing.jpg"))
     // );
 
+    //console.log(minioInfo);
+
+    
+
+    // .then( async (info) => {
+    //   await sendFromFilePath(
+    //     {
+    //       name: name,
+    //     }, 
+    //     'user-pfp', 
+    //     'pfptest.jpg', 
+    //     path.resolve(path.join(req.file.destination, "testing.jpg"))
+    //   );
+  
+    //   console.log(info);
+  
+    //   return res.status(302);
+    // }).catch((err) => {
+    //   return err;
+    // }); 
     return res.redirect('/reset');
   } catch (err) {
-    console.log(err);
-    return res.json({error: err});
+      console.log(err);
+      return res.json({error: err});
   }
 };
 
@@ -329,6 +351,8 @@ const downloadPfp = async (req, res) => {
   }
 }
 // const getPfp = async (req, res) => {
+
+
 
 // };
 // allows a current user to change their password

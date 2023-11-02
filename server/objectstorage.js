@@ -36,10 +36,10 @@ const getBuckets = async () => {
 //
 
 // send object to bucket from file path
-const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
+const sendFromFilePath = (metadata, bucketName, objectName, filePath) => {
   try {
     // send image to server using filepath
-    const result = await minioClient.fPutObject(
+    const result = minioClient.fPutObject(
       bucketName,
       objectName,
       filePath,
@@ -50,12 +50,12 @@ const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
           return { error: err };
         }
 
-        console.log('Success!', objInfo.etag, objInfo.versionId);
+        //console.log('Success!', objInfo.etag, objInfo.versionId);
         return objInfo;
       },
     );
 
-    console.log(result.etag);
+    //console.log(result.etag);
     return result;
   } catch (err) {
     console.log(err);
@@ -64,7 +64,7 @@ const sendFromFilePath = async (metadata, bucketName, objectName, filePath) => {
 };
 
 // send object to bucket from buffer
-const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePath) => {
+const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath) => {
   try {
     // open filestream
     const fileStream = fs.createReadStream(filePath);
@@ -72,20 +72,21 @@ const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePa
     // check make sure file exists, get statistics about it
     const object = fs.stat(
       file,
-      async (err, stats) => {
+      (err, stats) => {
         if (err) {
           console.log(err);
           return { error: err };
         }
 
         // print file stats
-        console.log(stats);
+        //console.log(stats);
 
         // send buffer to server
-        const result = await minioClient.putObject(
+        return minioClient.putObject(
           bucketName,
           objectName,
           fileStream,
+          stats.size,
           metadata,
           (error, objInfo) => {
             if (error) {
@@ -97,14 +98,8 @@ const sendFromFileStreamBuffer = async (metadata, bucketName, objectName, filePa
             return objInfo;
           },
         );
-
-        // console.log(result.etag);
-        return result;
       },
     );
-    // if (object.etag) {
-    //   console.log(object.etag);
-    // }
     
     return object;
   } catch (err) {
