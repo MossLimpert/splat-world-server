@@ -5,7 +5,8 @@ const db = require('../database.js');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const sharp = require('sharp');
-
+const fs = require('fs');
+const fsPromises = fs.promises;
 const { Account } = models;
 
 const minio = require('../objectstorage.js');
@@ -20,6 +21,18 @@ const getFileMetadata = async (path) => {
   } catch (err) {
     console.log(err);
     return err;
+  }
+}
+
+// delete file
+// https://bobbyhadz.com/blog/javascript-node-js-delete-file#deleting-a-file-using-unlink-with-fspromises-and-asyncawait
+async function deleteFile(path) {
+  try {
+    await fsPromises.unlink(path);
+
+    console.log(`Deleted the file under ${path}`);
+  } catch (err) {
+    console.log('An error occured: ', err.message);
   }
 }
 
@@ -271,18 +284,18 @@ const signup = async (req, res) => {
 // uploads a profile pic to the server that the user sends
 const uploadPfp = async (req, res) => {
   try {
-    //console.log(req.body.pfpname);
-    let name = "testName";
-    name = toString(req.body.pfpname);
-    
+    // before it gets here, multer middleware makes it accessible
+    // through req.file
+
+    console.log(req.file);
+    console.log(req.body.pfpname)
+
     // SHARP IMAGE COMPRESSION
     let filePath = path.resolve(path.join(req.file.destination, req.file.filename))
     let metadata = await getFileMetadata(filePath);
-    
-    //console.log(metadata.width, metadata.height);
 
-    let minioInfo;
-    /*let sharpInfo = */sharp(req.file.path).resize(
+    // thumbnail image
+    sharp(req.file.path).resize(
         Math.round(metadata.width / 2),
         Math.round(metadata.height / 2)
 
@@ -291,48 +304,29 @@ const uploadPfp = async (req, res) => {
         chromaSubsampling: '4:4:4'
 
     }).toFile(
-      path.join(req.file.destination, "testing.jpg"),
+      path.join(req.file.destination, req.body.pfpname + ".jpg"),
       (err, info) => {
         if (err) {
           console.log(err);
           return err;
         } else {
           return info;
-          //console.log(info);
         }
     })
 
-    //console.log("sharp:", sharpInfo);
+    // send to minio
+    sendFromFileStreamBuffer(
+      {
+        name: req.body.pfpname,
+      },
+      'user-pfp',
+      req.body.pfpname + ".jpg",
+      path.resolve(path.join(req.file.destination, "testing.jpg"))
+    );
 
-    // minioInfo = sendFromFileStreamBuffer(
-    //   {
-    //     name: name,
-    //   },
-    //   'user-pfp',
-    //   'pfptest.jpg',
-    //   path.resolve(path.join(req.file.destination, "testing.jpg"))
-    // );
+    // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
+    // await deleteFile(path.resolve(path.join(req.file.destination, req.file.filename)));
 
-    //console.log(minioInfo);
-
-    
-
-    // .then( async (info) => {
-    //   await sendFromFilePath(
-    //     {
-    //       name: name,
-    //     }, 
-    //     'user-pfp', 
-    //     'pfptest.jpg', 
-    //     path.resolve(path.join(req.file.destination, "testing.jpg"))
-    //   );
-  
-    //   console.log(info);
-  
-    //   return res.status(302);
-    // }).catch((err) => {
-    //   return err;
-    // }); 
     return res.redirect('/reset');
   } catch (err) {
       console.log(err);
