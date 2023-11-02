@@ -36,6 +36,14 @@ async function deleteFile(path) {
   }
 }
 
+const linkPfp = (etag) => {
+  try {
+
+  } catch (err) {
+
+  }
+}
+
 // splat world
 // add user
 const addUser = async (req, res) => {
@@ -304,7 +312,7 @@ const uploadPfp = async (req, res) => {
         chromaSubsampling: '4:4:4'
 
     }).toFile(
-      path.join(req.file.destination, req.body.pfpname + ".jpg"),
+      path.join(req.file.destination, "testing.jpg"),
       (err, info) => {
         if (err) {
           console.log(err);
@@ -315,7 +323,7 @@ const uploadPfp = async (req, res) => {
     })
 
     // send to minio
-    sendFromFileStreamBuffer(
+    let minioInfo = sendFromFileStreamBuffer(
       {
         name: req.body.pfpname,
       },
@@ -324,6 +332,7 @@ const uploadPfp = async (req, res) => {
       path.resolve(path.join(req.file.destination, "testing.jpg"))
     );
 
+    console.log(minioInfo);
     // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
     // await deleteFile(path.resolve(path.join(req.file.destination, req.file.filename)));
 
