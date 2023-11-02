@@ -1,29 +1,31 @@
 // Author: Moss Limpert
 
-const controllers = require('./controllers');
 const multer = require('multer');
 const path = require('path');
-const mkdirp = require('mkdirp');
+const controllers = require('./controllers');
+// const mkdirp = require('mkdirp');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(path.join(__dirname, '..', 'hosted', 'downloads'))); 
+    console.log(req, file);
+    cb(null, path.resolve(path.join(__dirname, '..', 'hosted', 'downloads')));
   },
   filename: (req, file, cb) => {
     console.log(req.body.pfpname + path.extname(file.originalname));
     cb(null, req.body.pfpname + path.extname(file.originalname));
-  }
+  },
 });
 
 const upload = multer({
-  storage: storage,
+  storage,
   onFileUploadStart: (file) => {
+    console.log(file);
     console.log('in file upload start');
-  }
+  },
 });
-//const upload = multer({dest: path.join(__dirname, 'hosted', 'downloads')});
-//const upload = multer({dest: path.join(__dirname, '/img')});
-//console.log(upload);
+// const upload = multer({dest: path.join(__dirname, 'hosted', 'downloads')});
+// const upload = multer({dest: path.join(__dirname, '/img')});
+// console.log(upload);
 
 const router = (app) => {
   //
@@ -59,7 +61,7 @@ const router = (app) => {
   app.get('/reset', controllers.User.changePassPage);
 
   // minio
-  app.post('/user-pfp', upload.single("image"), controllers.User.uploadPfp);
+  app.post('/user-pfp', upload.single('image'), controllers.User.uploadPfp);
   app.get('/user-pfp', controllers.User.downloadPfp);
 
   //

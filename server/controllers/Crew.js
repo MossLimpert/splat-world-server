@@ -1,9 +1,6 @@
 // Author: Moss Limpert
 
-// const models = require('../models');
 const db = require('../database.js');
-
-// const { Bubble, Account, Status } = models;
 
 // splat world
 // add crew

@@ -50,12 +50,12 @@ const sendFromFilePath = (metadata, bucketName, objectName, filePath) => {
           return { error: err };
         }
 
-        //console.log('Success!', objInfo.etag, objInfo.versionId);
+        // console.log('Success!', objInfo.etag, objInfo.versionId);
         return objInfo;
       },
     );
 
-    //console.log(result.etag);
+    // console.log(result.etag);
     return result;
   } catch (err) {
     console.log(err);
@@ -79,7 +79,7 @@ const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath) =>
         }
 
         // print file stats
-        //console.log(stats);
+        // console.log(stats);
 
         // send buffer to server
         return minioClient.putObject(
@@ -100,7 +100,7 @@ const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath) =>
         );
       },
     );
-    
+
     return object;
   } catch (err) {
     console.log(err);
@@ -250,8 +250,6 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 
 //       //console.log(dataStream);
 
-      
-
 //       return dataStream;
 //     })
 //     //   .then(() => {
@@ -275,34 +273,36 @@ const testGetObjectFileDownload = async () => {
       '/hosted/img/testDownload.png',
       (err) => {
         console.log(err);
-        return {error: err};
-      });
+        return { error: err };
+      },
+    );
   } catch (err) {
     console.log(err);
-    return {error: err};
+    return { error: err };
   }
-}
+};
 
 const getObjectFileDownload = async (bucketName, objectName) => {
   try {
     return minioClient.fGetObject(
       bucketName,
       objectName,
-      "splat-world-server/hosted/downloads/pfp.png",
+      'splat-world-server/hosted/downloads/pfp.png',
       (err) => {
         console.log(err);
-        return {error: err};
-      });
+        return { error: err };
+      },
+    );
   } catch (err) {
     console.log(err);
-    return {error: err};
+    return { error: err };
   }
-}
+};
 
 // const prommy = getObjectBuffer(userPfp, 'test');
 // prommy.then((stream) => {
 //   const writer = fs.createWriteStream(path.resolve('hosted/img'));
-  
+
 //   const pump = () => stream.read()
 //     .then((value) => {
 //       writer.write(value);
@@ -314,8 +314,8 @@ const getObjectFileDownload = async (bucketName, objectName) => {
 //     console.log('Closed stream, done writing');
 //   });
 // });
-//testGetObjectFileDownload();
-//testSendFromFilePath();
+// testGetObjectFileDownload();
+// testSendFromFilePath();
 
 //
 // presigned operations
@@ -327,7 +327,7 @@ const getPresignedUrl = (bucketName, objectName, expiry) => {
     return minioClient.presignedGetObject(bucketName, objectName, expiry, (err, result) => {
       if (err) {
         console.log(err);
-        return {error: err};
+        return { error: err };
       }
 
       console.log(result);
@@ -335,11 +335,11 @@ const getPresignedUrl = (bucketName, objectName, expiry) => {
     });
   } catch (err) {
     console.log(err);
-    return {error: err};
+    return { error: err };
   }
-}
+};
 
-//getPresignedUrl(userPfp, 'test', 24 * 60 * 60)
+// getPresignedUrl(userPfp, 'test', 24 * 60 * 60)
 testGetObjectFileDownload();
 
 module.exports = {
