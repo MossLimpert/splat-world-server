@@ -257,7 +257,7 @@ const getTagCount = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    // const uid = e.target.querySelector('#get-tag-count-id').value;
+    const uid = e.target.querySelector('#get-tag-count-id').value;
     //console.log(e.target.querySelector('#get-tag-count-id').value);
 
     if (!uid) {
@@ -265,10 +265,29 @@ const getTagCount = (e) => {
         return false;
     }
 
-    const data = {id: Number(e.target.querySelector('#get-tag-count-id').value)};
+    const data = {id: Number(uid)};
     //console.log(data);
 
     helper.sendGet(e.target.action, data, displayInfo);
+}
+
+// get pfp link
+const getPfpLink = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const uid = e.target.querySelector('#get-pfp-link-id').value;
+
+    if (!uid) {
+        helper.handleError('No user id!');
+        return false;
+    }
+
+    helper.sendGet(
+        e.target.action,
+        {id: Number(uid)},
+        displayInfo
+    );
 }
 
 const init = () => {
@@ -280,6 +299,7 @@ const init = () => {
     const saveTagForm = document.getElementById('save-tag');
     const loginForm = document.getElementById('login');
     const getTagCountForm = document.getElementById('get-tag-count');
+    const getPfpLinkForm = document.getElementById('get-pfp-link');
 
     // assigning event listeners
     getUserForm.addEventListener('submit', (e) => {
@@ -309,6 +329,10 @@ const init = () => {
     getTagCountForm.addEventListener('submit', (e) => {
         e.preventDefault();
         getTagCount(e);
+    });
+    getPfpLinkForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        getPfpLink(e);
     });
 };
 

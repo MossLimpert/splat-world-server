@@ -39,7 +39,7 @@ const sendPost = async (url, data, handler) => {
 const sendGet = async (url, data, handler) => {
   //console.log(url);
   //let dir = '/tag';
-  let params = new URLSearchParams(data);
+  let params = new URLSearchParams(JSON.parse(data));
   //console.log(params)
   let fullUrl = url + '?';
   //console.log(fullUrl);
@@ -51,16 +51,18 @@ const sendGet = async (url, data, handler) => {
     }
   });
   const result = await response.json();
-  hideError();
-  if (result.redirect) {
-    window.location = result.redirect;
-  }
-  if (result.error) {
-    handleError(result.error);
-  }
-  if (handler) {
-    handler(result);
-  }
+  console.log(result);
+  // hideError();
+
+  // if (result.redirect) {
+  //     window.location = result.redirect;
+  // }
+  // if (result.error) {
+  //     handleError(result.error);
+  // }
+  // if (handler) {
+  //     handler(result);
+  // }
 };
 
 // hides error message

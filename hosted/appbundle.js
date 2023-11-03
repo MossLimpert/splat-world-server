@@ -39,7 +39,7 @@ const sendPost = async (url, data, handler) => {
 const sendGet = async (url, data, handler) => {
   //console.log(url);
   //let dir = '/tag';
-  let params = new URLSearchParams(data);
+  let params = new URLSearchParams(JSON.parse(data));
   //console.log(params)
   let fullUrl = url + '?';
   //console.log(fullUrl);
@@ -51,16 +51,18 @@ const sendGet = async (url, data, handler) => {
     }
   });
   const result = await response.json();
-  hideError();
-  if (result.redirect) {
-    window.location = result.redirect;
-  }
-  if (result.error) {
-    handleError(result.error);
-  }
-  if (handler) {
-    handler(result);
-  }
+  console.log(result);
+  // hideError();
+
+  // if (result.redirect) {
+  //     window.location = result.redirect;
+  // }
+  // if (result.error) {
+  //     handleError(result.error);
+  // }
+  // if (handler) {
+  //     handler(result);
+  // }
 };
 
 // hides error message
@@ -5074,7 +5076,7 @@ const displayInfo = res => {
     // make results sectino visible
     document.querySelector('#result').classList.remove('hidden');
     // put info in
-    console.log(res);
+    //console.log(res);
     document.querySelector('#result p').innerHTML = "test"; //JSON.stringify(JSON.stringify(res));
   }
 };
@@ -5288,18 +5290,33 @@ const getTags = e => {
 const getTagCount = e => {
   e.preventDefault();
   helper.hideError();
+  const uid = e.target.querySelector('#get-tag-count-id').value;
+  //console.log(e.target.querySelector('#get-tag-count-id').value);
 
-  // const uid = e.target.querySelector('#get-tag-count-id').value;
-  console.log(e.target.querySelector('#get-tag-count-id').value);
   if (!uid) {
     helper.handleError('No user id!');
     return false;
   }
   const data = {
-    id: Number(e.target.querySelector('#get-tag-count-id').value)
+    id: Number(uid)
   };
-  console.log(data);
+  //console.log(data);
+
   helper.sendGet(e.target.action, data, displayInfo);
+};
+
+// get pfp link
+const getPfpLink = e => {
+  e.preventDefault();
+  helper.hideError();
+  const uid = e.target.querySelector('#get-pfp-link-id').value;
+  if (!uid) {
+    helper.handleError('No user id!');
+    return false;
+  }
+  helper.sendGet(e.target.action, {
+    id: Number(uid)
+  }, displayInfo);
 };
 const init = () => {
   // form references
@@ -5310,6 +5327,7 @@ const init = () => {
   const saveTagForm = document.getElementById('save-tag');
   const loginForm = document.getElementById('login');
   const getTagCountForm = document.getElementById('get-tag-count');
+  const getPfpLinkForm = document.getElementById('get-pfp-link');
 
   // assigning event listeners
   getUserForm.addEventListener('submit', e => {
@@ -5339,6 +5357,10 @@ const init = () => {
   getTagCountForm.addEventListener('submit', e => {
     e.preventDefault();
     getTagCount(e);
+  });
+  getPfpLinkForm.addEventListener('submit', e => {
+    e.preventDefault();
+    getPfpLink(e);
   });
 };
 window.onload = init;

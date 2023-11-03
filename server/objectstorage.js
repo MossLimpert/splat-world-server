@@ -1,6 +1,7 @@
 const minio = require('minio');
 const fs = require('fs');
 const path = require('path');
+const db = require('./database.js');
 
 const minioClient = new minio.Client({
   endPoint: process.env.ENDPOINT,
@@ -9,6 +10,8 @@ const minioClient = new minio.Client({
   accessKey: process.env.ACCESS_KEY,
   secretKey: process.env.SECRET_KEY,
 });
+
+
 
 // names of buckets:
 // const crewHeader = 'crew-header';
@@ -30,6 +33,8 @@ const getBuckets = async () => {
     console.log(err.message);
   }
 };
+
+
 
 //
 // UPLOADING
@@ -64,13 +69,13 @@ const sendFromFilePath = (metadata, bucketName, objectName, filePath) => {
 };
 
 // send object to bucket from buffer
-const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath) => {
+const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath, callback) => {
   try {
     // open filestream
     const fileStream = fs.createReadStream(filePath);
 
     // check make sure file exists, get statistics about it
-    const object = fs.stat(
+    fs.stat(
       file,
       (err, stats) => {
         if (err) {
@@ -91,17 +96,22 @@ const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath) =>
           (error, objInfo) => {
             if (error) {
               console.log(error);
-              return { error };
+              throw error;
             }
 
-            console.log('Success!', objInfo);
-            return objInfo;
+            //console.log('Success!', objInfo);
+            //console.log(objInfo.etag);
+
+
+
+            if (objInfo) callback(null, objInfo.etag);
+            else callback(error, null);
           },
         );
       },
     );
 
-    return object;
+    return false;
   } catch (err) {
     console.log(err);
     return { error: err };

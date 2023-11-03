@@ -78,6 +78,8 @@ const router = (app) => {
 
   // user / profile scene
   app.get('/get-tag-count', controllers.User.getUserTagCount);
+  app.get('/get-pfp-link', controllers.User.getPfpLink);
+
 };
 
 module.exports = router;

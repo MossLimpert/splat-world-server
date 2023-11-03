@@ -39,7 +39,7 @@ const sendPost = async (url, data, handler) => {
 const sendGet = async (url, data, handler) => {
   //console.log(url);
   //let dir = '/tag';
-  let params = new URLSearchParams(data);
+  let params = new URLSearchParams(JSON.parse(data));
   //console.log(params)
   let fullUrl = url + '?';
   //console.log(fullUrl);
@@ -51,16 +51,18 @@ const sendGet = async (url, data, handler) => {
     }
   });
   const result = await response.json();
-  hideError();
-  if (result.redirect) {
-    window.location = result.redirect;
-  }
-  if (result.error) {
-    handleError(result.error);
-  }
-  if (handler) {
-    handler(result);
-  }
+  console.log(result);
+  // hideError();
+
+  // if (result.redirect) {
+  //     window.location = result.redirect;
+  // }
+  // if (result.error) {
+  //     handleError(result.error);
+  // }
+  // if (handler) {
+  //     handler(result);
+  // }
 };
 
 // hides error message
@@ -164,14 +166,29 @@ const getImage = e => {
 
 // }
 
+const uploadImage = e => {
+  e.preventDefault();
+  helper.hideError();
+  const uid = e.target.querySelector('#user-id');
+  const name = e.target.querySelector('#pfpname');
+  if (!uid | !name) helper.handleError('No User ID or profile pic name specified');
+  helper.sendPost(e.target.action, {
+    id: uid,
+    pfpname: pfpname
+  }, displayInfo);
+};
 const init = () => {
   // ReactDOM.render(<ChangePassWindow />, 
   //     document.getElementById('content'));
-  //const uploadPfpForm = document.querySelector('image-upload');
+  const uploadPfpForm = document.querySelector('image-upload');
   const downloadPfpForm = document.querySelector('image-download');
   downloadPfpForm.addEventListener('submit', e => {
     e.preventDefault();
     getImage(e);
+  });
+  uploadPfpForm.addEventListener('submit', e => {
+    e.preventDefault();
+    uploadImage(e);
   });
   displayInfo('wow');
 };

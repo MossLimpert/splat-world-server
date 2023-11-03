@@ -55,6 +55,25 @@ const getImage = (e) => {
     
 // }
 
+const uploadImage = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const uid = e.target.querySelector('#user-id');
+    const name = e.target.querySelector('#pfpname');
+
+    if (!uid | !name) helper.handleError('No User ID or profile pic name specified');
+
+    helper.sendPost(
+        e.target.action,
+        {
+            id: uid,
+            pfpname: pfpname,
+        },
+        displayInfo
+    );
+};
+
 const init = () => {
     // ReactDOM.render(<ChangePassWindow />, 
     //     document.getElementById('content'));
@@ -65,6 +84,10 @@ const init = () => {
         e.preventDefault();
         getImage(e);
     });
+    // uploadPfpForm.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    //     uploadImage(e);
+    // })
 
     displayInfo('wow');
 };

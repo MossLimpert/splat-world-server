@@ -38,26 +38,52 @@ const getFileMetadata = async (filePath) => {
 //   }
 // }
 
-// const linkPfp = (etag, uid) => {
-//   try {
-//     db.query(
-//       `UPDATE ${process.env.DATABASE}.user SET pfp_link = ? WHERE id = ?`,
-//       [etag, uid],
-//       (err, results, fields) => {
-//         if (err) {
-//           console.log(err);
-//           return err;
-//         }
+const linkPfp = (etag, uid) => {
+  console.log('etag: ' + etag + ' uid: ' + uid);
+  try {
+    db.query(
+      `UPDATE ${process.env.DATABASE}.user SET pfp_link = ? WHERE id = ?`,
+      [etag, uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
 
-//         console.log(results, fields);
-//         return results;
-//       },
-//     );
-//   } catch (err) {
-//     console.log(err);
-//     return err;
-//   }
-// };
+        console.log(results);
+        return {results: results}
+      }
+    )
+  } catch (err) {
+    return {error: err};
+  }
+};
+
+const getPfpLink = (req, res) => {
+
+  const uid = req.query.uid;
+  try {
+    db.query(
+      `SELECT pfp_link FROM ${process.env.DATABASE}.user WHERE id = ?`,
+      [uid],
+      (err, results, fields) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+
+        console.log(results, fields);
+        if (results && results.length !==0) return res.json({results: results});
+        else return res.status(500).json({error: err});
+      },
+    );
+
+    return res.redirect('/');
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
 
 // const getPfpEtag = (uid) => {
 //   try {
@@ -108,7 +134,7 @@ const getUserTagCount = (req, res) => {
       },
     );
 
-    //return res.redirect('/');
+    return res.redirect('/');
   } catch (err) {
     console.log(err);
     return res.json({error: err});
@@ -379,8 +405,10 @@ const uploadPfp = async (req, res) => {
     // before it gets here, multer middleware makes it accessible
     // through req.file
 
-    console.log(req.file);
-    console.log(req.body.pfpname);
+    //console.log(req.file);
+    //console.log(req.body.pfpname);
+    //console.log("userid: ", req.body.id);
+    console.log("req body: ", req.body);
 
     // SHARP IMAGE COMPRESSION
     const filePath = path.resolve(path.join(req.file.destination, req.file.filename));
@@ -407,16 +435,26 @@ const uploadPfp = async (req, res) => {
     );
 
     // send to minio
-    const minioInfo = sendFromFileStreamBuffer(
+    let real = sendFromFileStreamBuffer(
       {
         name: req.body.pfpname,
+        id: req.body.id,
       },
       'user-pfp',
       `${req.body.pfpname}.jpg`,
       path.resolve(path.join(req.file.destination, 'testing.jpg')),
+      (err, etag) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+
+        return linkPfp(etag, req.body['user-id']);
+      }
     );
 
-    console.log(minioInfo);
+    console.log("real: ", real);
+
     // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
     // await deleteFile(path.resolve(path.join(req.file.destination, req.file.filename)));
 
@@ -506,5 +544,6 @@ module.exports = {
   uploadPfp,
   downloadPfp,
   getUserTagCount,
+  getPfpLink,
 
 };
