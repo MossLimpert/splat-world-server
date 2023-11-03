@@ -71,6 +71,13 @@
       <input type="submit" value="Save Tag">
     </form>
 
+    <h4>Get the count of all of a User's Tags</h4>
+    <form name="get tag count" action="/get-tag-count" method="get" id="get-tag-count">
+      <span><label for="get-tag-count-id">User ID:</label><input type="text" name="get-tag-count-id" id="get-tag-count-id"></span>
+      <br>
+      <input type="submit" value="Get Tag Count">
+    </form>
+
     <section id="res-tag" class="hidden">
       <h4>Get Tag Result</h4>
       <span><p>Title: <span id="res-title"></span></p></span>
@@ -96,6 +103,6 @@
   </main>
   
   
-  <script src="/assets/appBundle.js"></script>
+  <script crossorigin="anonymous" src="/assets/appBundle.js"></script>
 </body>
 </html>

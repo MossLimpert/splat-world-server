@@ -38,11 +38,12 @@ const sendPost = async (url, data, handler) => {
 const sendGet = async (url, data, handler) => {
     //console.log(url);
     //let dir = '/tag';
-    let params = new URLSearchParams(data);
-    let fullUrl = url + '?&' + params;
+    let params = new URLSearchParams(JSON.parse(data));
+    //console.log(params)
+    let fullUrl = url + '?'
     //console.log(fullUrl);
 
-    const response = await fetch (fullUrl, {
+    const response = await fetch (fullUrl + params, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -50,17 +51,18 @@ const sendGet = async (url, data, handler) => {
     });
 
     const result = await response.json();
-    hideError();
+    console.log(result);
+    // hideError();
 
-    if (result.redirect) {
-        window.location = result.redirect;
-    }
-    if (result.error) {
-        handleError(result.error);
-    }
-    if (handler) {
-        handler(result);
-    }
+    // if (result.redirect) {
+    //     window.location = result.redirect;
+    // }
+    // if (result.error) {
+    //     handleError(result.error);
+    // }
+    // if (handler) {
+    //     handler(result);
+    // }
 }
 
 // hides error message

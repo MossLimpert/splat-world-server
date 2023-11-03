@@ -3,8 +3,10 @@
 const multer = require('multer');
 const path = require('path');
 const controllers = require('./controllers');
-// const mkdirp = require('mkdirp');
 
+//
+// MULTER
+//
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     console.log(req, file);
@@ -15,7 +17,6 @@ const storage = multer.diskStorage({
     cb(null, req.body.pfpname + path.extname(file.originalname));
   },
 });
-
 const upload = multer({
   storage,
   onFileUploadStart: (file) => {
@@ -23,13 +24,13 @@ const upload = multer({
     console.log('in file upload start');
   },
 });
-// const upload = multer({dest: path.join(__dirname, 'hosted', 'downloads')});
-// const upload = multer({dest: path.join(__dirname, '/img')});
-// console.log(upload);
 
+//
+// ROUTER
+//
 const router = (app) => {
   //
-  // ADMIN SITE ROUTES
+  // SQL
   //
   // add SQL entries
   // add test user data
@@ -51,7 +52,9 @@ const router = (app) => {
   // save tag to saved tags
   app.post('/save-tag', controllers.Tag.saveTag);
 
-  // Page navigation
+  //
+  // ADMIN PAGE NAV
+  //
   // homepage
   app.get('/home', controllers.Tag.home);
   app.get('/', controllers.User.loginPage);
@@ -72,6 +75,9 @@ const router = (app) => {
   app.post('/signup', controllers.User.signup);
   // logout - doesnt work bc of redis session removal
   app.get('/logout', controllers.User.logout);
+
+  // user / profile scene
+  app.get('/get-tag-count', controllers.User.getUserTagCount);
 };
 
 module.exports = router;

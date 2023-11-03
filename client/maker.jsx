@@ -27,7 +27,8 @@ const displayInfo = (res) => {
         // make results sectino visible
         document.querySelector('#result').classList.remove('hidden');
         // put info in
-        document.querySelector('#result p').innerHTML = JSON.stringify(JSON.stringify(res));
+        //console.log(res);
+        document.querySelector('#result p').innerHTML = "test" ;//JSON.stringify(JSON.stringify(res));
     }
 }
 
@@ -251,6 +252,25 @@ const getTags = (e) => {
     }
 }
 
+// get count of user's tags
+const getTagCount = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    // const uid = e.target.querySelector('#get-tag-count-id').value;
+    //console.log(e.target.querySelector('#get-tag-count-id').value);
+
+    if (!uid) {
+        helper.handleError('No user id!');
+        return false;
+    }
+
+    const data = {id: Number(e.target.querySelector('#get-tag-count-id').value)};
+    //console.log(data);
+
+    helper.sendGet(e.target.action, data, displayInfo);
+}
+
 const init = () => {
     // form references
     const getUserForm = document.getElementById('get-user');
@@ -259,6 +279,7 @@ const init = () => {
     const getTagsForm = document.getElementById('get-tags');
     const saveTagForm = document.getElementById('save-tag');
     const loginForm = document.getElementById('login');
+    const getTagCountForm = document.getElementById('get-tag-count');
 
     // assigning event listeners
     getUserForm.addEventListener('submit', (e) => {
@@ -284,6 +305,10 @@ const init = () => {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         login(e);
+    });
+    getTagCountForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        getTagCount(e);
     });
 };
 

@@ -84,35 +84,45 @@ const getFileMetadata = async (filePath) => {
 
 // };
 
-// const getUserTagAmount = (uid) => {
-//   try {
-//     db.query(
-//       `SELECT * FROM ${process.env.DATABASE}.tag WHERE author_ref = ?`,
-//       [uid],
-//       (err, results, fields) => {
-//         if (err) {
-//           console.log(err);
-//           return err;
-//         }
+// get # of tags a user has
+const getUserTagCount = (req, res) => {
+  const uid = Number(req.query.id);
 
-//         console.log(results, fields);
-//         return results;
-//       },
-//     );
-//   } catch (err) {
-//     console.log(err);
-//     return err;
-//   }
-// };
+  try {
+    db.query(
+      `SELECT * FROM ${process.env.DATABASE}.tag WHERE author_ref = ?`,
+      [uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        }
+
+        //console.log(fields);
+        const tagCount = results.length;
+        //console.log(results);
+        //console.log(tagCount);
+        
+        if (results && results.length >= 0){
+          return res.json({ count: tagCount });
+        } else return res.status(500).json({error: err});
+      },
+    );
+
+    //return res.redirect('/');
+  } catch (err) {
+    console.log(err);
+    return res.json({error: err});
+  }
+};
 
 // splat world
 // add user
 const addUser = async (req, res) => {
-  //console.log(req);
+  // console.log(req);
   const username = `${req.body.username}`;
   const pass = `${req.body.pass}`;
 
-  //console.log(req.body);
+  // console.log(req.body);
   // try catch w pass hash
   try {
     const hash = await Account.generateHash(pass);
@@ -145,6 +155,7 @@ const addUser = async (req, res) => {
 };
 
 // get a user
+// ADD: GET PFP LINK, tag count, ooooh take in an array of desired variables? an enum?
 const getUser = (req, res) => {
   let username = null;
   let id = null;
@@ -494,5 +505,6 @@ module.exports = {
   verifyUser,
   uploadPfp,
   downloadPfp,
+  getUserTagCount,
 
 };

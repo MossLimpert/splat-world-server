@@ -40,10 +40,11 @@ const sendGet = async (url, data, handler) => {
   //console.log(url);
   //let dir = '/tag';
   let params = new URLSearchParams(data);
-  let fullUrl = url + '?&' + params;
+  //console.log(params)
+  let fullUrl = url + '?';
   //console.log(fullUrl);
 
-  const response = await fetch(fullUrl, {
+  const response = await fetch(fullUrl + params, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
