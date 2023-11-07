@@ -1,7 +1,7 @@
 const minio = require('minio');
 const fs = require('fs');
 const path = require('path');
-const db = require('./database.js');
+// const db = require('./database.js');
 
 const minioClient = new minio.Client({
   endPoint: process.env.ENDPOINT,
@@ -10,8 +10,6 @@ const minioClient = new minio.Client({
   accessKey: process.env.ACCESS_KEY,
   secretKey: process.env.SECRET_KEY,
 });
-
-
 
 // names of buckets:
 // const crewHeader = 'crew-header';
@@ -33,8 +31,6 @@ const getBuckets = async () => {
     console.log(err.message);
   }
 };
-
-
 
 //
 // UPLOADING
@@ -99,10 +95,8 @@ const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath, ca
               throw error;
             }
 
-            //console.log('Success!', objInfo);
-            //console.log(objInfo.etag);
-
-
+            // console.log('Success!', objInfo);
+            // console.log(objInfo.etag);
 
             if (objInfo) callback(null, objInfo.etag);
             else callback(error, null);

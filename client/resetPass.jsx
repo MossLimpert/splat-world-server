@@ -89,7 +89,7 @@ const init = () => {
     //     uploadImage(e);
     // })
 
-    displayInfo('wow');
+    displayInfo({wow: 'wow'});
 };
 
 window.onload = init;

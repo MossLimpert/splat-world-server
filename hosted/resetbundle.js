@@ -180,17 +180,20 @@ const uploadImage = e => {
 const init = () => {
   // ReactDOM.render(<ChangePassWindow />, 
   //     document.getElementById('content'));
-  const uploadPfpForm = document.querySelector('image-upload');
+  //const uploadPfpForm = document.querySelector('image-upload');
   const downloadPfpForm = document.querySelector('image-download');
   downloadPfpForm.addEventListener('submit', e => {
     e.preventDefault();
     getImage(e);
   });
-  uploadPfpForm.addEventListener('submit', e => {
-    e.preventDefault();
-    uploadImage(e);
+  // uploadPfpForm.addEventListener('submit', (e) => {
+  //     e.preventDefault();
+  //     uploadImage(e);
+  // })
+
+  displayInfo({
+    wow: 'wow'
   });
-  displayInfo('wow');
 };
 window.onload = init;
 })();

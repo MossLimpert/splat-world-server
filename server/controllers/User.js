@@ -11,6 +11,7 @@ const models = require('../models');
 const { Account } = models;
 
 const minio = require('../objectstorage.js');
+const { json } = require('body-parser');
 
 const { sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
 
@@ -38,8 +39,9 @@ const getFileMetadata = async (filePath) => {
 //   }
 // }
 
+// link a user to its profile picture
 const linkPfp = (etag, uid) => {
-  console.log('etag: ' + etag + ' uid: ' + uid);
+  console.log(`etag: ${etag} uid: ${uid}`);
   try {
     db.query(
       `UPDATE ${process.env.DATABASE}.user SET pfp_link = ? WHERE id = ?`,
@@ -51,17 +53,19 @@ const linkPfp = (etag, uid) => {
         }
 
         console.log(results);
-        return {results: results}
-      }
-    )
+        return { results };
+      },
+    );
+
+    return true;
   } catch (err) {
-    return {error: err};
+    return { error: err };
   }
 };
 
+// get the minio etag associated with a user's pfp
 const getPfpLink = (req, res) => {
-
-  const uid = req.query.uid;
+  const { uid } = req.query;
   try {
     db.query(
       `SELECT pfp_link FROM ${process.env.DATABASE}.user WHERE id = ?`,
@@ -73,8 +77,8 @@ const getPfpLink = (req, res) => {
         }
 
         console.log(results, fields);
-        if (results && results.length !==0) return res.json({results: results});
-        else return res.status(500).json({error: err});
+        if (results && results.length !== 0) return res.json({ results });
+        return res.status(500).json({ error: err });
       },
     );
 
@@ -84,27 +88,6 @@ const getPfpLink = (req, res) => {
     return err;
   }
 };
-
-// const getPfpEtag = (uid) => {
-//   try {
-//     db.query(
-//       `SELECT pfp_link FROM ${process.env.DATABASE}.user WHERE id = ?`,
-//       [uid],
-//       (err, results, fields) => {
-//         if (err) {
-//           console.log(err);
-//           return err;
-//         }
-
-//         console.log(results, fields);
-//         return results;
-//       },
-//     );
-//   } catch (err) {
-//     console.log(err);
-//     return err;
-//   }
-// };
 
 // const downloadPfpByEtag = (req, res) => {
 
@@ -123,21 +106,21 @@ const getUserTagCount = (req, res) => {
           console.log(err);
         }
 
-        //console.log(fields);
+        // console.log(fields);
         const tagCount = results.length;
-        //console.log(results);
-        //console.log(tagCount);
-        
-        if (results && results.length >= 0){
+        // console.log(results);
+        // console.log(tagCount);
+
+        if (results && results.length >= 0) {
           return res.json({ count: tagCount });
-        } else return res.status(500).json({error: err});
+        } return res.status(500).json({ error: err });
       },
     );
 
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res.json({error: err});
+    return res.json({ error: err });
   }
 };
 
@@ -405,10 +388,10 @@ const uploadPfp = async (req, res) => {
     // before it gets here, multer middleware makes it accessible
     // through req.file
 
-    //console.log(req.file);
-    //console.log(req.body.pfpname);
-    //console.log("userid: ", req.body.id);
-    console.log("req body: ", req.body);
+    // console.log(req.file);
+    // console.log(req.body.pfpname);
+    // console.log("userid: ", req.body.id);
+    // console.log("req body: ", req.body);
 
     // SHARP IMAGE COMPRESSION
     const filePath = path.resolve(path.join(req.file.destination, req.file.filename));
@@ -435,7 +418,7 @@ const uploadPfp = async (req, res) => {
     );
 
     // send to minio
-    let real = sendFromFileStreamBuffer(
+    const real = sendFromFileStreamBuffer(
       {
         name: req.body.pfpname,
         id: req.body.id,
@@ -450,10 +433,10 @@ const uploadPfp = async (req, res) => {
         }
 
         return linkPfp(etag, req.body['user-id']);
-      }
+      },
     );
 
-    console.log("real: ", real);
+    console.log('real: ', real);
 
     // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
     // await deleteFile(path.resolve(path.join(req.file.destination, req.file.filename)));
@@ -475,9 +458,127 @@ const downloadPfp = async (req, res) => {
     return res.json({ error: err });
   }
 };
-// const getPfp = async (req, res) => {
 
-// };
+const getUserCrews = async (req, res) => {
+  const uid = req.query.id;
+
+  try {
+    db.query(
+      `SELECT * FROM ${process.env.DATABASE}.crew_member WHERE user_ref = ?`,
+      [uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+
+        let response = {
+          error: "didn't work"
+        };
+
+        if (results && results.length !== 0) {
+          const count = results.length;
+          const ids = [];
+
+          for (let i = 0; i < results.length; i++) {
+            ids.push(results[i].crew);
+          }
+          // console.log(ids);
+
+          response = {
+            count: count,
+            ids: ids,
+            reqtype: 0, // this works with my enum in simplegetrequest unity
+          };
+          console.log(response);
+          //return res.end(response, 'json');
+        } 
+        return res.json(response);
+      });
+    return false;
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: err });
+  }
+};
+
+const generatePfpName = (uid) => `pfp-${uid}.jpg`;
+
+// allows a user to upload a new profile picture to replace their current profile picture
+const changePfp = async (req, res) => {
+  // upload new pic,
+  // then remove old pic
+  // console.log(req.body);
+  const uid = req.body['user-id'];
+  const filePath = path.resolve(path.join(req.file.destination, req.file.filename));
+  const fileName = req.body.pfpname;
+
+  // check for bad request
+  if (!uid && !filePath) {
+    res.status(400).json({ error: 'No user id, no file, and no file name provided!' });
+  } else if (!filePath && uid) {
+    res.status(400).json({ error: 'No file provided.' });
+  } else if (!uid && filePath) {
+    res.status(400).json({ error: 'No user id provided' });
+  }
+
+  // if no filename provided, make one to standard
+  if (!fileName) {
+    generatePfpName(uid);
+  }
+
+  // get the old etag and
+
+  const metaData = await getFileMetadata(filePath);
+  // console.log("METADATA: ", metaData);
+
+  // thumbnail image
+  sharp(req.file.path).resize(
+    Math.round(metaData.width / 2),
+    Math.round(metaData.height / 2),
+
+  ).jpeg({
+    quality: 80,
+    chromaSubsampling: '4:4:4',
+
+  }).toFile(
+    path.join(req.file.destination, 'changeProfilePic.jpg'),
+    (err, info) => {
+      if (err) {
+        console.log(err);
+        return err;
+      }
+      return info;
+    },
+  );
+
+  // send to minio and link pfp in sql after thats done
+  /* let minioOutput = */ sendFromFileStreamBuffer(
+    {
+      name: req.body.pfpname,
+      id: req.body.id,
+    },
+    'user-pfp',
+    `${fileName}.jpg`,
+    path.resolve(path.join(req.file.destination, 'changeProfilePic.jpg')),
+    (err, etag) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
+
+      return linkPfp(etag, uid);
+    },
+  );
+
+  // delete files
+  // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
+  // await deleteFile(path.resolve(pah.join(req.file.destination, req.file.filename)));
+  // delete old minio file
+
+  return res.end();
+};
+
 // allows a current user to change their password
 // const changePassword = async (req, res) =>npm {
 //   // req.session.account.username
@@ -545,5 +646,7 @@ module.exports = {
   downloadPfp,
   getUserTagCount,
   getPfpLink,
+  getUserCrews,
+  changePfp,
 
 };

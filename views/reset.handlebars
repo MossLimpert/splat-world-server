@@ -33,6 +33,20 @@
         <input type="submit" value="Upload Profile Pic">
       </form>
 
+      <form action="/change-pfp" method="post" class="image-upload" enctype='multipart/form-data'>
+        <h2>Change User Profile Picture</h2>
+        <label for="user-id">User ID: </label>
+        <input type="text" name="user-id" id="user-id">
+        <br>
+        <label for="pfpname">Profile picture name</label>
+        <input type="text" name="pfpname" id="pfpname">
+        <br>
+        <label for="image">Upload profile picture</label>
+        <input type="file" name="image" id="image">
+        <br>
+        <input type="submit" value="Change Profile Pic">
+      </form>
+
       <form action="/user-pfp" method="get" class="image-download">
         <h2>Download User Profile Picture</h2>
         <label for="download-name">Profile picture name</label>
