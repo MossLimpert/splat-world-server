@@ -4,16 +4,15 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const sharp = require('sharp');
 // const fs = require('fs');
-const db = require('../database.js');
-const models = require('../models');
-
 // const fsPromises = fs.promises;
-const { Account } = models;
-
+// MySQL
+const db = require('../database.js');
+//MIN.IO
 const minio = require('../objectstorage.js');
-const { json } = require('body-parser');
+const { sendFromFileStreamBuffer, testGetObjectFileDownload, getObjectFileDownload } = minio;
 
-const { sendFromFileStreamBuffer, testGetObjectFileDownload } = minio;
+const models = require('../models');
+const { Account } = models;
 
 // uses sharp to get file metadata
 const getFileMetadata = async (filePath) => {
@@ -113,11 +112,11 @@ const getUserTagCount = (req, res) => {
 
         if (results && results.length >= 0) {
           return res.json({ count: tagCount });
-        } return res.status(500).json({ error: err });
+        } else return res.json({ error: err });
       },
     );
 
-    return res.redirect('/');
+    return false;
   } catch (err) {
     console.log(err);
     return res.json({ error: err });
@@ -393,6 +392,8 @@ const uploadPfp = async (req, res) => {
     // console.log("userid: ", req.body.id);
     // console.log("req body: ", req.body);
 
+    const uid = req.body['user-id'];
+
     // SHARP IMAGE COMPRESSION
     const filePath = path.resolve(path.join(req.file.destination, req.file.filename));
     const metadata = await getFileMetadata(filePath);
@@ -417,14 +418,17 @@ const uploadPfp = async (req, res) => {
       },
     );
 
+    // create custom filename
+    let filename = generatePfpName(uid);
+
     // send to minio
     const real = sendFromFileStreamBuffer(
       {
         name: req.body.pfpname,
-        id: req.body.id,
+        id: uid,
       },
       'user-pfp',
-      `${req.body.pfpname}.jpg`,
+      `${filename}.jpg`,
       path.resolve(path.join(req.file.destination, 'testing.jpg')),
       (err, etag) => {
         if (err) {
@@ -432,7 +436,7 @@ const uploadPfp = async (req, res) => {
           throw err;
         }
 
-        return linkPfp(etag, req.body['user-id']);
+        return linkPfp(etag, uid);
       },
     );
 
@@ -449,6 +453,19 @@ const uploadPfp = async (req, res) => {
 };
 
 const downloadPfp = async (req, res) => {
+  // const uid = req.query.id;
+  // try {
+  //   /*generatePfpName(uid)*/
+  //   const thingy = await getObjectFileDownload('user-pfp', 'pfp-test');
+  //   console.log(thingy);
+
+  //   return false;
+  // } catch (err) {
+  //   console.log(err);
+  //   return res.status(500).json({error: err});
+  // }
+
+ //return res.download('/hosted/img/newpfp.png');
   try {
     await testGetObjectFileDownload();
     console.log(req);
@@ -487,8 +504,7 @@ const getUserCrews = async (req, res) => {
 
           response = {
             count: count,
-            ids: ids,
-            reqtype: 0, // this works with my enum in simplegetrequest unity
+            ids: ids
           };
           console.log(response);
           //return res.end(response, 'json');
@@ -579,6 +595,37 @@ const changePfp = async (req, res) => {
   return res.end();
 };
 
+// allows a user to get their total amount of splat points
+const getPoints = async (req, res) => {
+  const uid = req.query.id;
+
+  try {
+    db.query(
+      `SELECT points FROM ${process.env.DATABASE}.tag WHERE author_ref = ?`,
+      [uid],
+      (err, results) => {
+        if(err) {
+          console.log(err);
+          throw err;
+        }
+
+        //console.log(results);
+        let total = 0;
+        for (let i = 0; i < results.length; i++) {
+          total += results[i].points;
+        }
+        console.log(total);
+
+        return res.json({points: total});
+    });
+
+    return false;
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({error: err});
+  }
+};
+
 // allows a current user to change their password
 // const changePassword = async (req, res) =>npm {
 //   // req.session.account.username
@@ -648,5 +695,6 @@ module.exports = {
   getPfpLink,
   getUserCrews,
   changePfp,
+  getPoints,
 
 };

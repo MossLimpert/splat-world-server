@@ -81,6 +81,8 @@ const router = (app) => {
   app.get('/get-pfp-link', controllers.User.getPfpLink);
   app.get('/get-user-crews', controllers.User.getUserCrews);
   app.post('/change-pfp', upload.single('image'), controllers.User.changePfp);
+  app.get('/get-points', controllers.User.getPoints);
+  
 };
 
 module.exports = router;

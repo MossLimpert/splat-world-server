@@ -286,15 +286,17 @@ const testGetObjectFileDownload = async () => {
   }
 };
 
+//testGetObjectFileDownload();
+
 const getObjectFileDownload = async (bucketName, objectName) => {
   try {
     return minioClient.fGetObject(
       bucketName,
       objectName,
-      'splat-world-server/hosted/downloads/pfp.png',
+      '/hosted/downloads/pfp.png',
       (err) => {
         console.log(err);
-        return { error: err };
+        throw err;
       },
     );
   } catch (err) {
