@@ -72,6 +72,8 @@ const sendFromFilePath = (metadata, bucketName, objectName, filePath) => {
 // send object to bucket from buffer
 const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath, callback) => {
   try {
+
+    console.log(objectName);
     // open filestream
     const fileStream = fs.createReadStream(filePath);
 
@@ -274,38 +276,37 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 //   }
 // };
 
-const testGetObjectFileDownload = async () => {
-  try {
-    return minioClient.fGetObject(
-      userPfp,
-      'pfptest',
-      '/hosted/img/testDownload.png',
-      (err) => {
-        //console.log(err);
-        throw err;
-      },
-    );
-  } catch (err) {
-    console.log(err);
-    return { error: err };
-  }
-};
+// const testGetObjectFileDownload = async () => {
+//   try {
+//     return minioClient.fGetObject(
+//       userPfp,
+//       'pfptest',
+//       path.resolve('/hosted/downloads/testDownload.jpg'),
+//       (err) => {
+//         console.log(err);
+//         return err;
+//       },
+//     );
+//   } catch (err) {
+//     console.log(err);
+//     return { error: err };
+//   }
+// };
 
 //testGetObjectFileDownload();
 
 const getObjectFileDownload = async (bucketName, objectName) => {
   try {
-    return minioClient.fGetObject(
+    console.log(bucketName);
+    console.log(objectName);
+    console.log(path.resolve('hosted/downloads/pfp.jpg'));
+    return await minioClient.fGetObject(
       bucketName,
-      objectName,
-      '/hosted/downloads/pfp.png',
-      (err) => {
-        console.log(err);
-        throw err;
-      },
+      objectName + ".jpg",
+      path.resolve('hosted/downloads/pfp.jpg'),
     );
   } catch (err) {
-    console.log(err);
+    console.log("cmldsmal;kdjfl;kj;lkajf;asaldkj", err);
     return { error: err };
   }
 };
@@ -360,7 +361,6 @@ module.exports = {
   sendFromFileStreamBuffer,
   sendFromStringBuffer,
   getPresignedUrl,
-  testGetObjectFileDownload,
   getObjectFileDownload,
 
 };

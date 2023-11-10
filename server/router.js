@@ -82,6 +82,10 @@ const router = (app) => {
   app.get('/get-user-crews', controllers.User.getUserCrews);
   app.post('/change-pfp', upload.single('image'), controllers.User.changePfp);
   app.get('/get-points', controllers.User.getPoints);
+  app.post('/user-header', upload.single('image'), controllers.User.uploadHeader);
+  app.get('/user-header', controllers.User.downloadHeader);
+  app.post('/change-password', controllers.User.changePassword);
+
   
 };
 

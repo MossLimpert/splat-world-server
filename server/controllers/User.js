@@ -10,7 +10,7 @@ const db = require('../database.js');
 //MIN.IO
 const minio = require('../objectstorage.js');
 const { sendFromFileStreamBuffer, testGetObjectFileDownload, getObjectFileDownload } = minio;
-
+// models
 const models = require('../models');
 const { Account } = models;
 
@@ -28,6 +28,9 @@ const getFileMetadata = async (filePath) => {
 
 // standardize pfp names
 const generatePfpName = (uid) => `pfp-${uid}.jpg`;
+
+// standardize header names
+const generateHeaderName = (uid) => `header-${uid}.jpg`;
 
 // delete file
 // https://bobbyhadz.com/blog/javascript-node-js-delete-file#deleting-a-file-using-unlink-with-fspromises-and-asyncawait
@@ -51,19 +54,39 @@ const linkPfp = (etag, uid) => {
       (err, results) => {
         if (err) {
           console.log(err);
-          throw err;
+          return err;
         }
 
         //console.log(results);
         return { results };
-      },
-    );
+    });
 
     return true;
   } catch (err) {
     return { error: err };
   }
 };
+
+const linkHeader = (etag, uid) => {
+  console.log(`etag: ${etag} uid: ${uid}`);
+  try {
+    db.query(
+      `UPDATE ${process.env.DATABASE}.user SET header_link = ? WHERE id = ?`,
+      [etag, uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+
+        return { results };
+    });
+
+    return true;
+  } catch (err) {
+    return err;
+  }
+}
 
 // get the minio etag associated with a user's pfp
 const getPfpLink = (req, res) => {
@@ -387,14 +410,6 @@ const signup = async (req, res) => {
 // uploads a profile pic to the server that the user sends
 const uploadPfp = async (req, res) => {
   try {
-    // before it gets here, multer middleware makes it accessible
-    // through req.file
-
-    // console.log(req.file);
-    // console.log(req.body.pfpname);
-    // console.log("userid: ", req.body.id);
-    // console.log("req body: ", req.body);
-
     const uid = req.body['user-id'];
 
     // SHARP IMAGE COMPRESSION
@@ -423,28 +438,28 @@ const uploadPfp = async (req, res) => {
 
     // create custom filename
     let filename = generatePfpName(uid);
+    //console.log(filename);
 
     // send to minio
-    const real = sendFromFileStreamBuffer(
+    const result = sendFromFileStreamBuffer(
       {
         name: req.body.pfpname,
         id: uid,
       },
       'user-pfp',
-      `${filename}.jpg`,
+      filename,
       path.resolve(path.join(req.file.destination, 'testing.jpg')),
       (err, etag) => {
         if (err) {
           console.log(err);
-          throw err;
+          return err;
         }
 
         return linkPfp(etag, uid);
       },
     );
 
-    //console.log('real: ', real);
-
+    console.log(result);
     // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
     // await deleteFile(path.resolve(path.join(req.file.destination, req.file.filename)));
 
@@ -455,34 +470,115 @@ const uploadPfp = async (req, res) => {
   }
 };
 
+
+// downloads profile pic to the client
 const downloadPfp = async (req, res) => {
   const uid = req.query.id;
+  const name = req.query['download-name'];
 
   //console.log("name: ", req.query["download-name"]);
-  
+  if (name === undefined) {
+    name = generatePfpName(uid);
+  } 
+
   try {
     /*generatePfpName(uid)*/
-    const thingy = await getObjectFileDownload('user-pfp', req.query["download-name"]);
-    console.log(thingy);
+    await getObjectFileDownload('user-pfp', name);
 
-    return res.download(path.resolve('/hosted/downloads/newpfp.png'));
+    return res.download(path.resolve('hosted/downloads/pfp.jpg'));
+  } catch (err) {
+    console.log("error in downloadpfp catch", err);
+    return res.status(500).json({error: err});
+  }
+};
+
+// uploads a header pic to minio
+const uploadHeader = async (req, res) => {
+  try {
+    const uid = req.body['user-id'];
+
+    // sharp
+    const filePath = path.resolve(path.join(req.file.destination, req.file.filename));
+    const metadata = await getFileMetadata(filePath);
+    console.log(metadata);
+
+
+    // thumbnailing
+    sharp(req.file.path).resize({
+      width: 1080,
+      fit: 'cover',
+      withoutEnlargement: true,
+      position: 'centre'
+    }).jpeg({
+      quality: 80,
+      chromaSubsampling: '4:4:4',
+    }).toFile(
+      path.resolve(path.join(req.file.destination, 'header.jpg')),
+      (err, info) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+        return info;
+      }
+    );
+
+    // make filename
+    let filename = generateHeaderName(uid);
+
+    // send to minio
+    const result = sendFromFileStreamBuffer(
+      {
+        name: filename,
+        id: uid,
+      },
+      'user-header',
+      filename,
+      path.resolve(path.join(req.file.destination, 'header.jpg')),
+      (err, etag) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+
+        return linkHeader(etag, uid);
+      }
+    );
+
+    console.log('result:', result);
+
+    // delete temp files here
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    res.json({error: err});
+  }
+}
+
+// downloads a header pic to the client
+const downloadHeader = async (req, res) => {
+  //const uid = 
+  const name = req.query['download-name'];
+
+  if (name === undefined) {
+    return res.status(400)
+    .json({error: 'No filename provided to download header!'});
+  }
+
+  try {
+    const results = await getObjectFileDownload('user-header', name);
+    console.log(results);
+    
+    return res.download(path.resolve(`hosted/downloads/${name}.jpg`));
   } catch (err) {
     console.log(err);
     return res.status(500).json({error: err});
   }
+}
 
- 
-  // try {
-  //   await testGetObjectFileDownload();
-    
-  //   //console.log(req);
-  //   return res.download('/hosted/img/testDownload.png');
-  // } catch (err) {
-  //   console.log("meowmeomwoem \n\n\n\n", err);
-  //   return res.json({ error: err });
-  // }
-};
-
+// gets list of crew ids and returns to user
+// TODO: get crew names and include that too
 const getUserCrews = async (req, res) => {
   const uid = req.query.id;
 
@@ -524,8 +620,6 @@ const getUserCrews = async (req, res) => {
     return res.json({ error: err });
   }
 };
-
-
 
 // allows a user to upload a new profile picture to replace their current profile picture
 const changePfp = async (req, res) => {
@@ -634,56 +728,103 @@ const getPoints = async (req, res) => {
 };
 
 // allows a current user to change their password
-// const changePassword = async (req, res) =>npm {
-//   // req.session.account.username
-//   //const { username } = req.session.account;
-//   const oldPass = `${req.body.oldPass}`;
-//   const pass2 = `${req.body.pass2}`;
-//   const pass3 = `${req.body.pass3}`;
+const changePassword = async (req, res) => {
+  const uid = req.body.id;
+  const oldPass = `${req.body.oldPass}`;
+  const pass2 = `${req.body.pass2}`;
+  const pass3 = `${req.body.pass3}`;
 
-//   if (!username || !oldPass || !pass2 || !pass3) {
-//     return res.status(400).json({ error: 'All fields are required!' });
-//   }
+  if ( !uid || !oldPass || !pass2 || !pass3) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
 
-//   if (pass2 !== pass3) {
-//     return res.status(400).json({ error: 'Passwords do not match!' });
-//   }
+  if (pass2 !== pass3) {
+    return res.status(400).json({ error: 'New passwords do not match!' });
+  }
 
-//   try {
-//     return await Account.authenticate(username, oldPass, async (err, account) => {
-//       if (err || !account) {
-//         return res.status(401).json({ error: 'Old password is incorrect!' });
-//       }
+  try {
+    db.query(
+      `SELECT password FROM ${process.env.DATABASE}.user WHERE id = ?`,
+      [uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
 
-//       const hash = await Account.generateHash(pass2);
-//       await Account.updateOne({ username }, { password: hash });
+        let oldHash = Account.generateHash(oldPass);
+        if (results.password !== oldHash) return res.status(400).json({error: 'Old password provided does not match the one we have on file.'});
+        else {
+          const newHash = Account.generateHash(pass2);
 
-//       //req.session.account = Account.toAPI(account);
-//       return res.json({ redirect: '/home' });
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({ error: 'An error occured!' });
-//   }
-// };
+          db.query(
+            `UPDATE ${process.env.DATABASE}.user SET password = ? WHERE id = ?`,
+            [newHash, uid],
+            (err, results) => {
+              if (err) {
+                console.log(err);
+                return err;
+              }
 
-// allows the user unlimited access to the app
-// const buyPremium = async (req, res) => {
-//   try {
+              return res.json({results: results});
+          });
+        }
+      });
 
-//     return await Account.buyPremium(req.session.account._id, (acknowledged) => {
-//       if (!acknowledged) {
-//         res.status(500).json({error: 'Error updating account!'});
-//       }
+    return false;
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: err });
+  }
+};
 
-//       return res.redirect('/home');
-//     });
+// allows a user to remove their current pfp
+const removePfp = async (req, res) => {
+  const uid = req.query.id;
 
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({ error: 'Error retrieving user!' });
-//   }
-// };
+  try {
+    db.query(
+      `UPDATE ${process.env.DATABASE}.user SET pfp_link = NULL WHERE id = ?`,
+      [uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+
+        return res.json({results: results});
+    });
+
+    // remove img from minio here
+  } catch (err) {
+    console.log(err);
+    return res.json({error: err});
+  }
+};
+
+// remove current user header
+const removeHeader = async (req, res) => {
+  const uid = req.query.id;
+
+  try {
+    db.query(
+      `UPDATE ${process.env.DATABASE}.user SET header_link = NULL WHERE id = ?`,
+      [uid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+
+        return res.json({results: results});
+    });
+
+    // remove img from minio here
+  } catch (err) {
+    console.log(err);
+    return res.json({error: err});
+  }
+};
 
 module.exports = {
   loginPage,
@@ -703,5 +844,10 @@ module.exports = {
   getUserCrews,
   changePfp,
   getPoints,
+  uploadHeader,
+  downloadHeader,
+  changePassword,
+  removePfp,
+  removeHeader,
 
 };
