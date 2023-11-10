@@ -3,12 +3,17 @@ const fs = require('fs');
 const path = require('path');
 // const db = require('./database.js');
 
+let ssl = false;
+if (process.env.HOST !== "localhost") ssl = true;
+else ssl = false;
+
 const minioClient = new minio.Client({
   endPoint: process.env.ENDPOINT,
   port: parseInt(process.env.MINIO_PORT, 10),
-  useSSL: false,
+  useSSL: ssl,
   accessKey: process.env.ACCESS_KEY,
   secretKey: process.env.SECRET_KEY,
+  
 });
 
 // names of buckets:
@@ -276,8 +281,8 @@ const testGetObjectFileDownload = async () => {
       'pfptest',
       '/hosted/img/testDownload.png',
       (err) => {
-        console.log(err);
-        return { error: err };
+        //console.log(err);
+        throw err;
       },
     );
   } catch (err) {
@@ -346,7 +351,7 @@ const getPresignedUrl = (bucketName, objectName, expiry) => {
 };
 
 // getPresignedUrl(userPfp, 'test', 24 * 60 * 60)
-testGetObjectFileDownload();
+//testGetObjectFileDownload();
 
 module.exports = {
   minioClient,

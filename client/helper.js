@@ -41,7 +41,7 @@ const sendGet = async (url, data, handler) => {
     let params = new URLSearchParams(JSON.parse(data));
     //console.log(params)
     let fullUrl = url + '?'
-    //console.log(fullUrl);
+    //console.log(fullUrl + params);
 
     const response = await fetch (fullUrl + params, {
         method: 'GET',

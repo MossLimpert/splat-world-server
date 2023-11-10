@@ -26,6 +26,9 @@ const getFileMetadata = async (filePath) => {
   }
 };
 
+// standardize pfp names
+const generatePfpName = (uid) => `pfp-${uid}.jpg`;
+
 // delete file
 // https://bobbyhadz.com/blog/javascript-node-js-delete-file#deleting-a-file-using-unlink-with-fspromises-and-asyncawait
 // async function deleteFile(path) {
@@ -51,7 +54,7 @@ const linkPfp = (etag, uid) => {
           throw err;
         }
 
-        console.log(results);
+        //console.log(results);
         return { results };
       },
     );
@@ -440,7 +443,7 @@ const uploadPfp = async (req, res) => {
       },
     );
 
-    console.log('real: ', real);
+    //console.log('real: ', real);
 
     // await deleteFile(path.resolve(path.join(req.file.destination, "testing.jpg")));
     // await deleteFile(path.resolve(path.join(req.file.destination, req.file.filename)));
@@ -453,27 +456,31 @@ const uploadPfp = async (req, res) => {
 };
 
 const downloadPfp = async (req, res) => {
-  // const uid = req.query.id;
-  // try {
-  //   /*generatePfpName(uid)*/
-  //   const thingy = await getObjectFileDownload('user-pfp', 'pfp-test');
-  //   console.log(thingy);
+  const uid = req.query.id;
 
-  //   return false;
-  // } catch (err) {
-  //   console.log(err);
-  //   return res.status(500).json({error: err});
-  // }
-
- //return res.download('/hosted/img/newpfp.png');
+  //console.log("name: ", req.query["download-name"]);
+  
   try {
-    await testGetObjectFileDownload();
-    console.log(req);
-    return res.download('/hosted/img/testDownload.png');
+    /*generatePfpName(uid)*/
+    const thingy = await getObjectFileDownload('user-pfp', req.query["download-name"]);
+    console.log(thingy);
+
+    return res.download(path.resolve('/hosted/downloads/newpfp.png'));
   } catch (err) {
     console.log(err);
-    return res.json({ error: err });
+    return res.status(500).json({error: err});
   }
+
+ 
+  // try {
+  //   await testGetObjectFileDownload();
+    
+  //   //console.log(req);
+  //   return res.download('/hosted/img/testDownload.png');
+  // } catch (err) {
+  //   console.log("meowmeomwoem \n\n\n\n", err);
+  //   return res.json({ error: err });
+  // }
 };
 
 const getUserCrews = async (req, res) => {
@@ -518,7 +525,7 @@ const getUserCrews = async (req, res) => {
   }
 };
 
-const generatePfpName = (uid) => `pfp-${uid}.jpg`;
+
 
 // allows a user to upload a new profile picture to replace their current profile picture
 const changePfp = async (req, res) => {
