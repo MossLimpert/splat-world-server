@@ -16,16 +16,9 @@ const minioClient = new minio.Client({
   
 });
 
-// names of buckets:
-// const crewHeader = 'crew-header';
-// const tagImg = 'tag-img';
-// const tag = 'tag';
-// const userHeader = 'user-header';
-const userPfp = 'user-pfp';
-// console.log(crewHeader,tagImg,tag,userHeader); // so i dont get lint errors
 
 // file for testing
-const file = path.resolve('hosted/img/splat.png');
+//const file = path.resolve('hosted/img/splat.png');
 
 // get list of buckets
 const getBuckets = async () => {
@@ -79,7 +72,7 @@ const sendFromFileStreamBuffer = (metadata, bucketName, objectName, filePath, ca
 
     // check make sure file exists, get statistics about it
     fs.stat(
-      file,
+      filePath,
       (err, stats) => {
         if (err) {
           console.log(err);
@@ -293,13 +286,13 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
 //   }
 // };
 
-//testGetObjectFileDownload();
 
+// get obvject and download it locally
 const getObjectFileDownload = async (bucketName, objectName) => {
   try {
-    console.log(bucketName);
-    console.log(objectName);
-    console.log(path.resolve('hosted/downloads/pfp.jpg'));
+    //console.log(bucketName);
+    //console.log(objectName);
+    //console.log(path.resolve('hosted/downloads/pfp.jpg'));
     return await minioClient.fGetObject(
       bucketName,
       objectName + ".jpg",
@@ -310,28 +303,6 @@ const getObjectFileDownload = async (bucketName, objectName) => {
     return { error: err };
   }
 };
-
-// const prommy = getObjectBuffer(userPfp, 'test');
-// prommy.then((stream) => {
-//   const writer = fs.createWriteStream(path.resolve('hosted/img'));
-
-//   const pump = () => stream.read()
-//     .then((value) => {
-//       writer.write(value);
-
-//       return writer.then(pump);
-//     });
-
-//   pump.then(() => {
-//     console.log('Closed stream, done writing');
-//   });
-// });
-// testGetObjectFileDownload();
-// testSendFromFilePath();
-
-//
-// presigned operations
-//
 
 // get a temporary download link, returns a promise
 const getPresignedUrl = (bucketName, objectName, expiry) => {
@@ -351,8 +322,15 @@ const getPresignedUrl = (bucketName, objectName, expiry) => {
   }
 };
 
-// getPresignedUrl(userPfp, 'test', 24 * 60 * 60)
-//testGetObjectFileDownload();
+const removeObject = async (bucketName, objectName) => {
+  try {
+    console.log("in remove object method - object storage js");
+    return await minioClient.removeObject(bucketName, objectName);
+  } catch (err) {
+    console.log(err);
+    return {error: err};
+  }
+}
 
 module.exports = {
   minioClient,
@@ -362,5 +340,6 @@ module.exports = {
   sendFromStringBuffer,
   getPresignedUrl,
   getObjectFileDownload,
+  removeObject,
 
 };

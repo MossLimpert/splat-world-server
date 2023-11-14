@@ -19,7 +19,10 @@ const addUser = (e) => {
         return false;
     }
 
-    helper.sendPost(e.target.action, {username, pass});
+    helper.sendPost(e.target.action, {
+        username: username,
+        pass: pass
+    });
 }
 
 // add test crew

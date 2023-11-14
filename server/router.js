@@ -85,7 +85,8 @@ const router = (app) => {
   app.post('/user-header', upload.single('image'), controllers.User.uploadHeader);
   app.get('/user-header', controllers.User.downloadHeader);
   app.post('/change-password', controllers.User.changePassword);
-
+  app.get('/remove-pfp', controllers.User.removePfp);
+  app.get('/remove-header', controllers.User.removeHeader);
   
 };
 
