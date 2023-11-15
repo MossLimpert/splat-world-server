@@ -458,11 +458,13 @@ const uploadPfp = async (req, res) => {
 const downloadPfp = async (req, res) => {
   const uid = req.query.id;
   let name = req.query['download-name'];
-
+  console.log('download pfp: uid: ', uid, 'name: ', name);
   //console.log("name: ", req.query["download-name"]);
   if (name === undefined) {
     name = generatePfpName(uid);
-  } 
+  } else if (uid === undefined) {
+    name = 'no pfp';
+  }
 
   try {
     /*generatePfpName(uid)*/
@@ -579,7 +581,11 @@ const getCrewNamesById = async (res, responseObj) => {
 
         responseObj.names = names;
         console.log(responseObj);
-        return res.json({responseObj});
+        return res.json({
+          count: responseObj.count,
+          ids: responseObj.ids,
+          names: responseObj.names,
+        });
       }
     )
   } catch (err) {
