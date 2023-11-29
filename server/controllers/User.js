@@ -535,9 +535,10 @@ const uploadHeader = async (req, res) => {
     // delete temp files here
 
     return res.json({message: 'Successfully uploaded header.'});
+
   } catch (err) {
     console.log(err);
-    res.json({error: err});
+    return res.json({error: err});
   }
 }
 
@@ -579,15 +580,20 @@ const getCrewNamesById = async (res, responseObj) => {
           names.push(results[i].name);
         }
 
-        responseObj.names = names;
-        console.log(responseObj);
+        let response = {};
+        Object.assign(response, responseObj);
+        response.names = names;
+
+        console.log(response);
         return res.json({
-          count: responseObj.count,
-          ids: responseObj.ids,
-          names: responseObj.names,
+          count: response.count,
+          ids: response.ids,
+          names: response.names,
         });
       }
-    )
+    );
+
+    return false;
   } catch (err) {
     console.log(err);
     return res.json({error: err});
@@ -749,7 +755,7 @@ const getPoints = async (req, res) => {
 
 // allows a current user to change their password
 const changePassword = async (req, res) => {
-  const uid = parseInt(req.body.id);
+  const uid = parseInt(req.body.id, 10);
   const oldPass = `${req.body.oldPass}`;
   const pass2 = `${req.body.pass2}`;
   const pass3 = `${req.body.pass3}`;
@@ -792,7 +798,9 @@ const changePassword = async (req, res) => {
                 return res.json({results: results2});
             });
           } else return res.status(400).json({error: 'Old password provided does not match the one we have on file.'});
-        }
+        } else return res.status(404).json({error: 'No password found! Please retry.'});
+
+        return false;
       });
 
     return false;

@@ -237,7 +237,7 @@ const saveTag = (req, res) => {
     return res.status(400).json({ error: 'No id or title.' });
   }
 
-  const sql = 'UPDATE splatworld.tag SET saved = 1';
+  const sql = `UPDATE ${process.env.DATABASE}.tag SET saved = 1`;
   if (id === null) {
     try {
       const addition = ' WHERE title = ?';
@@ -316,10 +316,107 @@ const saveTag = (req, res) => {
   }
 };
 
+const flag = (userId, itemId, res) => {
+  const sql = `INSERT INTO ${process.env.DATABASE}.flagged SET ?`;
+
+  try {
+    db.query(
+      sql,
+      {
+        author_ref: userId,
+        item_ref: itemId,
+      },
+      (err) => {
+        if (err) throw err;
+
+        res.json({message: 'Success!'});
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: 'Failed to update flagged table with new flagged tag',
+      message: err
+    });
+  }
+}
+
+const flagTag = (req, res) => {
+  let userId = null;
+  let tagId = null;
+
+  if (req.body.uid) userId = req.body.uid;
+  if (req.body.tid) tagId = req.body.tid;
+
+  //console.log(req.body.uid, req.body.tid);
+  if (userId === null || tagId === null) {
+    return res.status(400).json({error: 'No user id or tag id provided.'});
+  }
+
+  const sql = `UPDATE ${process.env.DATABASE}.tag SET flagged = 1 WHERE id = ?`;
+  try {
+    db.execute(
+      sql,
+      [tagId],
+      (err, results) => {
+        if (err) throw err;
+
+        //console.log(results);
+
+        if (!results || results.length === 0) {
+          return res.status(404).json({error: 'No tag found to update.'});
+        } else return flag(userId, tagId, res);
+      }
+    );
+
+    return false;
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({error: err});
+  }
+};
+
+const addLocation = (req, res) => {
+  let latitude = null;
+  let longitude = null;
+  let tid = null;
+
+  if (req.body.latitude) latitude = req.body.latitude;
+  if (req.body.longitude) longitude = req.body.longitude;
+  if (req.body.tid) tid = req.body.tid;
+
+  if (latitude === null || longitude === null || tid === null) {
+    return res.status(400).json({error: 'No latitude or longitude or tag id'});
+  }
+
+  const sql = `INSERT INTO ${process.env.DATABASE}.tag_geolocation SET ?`;
+  try {
+    db.query(
+      sql,
+      {
+        tag_ref: tid,
+        latitude: latitude,
+        longitude: longitude
+      },
+      (err) => {
+        if (err) throw err;
+        //console.log(tid, latitude, longitude);
+        res.end();
+      }
+    )
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({error: err});
+  }
+}
+
 module.exports = {
   home,
   addTag,
   getTag,
   getTags,
   saveTag,
+  flagTag,
+  addLocation,
+
 };

@@ -79,12 +79,60 @@ const addTag = (e) => {
     });
 }
 
+const flagTag = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    let uID = null;
+    let tID = null; 
+
+    uID = e.target.querySelector('#userid').value;
+    tID = e.target.querySelector('#tagid').value;
+
+    if (!uID || !tID) {
+        helper.handleError('User ID or Tag ID field is empty!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {
+        uid: parseInt(uID),
+        tid: parseInt(tID)
+    });
+}
+
+const addLocation = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    let tID = null;
+    let latitude = null;
+    let longitude = null;
+
+    tID = e.target.querySelector('#tagid').value;
+    latitude = e.target.querySelector('#latitude').value;
+    longitude = e.target.querySelector('#longitude').value;
+
+    console.log(tID, latitude, longitude);
+
+    if (tID === null || latitude === null || longitude === null) {
+        helper.handleError('Tag ID or latitude or longitude field is empty!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {
+        tid: parseInt(tID),
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude)
+    });
+}
 
 const init = () => {
     // form references
     const addUserForm = document.getElementById('add-user-form');
     const addCrewForm = document.getElementById('add-crew-form');
     const addTagForm = document.getElementById('add-tag-form');
+    const flagTagForm = document.getElementById('flag-tag-form');
+    const addLocationForm = document.getElementById('add-location-form');
 
     // assigning event listeners
     addUserForm.addEventListener('submit', (e) => {
@@ -99,6 +147,15 @@ const init = () => {
         e.preventDefault();
         addTag(e);
     });
+    flagTagForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        flagTag(e);
+    });
+    addLocationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        addLocation(e);
+    });
+
 };
 
 window.onload = init;

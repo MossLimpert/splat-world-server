@@ -55,6 +55,26 @@
 
         <input className="formSubmit" type="submit" value="Create New Tag" id="add-tag-btn">
       </form>
+      <br><br>
+      <h4>Flag Tag</h4>
+      <form name="flag tag" action="/flag-tag" method="post" id="flag-tag-form">
+        <span><label for="tagid">Tag Id: </label><input type="text" name="tagid" id="tagid"></span>
+        <br>
+        <span><label for="userid">User Id: </label><input type="text" name="userid" id="userid"></span>
+        <br>
+        <input type="submit" className="formSubmit" id="flag-tag-btn" value="Flag Tag">
+      </form>
+      <br><br>
+      <h4>Add Tag Location</h4>
+      <form name="add location" action="/add-location" method="post" id="add-location-form">
+        <span><label for="tagid">Tag Id: </label><input type="text" name="tagid" id="tagid"></span>
+        <br>
+        <span><label for="latitude">Latitude: </label><input type="text" placeholder="43.0856" name="latitude" id="latitude"></span>
+        <br>
+        <span><label for="longitude">Longitude: </label><input type="text" placeholder="-77.6763" name="longitude" id="longitude"></span>
+        <br>
+        <input type="submit" value="Add Tag Location" className="formSubmit">
+      </form>
     </section>
   </main>
 

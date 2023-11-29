@@ -87,7 +87,8 @@ const router = (app) => {
   app.post('/change-password', controllers.User.changePassword);
   app.get('/remove-pfp', controllers.User.removePfp);
   app.get('/remove-header', controllers.User.removeHeader);
-  
+  app.post('/flag-tag', controllers.Tag.flagTag);
+  app.post('/add-location', controllers.Tag.addLocation);
 };
 
 module.exports = router;
