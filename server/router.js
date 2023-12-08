@@ -88,6 +88,8 @@ const router = (app) => {
   app.get('/remove-pfp', controllers.User.removePfp);
   app.get('/remove-header', controllers.User.removeHeader);
   app.post('/flag-tag', controllers.Tag.flagTag);
+
+  // draw scene
   app.post('/add-location', controllers.Tag.addLocation);
 };
 

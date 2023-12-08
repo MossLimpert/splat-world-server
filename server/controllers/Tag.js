@@ -1,6 +1,7 @@
 // Author: Moss Limpert
 
 const db = require('../database.js');
+const Flag = require('./Flag.js');
 
 // render homepage
 const home = async (req, res) => res.render('app');
@@ -316,31 +317,6 @@ const saveTag = (req, res) => {
   }
 };
 
-const flag = (userId, itemId, res) => {
-  const sql = `INSERT INTO ${process.env.DATABASE}.flagged SET ?`;
-
-  try {
-    db.query(
-      sql,
-      {
-        author_ref: userId,
-        item_ref: itemId,
-      },
-      (err) => {
-        if (err) throw err;
-
-        res.json({message: 'Success!'});
-      }
-    );
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      error: 'Failed to update flagged table with new flagged tag',
-      message: err
-    });
-  }
-}
-
 const flagTag = (req, res) => {
   let userId = null;
   let tagId = null;
@@ -365,7 +341,7 @@ const flagTag = (req, res) => {
 
         if (!results || results.length === 0) {
           return res.status(404).json({error: 'No tag found to update.'});
-        } else return flag(userId, tagId, res);
+        } else return Flag.flag(userId, tagId, res);
       }
     );
 
@@ -400,7 +376,7 @@ const addLocation = (req, res) => {
       },
       (err) => {
         if (err) throw err;
-        //console.log(tid, latitude, longitude);
+        console.log(tid, latitude, longitude);
         res.end();
       }
     )

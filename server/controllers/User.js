@@ -207,7 +207,7 @@ const getUser = (req, res) => {
     return res.status(400).json({ error: 'No id or username provided.' });
   }
 
-  const sql = `SELECT username, join_date FROM ${process.env.DATABASE}.user`;
+  const sql = `SELECT username, id, pfp_link, header_link FROM ${process.env.DATABASE}.user`;
   if (id === null) {
     try {
       const addition = ' WHERE username = ?';
@@ -219,7 +219,12 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results.length !== 0) return res.status(302).json({ user: results[0] });
+          if (results.length !== 0) return res.status(302).json({ 
+              username: results[0].username,
+              id: results[0].id,
+              pfp_link: results[0].pfp_link,
+              header_link: results[0].header_link
+          });
           return res.status(404).json({ error: 'No user found.' });
         },
       );
@@ -244,7 +249,12 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results && results.length !== 0) return res.status(302).json({ user: results[0] });
+          if (results && results.length !== 0) return res.status(302).json({
+              username: results[0].username,
+              id: results[0].id,
+              pfp_link: results[0].pfp_link,
+              header_link: results[0].header_link
+            });
           return res.status(404).json({ error: 'No user found.' });
         },
       );
@@ -269,7 +279,12 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results && results.length !== 0) return res .json({ user: results[0] });
+          if (results && results.length !== 0) return res.status(302).json({ 
+              username: results[0].username,
+              id: results[0].id,
+              pfp_link: results[0].pfp_link,
+              header_link: results[0].header_link
+          });
           return res.status(404).json({ error: 'No user found.' });
         },
       );
@@ -288,7 +303,7 @@ const getUser = (req, res) => {
 
 // verify account LOGIN
 const verifyUser = async (req, res) => {
-  const sql = `SELECT username, password, id FROM ${process.env.DATABASE}.user WHERE username = ?`;
+  const sql = `SELECT username, password, id, pfp_link, header_link FROM ${process.env.DATABASE}.user WHERE username = ?`;
   let username = null;
   let password = null;
 
@@ -314,11 +329,15 @@ const verifyUser = async (req, res) => {
         if (results && results.length !== 0) {
           const match = await bcrypt.compare(password, results[0].password);
 
+          console.log(results);
+
           if (match) {
             return res.status(202).send({
               user: {
                 username: results[0].username,
                 id: results[0].id,
+                pfp_link: results[0].pfp_link,
+                header_link: results[0].header_link
               },
             });
           } return res.status(400).send({ error: 'Username or password incorrect' });
@@ -348,8 +367,8 @@ const logout = (req, res) => res.redirect('/');
 // allows a user to sign up for Bubbles
 const signup = async (req, res) => {
   const username = `${req.body.username}`;
-  const pass = `${req.body.password}`;
-  const pass2 = `${req.body.retype}`;
+  const pass = `${req.body.pass}`;
+  const pass2 = `${req.body.pass2}`;
 
   console.log(req.body.username, req.body.password, req.body.retype);
 
@@ -379,7 +398,9 @@ const signup = async (req, res) => {
 
     console.log('Successfully inserted 1 user.');
 
-    return res.redirect('/');
+    return res.status(200).json({
+      username: username,
+    });
   } catch (err) {
     // console.log(err.errors);
     if (err.code === 11000) {
