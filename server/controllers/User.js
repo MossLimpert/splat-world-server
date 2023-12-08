@@ -366,13 +366,18 @@ const logout = (req, res) => res.redirect('/');
 
 // allows a user to sign up for Bubbles
 const signup = async (req, res) => {
-  const username = `${req.body.username}`;
-  const pass = `${req.body.pass}`;
-  const pass2 = `${req.body.pass2}`;
+  let username = null;
+  let pass = null;
+  let pass2 = null;
 
-  console.log(req.body.username, req.body.password, req.body.retype);
+  if (req.body.username) username = req.body.username;
+  if (req.body.pass) pass = req.body.pass;
+  if (req.body.pass2) pass2 = req.body.pass2;
 
-  if (!username || !pass || !pass2) {
+  console.log(req.body);
+  console.log(username, pass, pass2);
+
+  if (username === null || pass === null || pass2 === null) {
     return res.status(400).json({ error: 'All fields are required!' });
   }
 
@@ -381,7 +386,7 @@ const signup = async (req, res) => {
   }
 
   try {
-    const hash = await bcrypt.generateHash(pass);
+    const hash = Account.generateHash(pass);
 
     db.query(
       `INSERT INTO ${process.env.DATABASE}.user SET ?`,
@@ -406,7 +411,7 @@ const signup = async (req, res) => {
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Username already in use!' });
     }
-
+    console.log("error: ", err);
     return res.status(500).json({ error: err });
   }
 };
