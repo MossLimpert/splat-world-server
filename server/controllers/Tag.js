@@ -317,6 +317,7 @@ const saveTag = (req, res) => {
   }
 };
 
+// flags a tag as having objectionable content
 const flagTag = (req, res) => {
   let userId = null;
   let tagId = null;
@@ -352,6 +353,7 @@ const flagTag = (req, res) => {
   }
 };
 
+// adds a location to a tag
 const addLocation = (req, res) => {
   let latitude = null;
   let longitude = null;
@@ -394,5 +396,4 @@ module.exports = {
   saveTag,
   flagTag,
   addLocation,
-
 };

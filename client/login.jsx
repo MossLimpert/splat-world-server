@@ -6,7 +6,7 @@ const helper = require('./helper.js');
 // event handlers
 //
 
-// add test user
+// add user
 const addUser = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -25,7 +25,7 @@ const addUser = (e) => {
     });
 }
 
-// add test crew
+// add crew
 const addCrew = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -58,7 +58,7 @@ const addCrew = (e) => {
     helper.sendPost(e.target.action, body)
 }
 
-// add test tag
+// add tag
 const addTag = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -79,6 +79,7 @@ const addTag = (e) => {
     });
 }
 
+// flag a tag for objectionable content
 const flagTag = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -100,6 +101,7 @@ const flagTag = (e) => {
     });
 }
 
+// add location to tag
 const addLocation = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -126,6 +128,7 @@ const addLocation = (e) => {
     });
 }
 
+// set up event listeners
 const init = () => {
     // form references
     const addUserForm = document.getElementById('add-user-form');

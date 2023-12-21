@@ -1,3 +1,5 @@
+// Author: Moss Limpert
+
 const minio = require('minio');
 const fs = require('fs');
 const path = require('path');
@@ -15,10 +17,6 @@ const minioClient = new minio.Client({
   secretKey: process.env.SECRET_KEY,
   
 });
-
-
-// file for testing
-//const file = path.resolve('hosted/img/splat.png');
 
 // get list of buckets
 const getBuckets = async () => {
@@ -140,159 +138,9 @@ const sendFromStringBuffer = async (metadata, bucketName, objectName, buffer) =>
   }
 };
 
-// send test image to user pfp from file location
-// const testSendFromFilePath = async () => {
-//    try {
-//     const metaData = {
-//       test: 'value',
-//     };
-
-//     // send image to server using filepath
-//     const result = await minioClient.fPutObject(
-// userPfp,
-// 'test',
-// file,
-// metaData,
-// (err, objInfo) => {
-//       if (err) {
-//         console.log(err);
-//         return { error: err };
-//       }
-
-//       console.log('Success!', objInfo.etag, objInfo.versionId);
-//       return objInfo;
-//     });
-
-//     console.log(result);
-//     return result;
-//   } catch (err) {
-//     console.log(err);
-//     return { error: err };
-//   }
-// };
-
-//
-// DOWNLOADING
-//
-
-// get buffer of object from server
-// referencing https://www.tabnine.com/code/javascript/functions/minio/Client/getObject
-// const getObjectBuffer = async (bucketName, objectName) => {
-
-//   try {
-//     return {
-//       createStream: () => {
-//         return new Promise((resolve, reject) => {
-//           return minioClient.getObject(
-//             bucketName,
-//             objectName,
-//             (err, dataStream) => {
-//               if (err) {
-//                 console.log(err);
-//                 return reject(err);
-//               }
-//               //dataStream.read()
-//               return resolve(dataStream);
-//             }
-//           );
-//         });
-//       }
-//       ,
-//       headers: async () => {
-//         const stat = await new Promise((resolve, reject) => {
-//           return minioClient.statObject(
-//             bucketName,
-//             objectName,
-//             (err, stat) => {
-//               if (err) {
-//                 console.log(err);
-//                 return reject(err);
-//               }
-//               return resolve(stat);
-//             }
-//           );
-//         });
-//         return {
-//           "Content-Type": stat.metaData["content-type"],
-//           "Content-Encoding": stat.metaData["content-encoding"],
-//           "Cache-Control": stat.metaData["cache-control"],
-//           "Content-Length": stat.size,
-//           "Record-ID": stat.metaData["record-id"]
-//         };
-//       }
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     return { error: err };
-//   }
-// };
-
-// // get buffer of object from server
-// const getObjectBuffer = async (bucketName, objectName) => {
-//   let size = 0;
-
-//   try {
-//     const stream = minioClient.getObject(bucketName, objectName, async (err, dataStream) => {
-//       if (err) {
-//         console.log(err);
-//         return { error: err };
-//       }
-
-//       // keep track of size of object
-//       dataStream.on('data', (chunk) => {
-//         size += chunk.length;
-//       });
-//       // optional: report size to console
-//       dataStream.on('end', () => {
-//         console.log('End data stream. Total size = ', size);
-//       });
-//       // return error message as json
-//       dataStream.on('error', (error) => {
-//         console.log(error);
-//         return { error };
-//       });
-
-//       //console.log(dataStream);
-
-//       return dataStream;
-//     })
-//     //   .then(() => {
-
-//     //   });
-
-//     // fs.createWriteStream(path.resolve('hosted/img'))
-//     //     .pipe(stream);
-//     return stream;
-//   } catch (err) {
-//     console.log(err);
-//     return { error: err };
-//   }
-// };
-
-// const testGetObjectFileDownload = async () => {
-//   try {
-//     return minioClient.fGetObject(
-//       userPfp,
-//       'pfptest',
-//       path.resolve('/hosted/downloads/testDownload.jpg'),
-//       (err) => {
-//         console.log(err);
-//         return err;
-//       },
-//     );
-//   } catch (err) {
-//     console.log(err);
-//     return { error: err };
-//   }
-// };
-
-
-// get obvject and download it locally
+// get object and download it locally
 const getObjectFileDownload = async (bucketName, objectName) => {
   try {
-    //console.log(bucketName);
-    //console.log(objectName);
-    //console.log(path.resolve('hosted/downloads/pfp.jpg'));
     return await minioClient.fGetObject(
       bucketName,
       objectName + ".jpg",
@@ -322,6 +170,7 @@ const getPresignedUrl = (bucketName, objectName, expiry) => {
   }
 };
 
+// removes an object from the minio object storage
 const removeObject = async (bucketName, objectName) => {
   try {
     console.log("in remove object method - object storage js");

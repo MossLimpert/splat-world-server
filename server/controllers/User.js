@@ -3,11 +3,11 @@
 const bcrypt = require('bcrypt');
 const path = require('path');
 const sharp = require('sharp');
-// const fs = require('fs');
-// const fsPromises = fs.promises;
+// const fs = require('fs');  // these will get used later when I figure out
+// const fsPromises = fs.promises;  // how to delete the temporary files i download
 // MySQL
 const db = require('../database.js');
-//MIN.IO
+// MIN.IO
 const minio = require('../objectstorage.js');
 const { sendFromFileStreamBuffer, removeObject, getObjectFileDownload } = minio;
 // models
@@ -67,6 +67,7 @@ const linkPfp = (etag, uid) => {
   }
 };
 
+// links a user and its header image
 const linkHeader = (etag, uid) => {
   console.log(`etag: ${etag} uid: ${uid}`);
   try {
@@ -113,10 +114,6 @@ const getPfpLink = (req, res) => {
     return err;
   }
 };
-
-// const downloadPfpByEtag = (req, res) => {
-
-// };
 
 // get # of tags a user has
 const getUserTagCount = (req, res) => {
@@ -356,13 +353,7 @@ const verifyUser = async (req, res) => {
 
 const loginPage = (req, res) => {
   res.render('login');
-}; // login
-const buyPremiumPage = (req, res) => res.render('buy-premium'); // buy premium page
-const docPage = (req, res) => res.render('docs'); // documentation page
-const changePassPage = (req, res) => res.render('reset'); // change password page
-
-// logs a user out of their account.
-const logout = (req, res) => res.redirect('/');
+};  // login page
 
 // allows a user to sign up for Bubbles
 const signup = async (req, res) => {
@@ -479,7 +470,6 @@ const uploadPfp = async (req, res) => {
   }
 };
 
-
 // downloads profile pic to the client
 const downloadPfp = async (req, res) => {
   const uid = req.query.id;
@@ -589,6 +579,7 @@ const downloadHeader = async (req, res) => {
   }
 }
 
+// get names of crews from an array of crew ids
 const getCrewNamesById = async (res, responseObj) => {
   try {
     const ids = responseObj.ids;
@@ -898,11 +889,7 @@ const removeHeader = async (req, res) => {
 
 module.exports = {
   loginPage,
-  logout,
   signup,
-  changePassPage,
-  buyPremiumPage,
-  docPage,
   addUser,
   getUser,
   verifyUser,
@@ -918,5 +905,4 @@ module.exports = {
   changePassword,
   removePfp,
   removeHeader,
-
 };

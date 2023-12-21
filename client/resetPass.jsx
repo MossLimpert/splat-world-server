@@ -47,14 +47,7 @@ const getImage = (e) => {
     );
 };
 
-// uploads an image to minio from server
-// const sendImage = (e) => {
-//     e.preventDefault();
-//     helper.hideError();
-
-    
-// }
-
+// uploads an image to the minio server
 const uploadImage = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -74,10 +67,8 @@ const uploadImage = (e) => {
     );
 };
 
+// connect event listeners
 const init = () => {
-    // ReactDOM.render(<ChangePassWindow />, 
-    //     document.getElementById('content'));
-    //const uploadPfpForm = document.querySelector('image-upload');
     const downloadPfpForm = document.querySelector('image-download');
 
     downloadPfpForm.addEventListener('submit', (e) => {

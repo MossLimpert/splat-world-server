@@ -131,6 +131,7 @@ const getCrew = (req, res) => {
   }
 };
 
+// returns a list of crew member names using the search query of name or crew id
 const getCrewMembers = (req, res) => {
   let name = null;
   let crew = null;

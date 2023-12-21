@@ -1,7 +1,6 @@
 // Author: Moss Limpert
 
 const helper = require('./helper.js');
-const handlebars = require('handlebars');
 
 //
 // helpers
@@ -89,9 +88,6 @@ const displayTag = (res) => {
     document.querySelector('#res-active').innerHTML = res.tag.active;
 
 }
-
-
-
 
 //
 // event handlers
@@ -290,6 +286,7 @@ const getPfpLink = (e) => {
     );
 }
 
+// connects event listeners
 const init = () => {
     // form references
     const getUserForm = document.getElementById('get-user');
