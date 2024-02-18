@@ -108,11 +108,11 @@ const getUser = (e) => {
         return false;
     }
 
-    if (username && !uid) {
+    if (username && uid === "") {
         helper.sendGet(e.target.action, {
             username: username
         }, displayUser);
-    } else if (!username && uid) {
+    } else if (username === "" && uid) {
         helper.sendGet(e.target.action, {
             id: uid
         }, displayUser);

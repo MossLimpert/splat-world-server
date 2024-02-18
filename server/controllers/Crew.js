@@ -132,60 +132,60 @@ const getCrew = (req, res) => {
 };
 
 // returns a list of crew member names using the search query of name or crew id
-const getCrewMembers = (req, res) => {
-  let name = null;
-  let crew = null;
+// const getCrewMembers = (req, res) => {
+//   let name = null;
+//   let crew = null;
 
-  if (req.query.name) name = req.query.name;
-  if (req.query.cid) crew = req.query.cid;
+//   if (req.query.name) name = req.query.name;
+//   if (req.query.cid) crew = req.query.cid;
 
-  let sql = `SELECT * FROM ${process.env.DATABASE}.crew_member `;
-  if (name === null && crew != null) {
-    let addition = 'WHERE crew = ?';
+//   let sql = `SELECT * FROM ${process.env.DATABASE}.crew_member `;
+//   if (name === null && crew != null) {
+//     let addition = 'WHERE crew = ?';
 
-    try {
-      db.execute(
-        sql + addition,
-        [crew],
-        (err, results) => {
-          if (err) throw err;
+//     try {
+//       db.execute(
+//         sql + addition,
+//         [crew],
+//         (err, results) => {
+//           if (err) throw err;
 
-          if (results.length !== 0 && results.length === 1) {
-            return res.status(302).json({ crewMembers: results[0]});
-          } else if (results.length !== 0 && results.length > 1) {
-            return res.status(302).json({ crewMembers: results});
-          } else return res.status(404).json({error: 'No crew members found.'});
-        }
-      )
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({error: err});
-    }
-  } else if (crew === null && name != null) {
-    let addition = 'WHERE name = ?';
+//           if (results.length !== 0 && results.length === 1) {
+//             return res.status(302).json({ crewMembers: results[0]});
+//           } else if (results.length !== 0 && results.length > 1) {
+//             return res.status(302).json({ crewMembers: results});
+//           } else return res.status(404).json({error: 'No crew members found.'});
+//         }
+//       )
+//     } catch (err) {
+//       console.log(err);
+//       return res.status(500).json({error: err});
+//     }
+//   } else if (crew === null && name != null) {
+//     let addition = 'WHERE name = ?';
 
-    try {
-      db.execute(
-        sql + addition,
-        [name],
-        (err, results) => {
-          if (err) throw err;
+//     try {
+//       db.execute(
+//         sql + addition,
+//         [name],
+//         (err, results) => {
+//           if (err) throw err;
 
-          if (results.length !== 0 && results.length === 1) {
-            return res.status(302).json({ crewMembers: results[0]});
-          } else if (results.length !== 0 && results.length > 1) {
-            return res.status(302).json({ crewMembers: results});
-          } else return res.status(404).json({error: 'No crew members found.'});
-        }
-      )
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({error: err});
-    }
-  } else if (name === null && crew === null) {
-     return res.status(400).json({error: 'No crew name or id provided.'});
-  } else return res.status(500).end();
-}
+//           if (results.length !== 0 && results.length === 1) {
+//             return res.status(302).json({ crewMembers: results[0]});
+//           } else if (results.length !== 0 && results.length > 1) {
+//             return res.status(302).json({ crewMembers: results});
+//           } else return res.status(404).json({error: 'No crew members found.'});
+//         }
+//       )
+//     } catch (err) {
+//       console.log(err);
+//       return res.status(500).json({error: err});
+//     }
+//   } else if (name === null && crew === null) {
+//      return res.status(400).json({error: 'No crew name or id provided.'});
+//   } else return res.status(500).end();
+// }
 
 module.exports = {
   addCrew,

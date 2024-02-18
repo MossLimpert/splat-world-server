@@ -42,7 +42,7 @@ const sendGet = async (url, data, handler) => {
     //console.log(url);
     //let dir = '/tag';
     let params = new URLSearchParams(JSON.parse(data));
-    //console.log(params)
+    console.log(params)
     let fullUrl = url + '?'
     //console.log(fullUrl + params);
 

@@ -659,6 +659,7 @@ const getUserCrews = async (req, res) => {
           response = {
             error: "no results found"
           }
+          return res.json(response);
         } 
         return getCrewNamesById(res, response);
       });
