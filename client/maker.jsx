@@ -286,6 +286,25 @@ const getPfpLink = (e) => {
     );
 }
 
+// get user crews
+const getUserCrews = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const uid = e.target.querySelector('#get-user-crews-id');
+
+    if (!uid) {
+        helper.handleError('No user id!');
+        return false;
+    }
+
+    helper.sendGet(
+        e.target.action,
+        {id: Number(uid)},
+        displayInfo
+    );
+}
+
 // connects event listeners
 const init = () => {
     // form references
@@ -297,6 +316,7 @@ const init = () => {
     const loginForm = document.getElementById('login');
     const getTagCountForm = document.getElementById('get-tag-count');
     const getPfpLinkForm = document.getElementById('get-pfp-link');
+    const getUserCrewsForm = document.getElementById('get-user-crews');
 
     // assigning event listeners
     getUserForm.addEventListener('submit', (e) => {
@@ -330,6 +350,10 @@ const init = () => {
     getPfpLinkForm.addEventListener('submit', (e) => {
         e.preventDefault();
         getPfpLink(e);
+    });
+    getUserCrewsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        getUserCrews(e);
     });
 };
 
