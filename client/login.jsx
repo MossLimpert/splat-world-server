@@ -53,9 +53,9 @@ const addCrew = (e) => {
         color_b: color.b
     };
 
-    console.log(body);
+    //console.log(body);
 
-    helper.sendPost(e.target.action, body)
+    helper.sendPost(e.target.action, body, helper.displayInfo)
 }
 
 // add tag

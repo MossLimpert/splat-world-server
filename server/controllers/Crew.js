@@ -12,7 +12,7 @@ const associateCrewMember = async (uid, cid, res) => {
         user_ref: uid,
         crew: cid,
       },
-      (err) => {
+      (err, results) => {
         if (err) {
           console.log(err);
           throw err;
@@ -20,22 +20,19 @@ const associateCrewMember = async (uid, cid, res) => {
 
         // console.log(results);
 
-        return res.end();
-        // if (results.length !== 0) {
-        //   let count = results.length;
-        //   let names;
+        //return res.end();
+        if (results.length !== 0) {
 
-        //   console.log(results);
-
-        //   return res.json({
-        //     count: count,
-        //     names: names
-        //   });
-        // } else return res.json({error: 'An error getting user crews!'});
+          return res.json({
+            message: 'successfully added crew and associated owner with crew'
+          });
+        } 
+        //return res.end();
+        else return res.json({error: 'An error returning crew info! Crew Successfully added.'});
       },
     );
 
-    return res.end();
+    //return res.end();
   } catch (err) {
     console.log(err);
     return res.json({ error: err });
@@ -78,9 +75,8 @@ const addCrew = async (req, res) => {
       return associateCrewMember(owner, results.insertId, res);
     });
 
-    console.log('Successfully inserted 1 crew');
-
-    return res.redirect('/');
+    //return res.redirect('/');
+    
   } catch (err) {
     console.log(err);
 

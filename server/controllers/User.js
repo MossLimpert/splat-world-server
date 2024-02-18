@@ -636,6 +636,8 @@ const getUserCrews = async (req, res) => {
           error: "didn't work"
         };
 
+        console.log(results);
+
         if (results && results.length !== 0) {
           const count = results.length;
           const ids = [];

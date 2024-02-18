@@ -379,9 +379,14 @@ const addLocation = (req, res) => {
       (err) => {
         if (err) throw err;
         console.log(tid, latitude, longitude);
-        res.end();
+        return res.json({
+          tid: tid,
+          latitude: latitude,
+          longitude: longitude
+        });
       }
     )
+    return res.status(200);
   } catch (err) {
     console.log(err);
     return res.status(500).json({error: err});

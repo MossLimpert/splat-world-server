@@ -4,6 +4,8 @@
 /* 1 */
 /***/ ((module) => {
 
+// Authors: Austin Willoughby, Moss Limpert
+
 /* Takes in an error message. Sets the error message up in html, and
    displays it to the user. Will be hidden by other events that could
    end in an error.
@@ -13,17 +15,31 @@ const handleError = message => {
   document.getElementById('message').classList.remove('hidden');
 };
 
+// puts stuff in result box
+const displayInfo = res => {
+  if (res.error) helper.handleError(res.error);else {
+    // make results sectino visible
+    document.querySelector('#result').classList.remove('hidden');
+    // put info in
+    //console.log(res);
+    document.querySelector('#result p').innerHTML = JSON.stringify(res);
+  }
+};
+
 /* Sends post requests to the server using fetch. Will look for various
     entries in the response JSON object, and will handle them appropriately.
 */
 const sendPost = async (url, data, handler) => {
+  let body = JSON.stringify(data);
+  //console.log(body);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data)
+    body: body
   });
+  //console.log("test");
   const result = await response.json();
   document.getElementById('message').classList.add('hidden');
   if (result.redirect) {
@@ -33,17 +49,16 @@ const sendPost = async (url, data, handler) => {
     handleError(result.error);
   }
   if (handler) {
+    console.log(result);
     handler(result);
   }
 };
-const sendGet = async (url, data, handler) => {
-  //console.log(url);
-  //let dir = '/tag';
-  let params = new URLSearchParams(JSON.parse(data));
-  //console.log(params)
-  let fullUrl = url + '?';
-  //console.log(fullUrl + params);
 
+// sends a get request
+const sendGet = async (url, data, handler) => {
+  //let params = new URLSearchParams(JSON.parse(data));
+  let params = new URLSearchParams(data);
+  let fullUrl = url + '?' + params;
   const response = await fetch(fullUrl + params, {
     method: 'GET',
     headers: {
@@ -51,18 +66,17 @@ const sendGet = async (url, data, handler) => {
     }
   });
   const result = await response.json();
-  console.log(result);
-  // hideError();
-
-  // if (result.redirect) {
-  //     window.location = result.redirect;
-  // }
-  // if (result.error) {
-  //     handleError(result.error);
-  // }
-  // if (handler) {
-  //     handler(result);
-  // }
+  hideError();
+  if (result.redirect) {
+    window.location = result.redirect;
+  }
+  if (result.error) {
+    handleError(result.error);
+  }
+  if (handler) {
+    //console.log(result);
+    handler(result);
+  }
 };
 
 // hides error message
@@ -84,7 +98,8 @@ module.exports = {
   sendPost,
   hideError,
   convertHexRGB,
-  sendGet
+  sendGet,
+  displayInfo
 };
 
 /***/ })
@@ -159,13 +174,7 @@ const getImage = e => {
   }, displayInfo);
 };
 
-// uploads an image to minio from server
-// const sendImage = (e) => {
-//     e.preventDefault();
-//     helper.hideError();
-
-// }
-
+// uploads an image to the minio server
 const uploadImage = e => {
   e.preventDefault();
   helper.hideError();
@@ -177,10 +186,9 @@ const uploadImage = e => {
     pfpname: pfpname
   }, displayInfo);
 };
+
+// connect event listeners
 const init = () => {
-  // ReactDOM.render(<ChangePassWindow />, 
-  //     document.getElementById('content'));
-  //const uploadPfpForm = document.querySelector('image-upload');
   const downloadPfpForm = document.querySelector('image-download');
   downloadPfpForm.addEventListener('submit', e => {
     e.preventDefault();

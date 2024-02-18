@@ -61,8 +61,8 @@ const displayUser = (res) => {
     document.querySelector('#res-user').classList.remove('hidden');
 
     // set fields
-    document.querySelector('#res-username').innerHTML = res.user.username;
-    document.querySelector('#res-join_date').innerHTML = res.user.join_date;
+    document.querySelector('#res-username').innerHTML = res.username;
+    //document.querySelector('#res-join_date').innerHTML = res.user.join_date;
 }
 
 // fill template with tag info
@@ -282,7 +282,7 @@ const getPfpLink = (e) => {
     helper.sendGet(
         e.target.action,
         {id: Number(uid)},
-        displayInfo
+        helper.displayInfo
     );
 }
 
@@ -291,7 +291,7 @@ const getUserCrews = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    const uid = e.target.querySelector('#get-user-crews-id');
+    const uid = e.target.querySelector('#get-user-crews-id').value;
 
     if (!uid) {
         helper.handleError('No user id!');

@@ -9,18 +9,33 @@ const handleError = (message) => {
     document.getElementById('message').classList.remove('hidden');
 };
   
+// puts stuff in result box
+const displayInfo = (res) => {
+
+    if (res.error) helper.handleError(res.error);
+    else {
+        // make results sectino visible
+        document.querySelector('#result').classList.remove('hidden');
+        // put info in
+        //console.log(res);
+        document.querySelector('#result p').innerHTML = JSON.stringify(res);
+    }
+}
+
 /* Sends post requests to the server using fetch. Will look for various
     entries in the response JSON object, and will handle them appropriately.
 */
 const sendPost = async (url, data, handler) => {
+    let body = JSON.stringify(data);
+    //console.log(body);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: body,
     });
-
+    //console.log("test");
     const result = await response.json();
     document.getElementById('message').classList.add('hidden');
 
@@ -33,18 +48,16 @@ const sendPost = async (url, data, handler) => {
     }
 
     if (handler) {
+        console.log(result);
         handler(result);
     }
 };
 
 // sends a get request
 const sendGet = async (url, data, handler) => {
-    //console.log(url);
-    //let dir = '/tag';
-    let params = new URLSearchParams(JSON.parse(data));
-    console.log(params)
-    let fullUrl = url + '?'
-    //console.log(fullUrl + params);
+    //let params = new URLSearchParams(JSON.parse(data));
+    let params = new URLSearchParams(data);
+    let fullUrl = url + '?' + params;
 
     const response = await fetch (fullUrl + params, {
         method: 'GET',
@@ -54,8 +67,7 @@ const sendGet = async (url, data, handler) => {
     });
 
     const result = await response.json();
-    console.log(result);
-    // hideError();
+    hideError();
 
     if (result.redirect) {
         window.location = result.redirect;
@@ -64,8 +76,10 @@ const sendGet = async (url, data, handler) => {
         handleError(result.error);
     }
     if (handler) {
+        //console.log(result);
         handler(result);
     }
+    
 }
 
 // hides error message
@@ -89,4 +103,5 @@ module.exports = {
     hideError,
     convertHexRGB,
     sendGet,
+    displayInfo
 };
