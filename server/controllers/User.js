@@ -300,7 +300,7 @@ const getUser = (req, res) => {
 
 // verify account LOGIN
 const verifyUser = async (req, res) => {
-  const sql = `SELECT username, password, id, pfp_link, header_link FROM ${process.env.DATABASE}.user WHERE username = ?`;
+  const sql = `SELECT username, password, id, pfp_link, header_link, join_date FROM ${process.env.DATABASE}.user WHERE username = ?`;
   let username = null;
   let password = null;
 
@@ -329,12 +329,13 @@ const verifyUser = async (req, res) => {
           console.log(results);
 
           if (match) {
-            return res.status(202).send({
+            return res.status(202).json({
               user: {
                 username: results[0].username,
                 id: results[0].id,
                 pfp_link: results[0].pfp_link,
-                header_link: results[0].header_link
+                header_link: results[0].header_link,
+                join_date: results[0].join_date
               },
             });
           } return res.status(400).send({ error: 'Username or password incorrect' });
