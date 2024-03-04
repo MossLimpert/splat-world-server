@@ -63,3 +63,18 @@ CREATE TABLE IF NOT EXISTS `tag_geolocation` (
   KEY `tag_ref_idx` (`tag_ref`),
   CONSTRAINT `tag_ref` FOREIGN KEY (`tag_ref`) REFERENCES `tag` (`id`)
 );
+
+CREATE TABLE `flagged` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `author_ref` int NOT NULL,
+  `type` varchar(45) NOT NULL DEFAULT 'tag',
+  `item_ref` int NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `reviewed` tinyint NOT NULL DEFAULT '0',
+  `appealed` tinyint NOT NULL DEFAULT '0',
+  `delete` tinyint NOT NULL DEFAULT '0',
+  `notes` varchar(288) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `author_ref_idx_idx` (`author_ref`),
+  CONSTRAINT `author_ref_idx` FOREIGN KEY (`author_ref`) REFERENCES `user` (`id`)
+);
