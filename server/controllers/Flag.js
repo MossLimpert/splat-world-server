@@ -4,29 +4,29 @@ const db = require('../database.js');
 
 // flag a tag as having objectionable content
 const flag = (userId, itemId, res) => {
-    const sql = `INSERT INTO ${process.env.DATABASE}.flagged SET ?`;
-  
-    try {
-      db.query(
-        sql,
-        {
-          author_ref: userId,
-          item_ref: itemId,
-        },
-        (err) => {
-          if (err) throw err;
-  
-          res.json({message: 'Success!'});
-        }
-      );
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        error: 'Failed to update flagged table with new flagged tag',
-        message: err
-      });
-    }
+  const sql = `INSERT INTO ${process.env.DATABASE}.flagged SET ?`;
+
+  try {
+    db.query(
+      sql,
+      {
+        author_ref: userId,
+        item_ref: itemId,
+      },
+      (err) => {
+        if (err) throw err;
+
+        res.json({ message: 'Success!' });
+      },
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: 'Failed to update flagged table with new flagged tag',
+      message: err,
+    });
   }
+};
 
 // // unimplemented
 // // get a flagged tag for review
@@ -37,7 +37,7 @@ const flag = (userId, itemId, res) => {
 // // unimplemented
 // // lowers a tag's flag, marking in its notes that it has been flagged
 // const lowerFlag = (req, res) => {
-  
+
 // };
 
 // // unimplemented
@@ -51,7 +51,6 @@ const flag = (userId, itemId, res) => {
 // const appealFlag = (req, res) => {
 //   let fid = null;
 
-
 // };
 
 // // unimplemented
@@ -61,11 +60,11 @@ const flag = (userId, itemId, res) => {
 // };
 
 module.exports = {
-    flag,
-    // lowerFlag,
-    // reviewFlag,
-    // appealFlag,
-    // markFlagForDeletion,
-    // getFlag,
-    
-}
+  flag,
+  // lowerFlag,
+  // reviewFlag,
+  // appealFlag,
+  // markFlagForDeletion,
+  // getFlag,
+
+};

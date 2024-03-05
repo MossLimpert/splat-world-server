@@ -20,19 +20,18 @@ const associateCrewMember = async (uid, cid, res) => {
 
         // console.log(results);
 
-        //return res.end();
+        // return res.end();
         if (results.length !== 0) {
-
           return res.json({
-            message: 'successfully added crew and associated owner with crew'
+            message: 'successfully added crew and associated owner with crew',
           });
-        } 
-        //return res.end();
-        else return res.json({error: 'An error returning crew info! Crew Successfully added.'});
+        }
+        // return res.end();
+        return res.json({ error: 'An error returning crew info! Crew Successfully added.' });
       },
     );
 
-    //return res.end();
+    // return res.end();
   } catch (err) {
     console.log(err);
     return res.json({ error: err });
@@ -75,8 +74,7 @@ const addCrew = async (req, res) => {
       return associateCrewMember(owner, results.insertId, res);
     });
 
-    //return res.redirect('/');
-    
+    // return res.redirect('/');
   } catch (err) {
     console.log(err);
 

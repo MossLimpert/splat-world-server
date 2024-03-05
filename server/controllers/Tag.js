@@ -325,9 +325,9 @@ const flagTag = (req, res) => {
   if (req.body.uid) userId = req.body.uid;
   if (req.body.tid) tagId = req.body.tid;
 
-  //console.log(req.body.uid, req.body.tid);
+  // console.log(req.body.uid, req.body.tid);
   if (userId === null || tagId === null) {
-    return res.status(400).json({error: 'No user id or tag id provided.'});
+    return res.status(400).json({ error: 'No user id or tag id provided.' });
   }
 
   const sql = `UPDATE ${process.env.DATABASE}.tag SET flagged = 1 WHERE id = ?`;
@@ -338,18 +338,18 @@ const flagTag = (req, res) => {
       (err, results) => {
         if (err) throw err;
 
-        //console.log(results);
+        // console.log(results);
 
         if (!results || results.length === 0) {
-          return res.status(404).json({error: 'No tag found to update.'});
-        } else return Flag.flag(userId, tagId, res);
-      }
+          return res.status(404).json({ error: 'No tag found to update.' });
+        } return Flag.flag(userId, tagId, res);
+      },
     );
 
     return false;
   } catch (err) {
     console.log(err);
-    return res.status(500).json({error: err});
+    return res.status(500).json({ error: err });
   }
 };
 
@@ -364,7 +364,7 @@ const addLocation = (req, res) => {
   if (req.body.tid) tid = req.body.tid;
 
   if (latitude === null || longitude === null || tid === null) {
-    return res.status(400).json({error: 'No latitude or longitude or tag id'});
+    return res.status(400).json({ error: 'No latitude or longitude or tag id' });
   }
 
   const sql = `INSERT INTO ${process.env.DATABASE}.tag_geolocation SET ?`;
@@ -373,25 +373,25 @@ const addLocation = (req, res) => {
       sql,
       {
         tag_ref: tid,
-        latitude: latitude,
-        longitude: longitude
+        latitude,
+        longitude,
       },
       (err) => {
         if (err) throw err;
         console.log(tid, latitude, longitude);
         return res.json({
-          tid: tid,
-          latitude: latitude,
-          longitude: longitude
+          tid,
+          latitude,
+          longitude,
         });
-      }
-    )
+      },
+    );
     return res.status(200);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({error: err});
+    return res.status(500).json({ error: err });
   }
-}
+};
 
 module.exports = {
   home,

@@ -9,9 +9,11 @@ const sharp = require('sharp');
 const db = require('../database.js');
 // MIN.IO
 const minio = require('../objectstorage.js');
+
 const { sendFromFileStreamBuffer, removeObject, getObjectFileDownload } = minio;
 // models
 const models = require('../models');
+
 const { Account } = models;
 
 // uses sharp to get file metadata
@@ -57,9 +59,10 @@ const linkPfp = (etag, uid) => {
           return err;
         }
 
-        //console.log(results);
+        // console.log(results);
         return { results };
-    });
+      },
+    );
 
     return true;
   } catch (err) {
@@ -81,13 +84,14 @@ const linkHeader = (etag, uid) => {
         }
 
         return { results };
-    });
+      },
+    );
 
     return true;
   } catch (err) {
     return err;
   }
-}
+};
 
 // get the minio etag associated with a user's pfp
 const getPfpLink = (req, res) => {
@@ -135,7 +139,7 @@ const getUserTagCount = (req, res) => {
 
         if (results && results.length >= 0) {
           return res.json({ count: tagCount });
-        } else return res.json({ error: err });
+        } return res.json({ error: err });
       },
     );
 
@@ -161,8 +165,8 @@ const addUser = async (req, res) => {
     db.query(
       `INSERT INTO ${process.env.DATABASE}.user SET ?`,
       {
-        username: username,
-        password: hash
+        username,
+        password: hash,
       },
       (err, results) => {
         if (err) {
@@ -170,7 +174,7 @@ const addUser = async (req, res) => {
           throw err;
         }
 
-        //console.log(results);
+        // console.log(results);
         return results;
       },
     );
@@ -216,12 +220,14 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results.length !== 0) return res.status(302).json({ 
+          if (results.length !== 0) {
+            return res.status(302).json({
               username: results[0].username,
               id: results[0].id,
               pfp_link: results[0].pfp_link,
-              header_link: results[0].header_link
-          });
+              header_link: results[0].header_link,
+            });
+          }
           return res.status(404).json({ error: 'No user found.' });
         },
       );
@@ -246,12 +252,14 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results && results.length !== 0) return res.status(302).json({
+          if (results && results.length !== 0) {
+            return res.status(302).json({
               username: results[0].username,
               id: results[0].id,
               pfp_link: results[0].pfp_link,
-              header_link: results[0].header_link
+              header_link: results[0].header_link,
             });
+          }
           return res.status(404).json({ error: 'No user found.' });
         },
       );
@@ -276,12 +284,14 @@ const getUser = (req, res) => {
 
           console.log(results);
 
-          if (results && results.length !== 0) return res.status(302).json({ 
+          if (results && results.length !== 0) {
+            return res.status(302).json({
               username: results[0].username,
               id: results[0].id,
               pfp_link: results[0].pfp_link,
-              header_link: results[0].header_link
-          });
+              header_link: results[0].header_link,
+            });
+          }
           return res.status(404).json({ error: 'No user found.' });
         },
       );
@@ -335,7 +345,7 @@ const verifyUser = async (req, res) => {
                 id: results[0].id,
                 pfp_link: results[0].pfp_link,
                 header_link: results[0].header_link,
-                join_date: results[0].join_date
+                join_date: results[0].join_date,
               },
             });
           } return res.status(400).send({ error: 'Username or password incorrect' });
@@ -354,7 +364,7 @@ const verifyUser = async (req, res) => {
 
 const loginPage = (req, res) => {
   res.render('login');
-};  // login page
+}; // login page
 
 // allows a user to sign up for Bubbles
 const signup = async (req, res) => {
@@ -396,14 +406,14 @@ const signup = async (req, res) => {
     console.log('Successfully inserted 1 user.');
 
     return res.status(200).json({
-      username: username,
+      username,
     });
   } catch (err) {
     // console.log(err.errors);
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Username already in use!' });
     }
-    console.log("error: ", err);
+    console.log('error: ', err);
     return res.status(500).json({ error: err });
   }
 };
@@ -438,8 +448,8 @@ const uploadPfp = async (req, res) => {
     );
 
     // create custom filename
-    let filename = generatePfpName(uid);
-    //console.log(filename);
+    const filename = generatePfpName(uid);
+    // console.log(filename);
 
     // send to minio
     const result = sendFromFileStreamBuffer(
@@ -476,7 +486,7 @@ const downloadPfp = async (req, res) => {
   const uid = req.query.id;
   let name = req.query['download-name'];
   console.log('download pfp: uid: ', uid, 'name: ', name);
-  //console.log("name: ", req.query["download-name"]);
+  // console.log("name: ", req.query["download-name"]);
   if (name === undefined) {
     name = generatePfpName(uid);
   } else if (uid === undefined) {
@@ -484,13 +494,13 @@ const downloadPfp = async (req, res) => {
   }
 
   try {
-    /*generatePfpName(uid)*/
+    /* generatePfpName(uid) */
     await getObjectFileDownload('user-pfp', name);
 
     return res.download(path.resolve('hosted/downloads/pfp.jpg'));
   } catch (err) {
-    console.log("error in downloadpfp catch", err);
-    return res.status(500).json({error: err});
+    console.log('error in downloadpfp catch', err);
+    return res.status(500).json({ error: err });
   }
 };
 
@@ -504,13 +514,12 @@ const uploadHeader = async (req, res) => {
     const metadata = await getFileMetadata(filePath);
     console.log(metadata);
 
-
     // thumbnailing
     sharp(req.file.path).resize({
       width: 1080,
       fit: 'cover',
       withoutEnlargement: true,
-      position: 'centre'
+      position: 'centre',
     }).jpeg({
       quality: 80,
       chromaSubsampling: '4:4:4',
@@ -522,11 +531,11 @@ const uploadHeader = async (req, res) => {
           return err;
         }
         return info;
-      }
+      },
     );
 
     // make filename
-    let filename = generateHeaderName(uid);
+    const filename = generateHeaderName(uid);
 
     // send to minio
     sendFromFileStreamBuffer(
@@ -544,46 +553,45 @@ const uploadHeader = async (req, res) => {
         }
 
         return linkHeader(etag, uid);
-      }
+      },
     );
 
-    //console.log('result:', result);
+    // console.log('result:', result);
 
     // delete temp files here
 
-    return res.json({message: 'Successfully uploaded header.'});
-
+    return res.json({ message: 'Successfully uploaded header.' });
   } catch (err) {
     console.log(err);
-    return res.json({error: err});
+    return res.json({ error: err });
   }
-}
+};
 
 // downloads a header pic to the client
 const downloadHeader = async (req, res) => {
-  //const uid = 
+  // const uid =
   const name = req.query['download-name'];
 
   if (name === undefined) {
     return res.status(400)
-    .json({error: 'No filename provided to download header!'});
+      .json({ error: 'No filename provided to download header!' });
   }
 
   try {
     const results = await getObjectFileDownload('user-header', name);
     console.log(results);
-    
+
     return res.download(path.resolve(`hosted/downloads/${name}.jpg`));
   } catch (err) {
     console.log(err);
-    return res.status(500).json({error: err});
+    return res.status(500).json({ error: err });
   }
-}
+};
 
 // get names of crews from an array of crew ids
 const getCrewNamesById = async (res, responseObj) => {
   try {
-    const ids = responseObj.ids;
+    const { ids } = responseObj;
 
     db.query(
       `SELECT name FROM ${process.env.DATABASE}.crew WHERE id IN (?)`,
@@ -591,14 +599,14 @@ const getCrewNamesById = async (res, responseObj) => {
       (err, results) => {
         if (err) throw err;
 
-        //console.log(results);
+        // console.log(results);
 
-        let names = [];
+        const names = [];
         for (let i = 0; i < results.length; i++) {
           names.push(results[i].name);
         }
 
-        let response = {};
+        const response = {};
         Object.assign(response, responseObj);
         response.names = names;
 
@@ -608,15 +616,15 @@ const getCrewNamesById = async (res, responseObj) => {
           ids: response.ids,
           names: response.names,
         });
-      }
+      },
     );
 
     return false;
   } catch (err) {
     console.log(err);
-    return res.json({error: err});
+    return res.json({ error: err });
   }
-}
+};
 
 // gets list of crew ids and returns to user
 // TODO: get crew names and include that too
@@ -634,7 +642,7 @@ const getUserCrews = async (req, res) => {
         }
 
         let response = {
-          error: "didn't work"
+          error: "didn't work",
         };
 
         console.log(results);
@@ -643,29 +651,28 @@ const getUserCrews = async (req, res) => {
           const count = results.length;
           const ids = [];
 
-          
           for (let i = 0; i < results.length; i++) {
             ids.push(results[i].crew);
           }
 
-          //console.log(crewNames);
+          // console.log(crewNames);
           // console.log(ids);
 
           response = {
-            count: count,
-            ids: ids,
+            count,
+            ids,
           };
           console.log(response);
-          //return res.end(response, 'json');
-        }
-        else {
+          // return res.end(response, 'json');
+        } else {
           response = {
-            error: "no results found"
-          }
+            error: 'no results found',
+          };
           return res.json(response);
-        } 
+        }
         return getCrewNamesById(res, response);
-      });
+      },
+    );
     return false;
   } catch (err) {
     console.log(err);
@@ -757,25 +764,26 @@ const getPoints = async (req, res) => {
       `SELECT points FROM ${process.env.DATABASE}.tag WHERE author_ref = ?`,
       [uid],
       (err, results) => {
-        if(err) {
+        if (err) {
           console.log(err);
           throw err;
         }
 
-        //console.log(results);
+        // console.log(results);
         let total = 0;
         for (let i = 0; i < results.length; i++) {
           total += results[i].points;
         }
         console.log(total);
 
-        return res.json({points: total});
-    });
+        return res.json({ points: total });
+      },
+    );
 
     return false;
   } catch (err) {
     console.log(err);
-    return res.status(500).json({error: err});
+    return res.status(500).json({ error: err });
   }
 };
 
@@ -785,10 +793,10 @@ const changePassword = async (req, res) => {
   const oldPass = `${req.body.oldPass}`;
   const pass2 = `${req.body.pass2}`;
   const pass3 = `${req.body.pass3}`;
-  //console.log("in change password ");
+  // console.log("in change password ");
 
-  //console.log(req.body);
-  if ( !uid || !oldPass || !pass2 || !pass3) {
+  // console.log(req.body);
+  if (!uid || !oldPass || !pass2 || !pass3) {
     return res.status(400).json({ error: 'All fields are required!' });
   }
 
@@ -805,8 +813,8 @@ const changePassword = async (req, res) => {
           console.log(err);
           return err;
         }
-        //console.log(results);
-        
+        // console.log(results);
+
         if (results && results.length !== 0) {
           const match = bcrypt.compare(oldPass, results[0].password);
           if (match) {
@@ -820,14 +828,16 @@ const changePassword = async (req, res) => {
                   console.log(error);
                   throw error;
                 }
-                console.log('Successfully changed password')
-                return res.json({results: results2});
-            });
-          } else return res.status(400).json({error: 'Old password provided does not match the one we have on file.'});
-        } else return res.status(404).json({error: 'No password found! Please retry.'});
+                console.log('Successfully changed password');
+                return res.json({ results: results2 });
+              },
+            );
+          } else return res.status(400).json({ error: 'Old password provided does not match the one we have on file.' });
+        } else return res.status(404).json({ error: 'No password found! Please retry.' });
 
         return false;
-      });
+      },
+    );
 
     return false;
   } catch (err) {
@@ -839,7 +849,7 @@ const changePassword = async (req, res) => {
 // allows a user to remove their current pfp
 const removePfp = async (req, res) => {
   const uid = req.query.id;
-  console.log("in remove pfp user js");
+  console.log('in remove pfp user js');
   try {
     db.query(
       `UPDATE ${process.env.DATABASE}.user SET pfp_link = NULL WHERE id = ?`,
@@ -849,27 +859,27 @@ const removePfp = async (req, res) => {
           console.log(err);
           throw err;
         }
-        console.log("remove profile pic: ", results);
-        return {results: results};
-    });
+        console.log('remove profile pic: ', results);
+        return { results };
+      },
+    );
 
     // remove img from minio here
-    let results = await removeObject('user-pfp', `pfp-${uid}`);
+    const results = await removeObject('user-pfp', `pfp-${uid}`);
 
     console.log(results);
 
-    return res.json({message: 'Successfully removed profile pic'});
-
+    return res.json({ message: 'Successfully removed profile pic' });
   } catch (err) {
     console.log(err);
-    return res.json({error: err});
+    return res.json({ error: err });
   }
 };
 
 // remove current user header
 const removeHeader = async (req, res) => {
   const uid = req.query.id;
-  console.log("in remove header user js");
+  console.log('in remove header user js');
   try {
     db.query(
       `UPDATE ${process.env.DATABASE}.user SET header_link = NULL WHERE id = ?`,
@@ -880,19 +890,19 @@ const removeHeader = async (req, res) => {
           return err;
         }
 
-        return {results: results};
-    });
+        return { results };
+      },
+    );
 
     // remove img from minio here
-    let results = removeObject('user-header', `header-${uid}`);
+    const results = removeObject('user-header', `header-${uid}`);
 
     console.log(results);
 
-    return res.json({message: 'Successfully removed header image'});
-
+    return res.json({ message: 'Successfully removed header image' });
   } catch (err) {
     console.log(err);
-    return res.json({error: err});
+    return res.json({ error: err });
   }
 };
 

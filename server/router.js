@@ -61,7 +61,7 @@ const router = (app) => {
   // login
   app.get('/login', controllers.User.loginPage);
   // change password
-  //app.get('/reset', controllers.User.changePassPage);
+  // app.get('/reset', controllers.User.changePassPage);
 
   // minio
   app.post('/user-pfp', upload.single('image'), controllers.User.uploadPfp);
