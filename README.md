@@ -14,10 +14,13 @@ In gulpFile.js, you can find a couple scripts used to automate the building, lin
 
 `jsTask`
 jsTask takes the .jsx React files and runs them through webpack, which makes them smaller and more efficient. 
+
 `lintTask`
 lintTask runs all of our code through eslint, automatically modifying it where it can so that our code meets the Airbnb code linting standards. 
+
 `build`
 build runs jsTask and lintTask in parallel. 
+
 `watch`
 watch observes our files for changes, and then tells nodemon to restart the live running version of our code. 
 
