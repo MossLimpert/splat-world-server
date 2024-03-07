@@ -55,10 +55,15 @@ Once you're there, `git pull` in order to update all the source code that our se
 Now, the live code doesn't update right away, ~~we're not running the live build with nodemon, that's only for testing~~ that's a lie we are for now but that will change. Instead, it is run the normal way, but it's inside of a Docker container. What's Docker?
 
 #### Docker
-I'm so glad you asked. Docker basically runs little vms inside our server, these are called Docker containers. There is one for the MySQL database, and one for the Node server. If you're still inside the splat-world-server/ directory, you can use the command:
+I'm so glad you asked. Docker basically runs little vms inside our server, these are called Docker containers. You can find the Docker documentation [here](https://docs.docker.com/reference/). There is one for the MySQL database, and one for the Node server. 
+
+`splatweb` this is the name of our Node server
+`db` this the name of our MySQL database
+
+If you're still inside the splat-world-server/ directory, you can use the command:
 
 `docker build .`
-This builds a Docker container out of the current code. You'll see output that looks like this:
+This builds a Docker container out of the current code in the directory you're in. It knows what settings to use because of the Dockerfile you can find at the top level of the repository. You'll see output that looks like this:
 ![Image is of a CLI with the following text visible: blurred text ~/splat-world-server main> docker build .
 DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
             Install the buildx component to build images with BuildKit:
@@ -84,5 +89,28 @@ Step 6/6 : CMD npm run start
  ---> c14267408049
 Successfully built c14267408049 there is a box around this last bit of text](readme/docker1.png)
 
+`docker tag splatwebserver:dev <insert boxed text here>`
+This command associates the build you just made with the container we are running the Node server from. 
+
+`docker-compose -f /data/docker-compose.yml up -d --force-recreate splatweb`
+This command recreates the docker container. The flag `-f` tells docker-compose where the docker compose file is. This is different from the Dockerfile, because it configures all of the docker containers, and holds environment variables for each one, if need be. `up` tells Docker that we want to recreate the container from scratch. `-d` runs the container in the background, that way you can go back to entering commands after you restart it. `--force-recreate` tells Docker to recreate it, even if it doesn't seem like it's changed at all. `splatweb` is the name of the container.
+
+These are the main three commands you need to recreate containers after you upload a new build. 
+
+Here are some other useful commands:
+
+`docker exec -it <container name> bash`
+This opens a bash terminal to whichever container you specify. 
+
 ### MAGIC Server
 
+Magic Spell Studios gave us a server, but it runs on RIT's private network, and can only be accessed from RIT wifi. But I was able to convince CAD to make an exception, and so it talks to our Node server only. The MAGIC Server hosts our Min.IO object storage. Eventually, when we graduate, Moss will migrate it and its data over to the Capsul server, inside of another Docker container. You shouldn't need to mess with this much, unless you are making new buckets, but if you do want to go and check it, here's some useful commands:
+
+[`mc ls`](https://min.io/docs/minio/linux/reference/minio-mc/mc-ls.html)
+This operates similar to `ls`, and it lists all of the minio buckets or objects in a current directory.
+
+[`mc mb <bucket name>`](https://min.io/docs/minio/linux/reference/minio-mc/mc-mb.html)
+This creates a Min.IO bucket.
+
+[`mc rm <object name>`](https://min.io/docs/minio/linux/reference/minio-mc/mc-rm.html)
+This removes objects in the current directory/bucket. 
