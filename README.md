@@ -59,11 +59,11 @@ I'm so glad you asked. Docker basically runs little vms inside our server, these
 
 `docker build .`
 This builds a Docker container out of the current code. You'll see output that looks like this:
-[Image is of a CLI with the following text visible: blurred text ~/splat-world-server (main)> docker build .
+![Image is of a CLI with the following text visible: blurred text ~/splat-world-server main> docker build .
 DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
             Install the buildx component to build images with BuildKit:
             https://docs.docker.com/go/buildx/
-(there is an arrow pointing to the above text after DEPRECATED. it says: "we don't have to worry about this now")
+there is an arrow pointing to the above text after DEPRECATED. it says: "we don't have to worry about this now"
 Sending build context to Docker daemon  195.2MB
 Step 1/6 : FROM node:20
  ---> b5288ff94366
@@ -82,7 +82,7 @@ Step 5/6 : COPY . .
 Step 6/6 : CMD npm run start
  ---> Using cache
  ---> c14267408049
-Successfully built c14267408049 (there is a box around this last bit of text)] (readme/docker1.png)
+Successfully built c14267408049 there is a box around this last bit of text](readme/docker1.png)
 
 ### MAGIC Server
 
