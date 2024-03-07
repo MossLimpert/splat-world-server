@@ -7,6 +7,16 @@
 ## SQL Database
 
 ## Minio Object Storage
+You shouldn't need to mess with this much, unless you are making new buckets, but if you do want to go and check it, here's some useful commands:
+
+[`mc ls`](https://min.io/docs/minio/linux/reference/minio-mc/mc-ls.html)
+This operates similar to `ls`, and it lists all of the minio buckets or objects in a current directory.
+
+[`mc mb <bucket name>`](https://min.io/docs/minio/linux/reference/minio-mc/mc-mb.html)
+This creates a Min.IO bucket.
+
+[`mc rm <object name>`](https://min.io/docs/minio/linux/reference/minio-mc/mc-rm.html)
+This removes objects in the current directory/bucket. 
 
 ## Linux Reference and SSH
 ### Local Testing Environment  
@@ -104,13 +114,4 @@ This opens a bash terminal to whichever container you specify.
 
 ### MAGIC Server
 
-Magic Spell Studios gave us a server, but it runs on RIT's private network, and can only be accessed from RIT wifi. But I was able to convince CAD to make an exception, and so it talks to our Node server only. The MAGIC Server hosts our Min.IO object storage. Eventually, when we graduate, Moss will migrate it and its data over to the Capsul server, inside of another Docker container. You shouldn't need to mess with this much, unless you are making new buckets, but if you do want to go and check it, here's some useful commands:
-
-[`mc ls`](https://min.io/docs/minio/linux/reference/minio-mc/mc-ls.html)
-This operates similar to `ls`, and it lists all of the minio buckets or objects in a current directory.
-
-[`mc mb <bucket name>`](https://min.io/docs/minio/linux/reference/minio-mc/mc-mb.html)
-This creates a Min.IO bucket.
-
-[`mc rm <object name>`](https://min.io/docs/minio/linux/reference/minio-mc/mc-rm.html)
-This removes objects in the current directory/bucket. 
+Magic Spell Studios gave us a server, but it runs on RIT's private network, and can only be accessed from RIT wifi. But I was able to convince CAD to make an exception, and so it talks to our Node server only. The MAGIC Server hosts our Min.IO object storage. Eventually, when we graduate, Moss will migrate it and its data over to the Capsul server, inside of another Docker container. [Find useful commands in the Min.IO section]()
