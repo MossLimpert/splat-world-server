@@ -78,3 +78,14 @@ CREATE TABLE `flagged` (
   KEY `author_ref_idx_idx` (`author_ref`),
   CONSTRAINT `author_ref_idx` FOREIGN KEY (`author_ref`) REFERENCES `user` (`id`)
 );
+
+CREATE TABLE `admins` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `username` (`username`),
+  CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `user` (`id`)
+);

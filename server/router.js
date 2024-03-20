@@ -53,11 +53,18 @@ const router = (app) => {
   app.post('/save-tag', controllers.Tag.saveTag);
 
   //
+  // ADMIN LOGIN
+  //
+  app.get('/login-admin', controllers.Admin.login);
+
+  //
   // ADMIN PAGE NAV
   //
+  // admin login
+  app.get('/', controllers.Admin.loginPage);
+  app.get('/adminlogin', controllers.Admin.loginPage);
   // homepage
   app.get('/home', controllers.Tag.home);
-  app.get('/', controllers.User.loginPage);
   // login
   app.get('/login', controllers.User.loginPage);
   // change password
