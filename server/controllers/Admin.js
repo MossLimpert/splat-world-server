@@ -3,7 +3,7 @@
 
 const models = require('../models');
 
-const { Admin } = models;
+const { AdminAccount } = models;
 
 // MySQL
 const db = require('../database.js');
@@ -12,8 +12,8 @@ const loginPage = (req, res) => {
     res.render('admin-login');
 }; // admin login page
 
-const adminManagementPage = (req, res) => {
-    res.render('admin-management');
+const adminPage = (req, res) => {
+    res.render('admin');
 }
 
 // verify admin LOGIN
@@ -84,7 +84,7 @@ const addAdmin = async (req, res) => {
     console.log(req.body);
     // try catch w pass hash
     try {
-        const hash = pass;//await Admin.generateHash(pass);
+        const hash = await AdminAccount.generateHash(pass);
         console.log(user);
         console.log(hash);
         db.query(
@@ -106,7 +106,7 @@ const addAdmin = async (req, res) => {
 
         console.log('Successfully inserted 1 user.');
 
-        return res.redirect('/admin-management');
+        return res.redirect('/admin');
     } catch (err) {
         console.log(err);
         // failed to create/update
@@ -120,7 +120,7 @@ const addAdmin = async (req, res) => {
 
 module.exports = {
     loginPage,
-    adminManagementPage,
+    adminPage,
     verifyAdmin,
     addAdmin,
 };
