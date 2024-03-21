@@ -55,7 +55,8 @@ const router = (app) => {
   //
   // ADMIN LOGIN
   //
-  app.get('/login-admin', controllers.Admin.login);
+  app.post('/login-admin', controllers.Admin.verifyAdmin);
+  app.post('/add-admin', controllers.Admin.addAdmin);
 
   //
   // ADMIN PAGE NAV
@@ -69,6 +70,8 @@ const router = (app) => {
   app.get('/login', controllers.User.loginPage);
   // change password
   // app.get('/reset', controllers.User.changePassPage);
+  // admin management
+  app.get('/admin-management', controllers.Admin.adminManagementPage)
 
   // minio
   app.post('/user-pfp', upload.single('image'), controllers.User.uploadPfp);
