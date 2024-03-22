@@ -13,7 +13,17 @@ const toAPI = (doc) => ({
 // Helper function to hash a password
 const generateHash = (password) => bcrypt.hash(password, saltRounds);
 
+const authenticatePassword = async (pass, ecryptedPass) => {
+  let match;
+  console.log('authenticating password');
+  await bcrypt.compare(pass, ecryptedPass, (err, result) => {
+    match = result;
+  });
+  return match;
+}
+
 module.exports = {
   toAPI,
   generateHash,
+  authenticatePassword
 };

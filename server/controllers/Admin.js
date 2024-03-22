@@ -2,6 +2,7 @@
 // Very similar to User.js, seperated out so that further development will hopefully be easier.
 
 const models = require('../models');
+const bcrypt = require('bcrypt');
 
 const { AdminAccount } = models;
 
@@ -18,48 +19,60 @@ const adminPage = (req, res) => {
 
 // verify admin LOGIN
 const verifyAdmin = async (req, res) => {
+    console.log(req);
     const sql = `SELECT username, password, id FROM ${process.env.DATABASE}.admin WHERE username = ?`;
-    let username = null;
-    let password = null;
+    let user = null;
+    let pass = null;
+
+    console.log(req.body.user);
+    console.log(req.body.pass);
 
     // add de-encryption step for password
     // console.log(`${req.body.username}`);
     // console.log(`${req.body.password}`);
-    if (`${req.body.username}`) username = `${req.body.username}`;
-    if (`${req.body.password}`) password = `${req.body.password}`;
+    if (`${req.body.user}`) user = `${req.body.user}`;
+    if (`${req.body.pass}`) pass = `${req.body.pass}`;
 
-    if (username === null || password == null) {
-        return res.status(400).send({ error: 'Either username or password is missing. You need both to login.' });
+    console.log(`username: ${user}, password: ${pass}`);
+
+    if (!user || !pass) {
+        console.log("Missing username or password.");
+        return res.status(400).send({ error: 'Missing username or password.' });
     }
 
     try {
         db.execute(
-        sql,
-        [username],
-        async (err, results) => {
-            if (err) console.log(err);
+            sql,
+            [user],
+            async (err, results) => {
+                if (err) console.log(err);
 
-            // console.log(results);
+                //console.log(JSON.stringify(results));
 
-            if (results && results.length !== 0) {
-            const match = await bcrypt.compare(password, results[0].password);
+                if (results && results.length !== 0) {
+                    //const match = await bcrypt.compare(pass, results[0].password);
+                    const match = await AdminAccount.authenticatePassword(pass, results[0].password);
+                    console.log(`password match: ${match}`);
 
-            console.log(results);
+                    if (match) {
+                        return res.status(202).json({
+                            user: {
+                                id: results[0].id,
+                                username: results[0].username,
+                            },
+                        });
+                    } 
 
-            if (match) {
-                return res.status(202).json({
-                user: {
-                    id: results[0].id,
-                    username: results[0].username,
-                },
-                });
-            } return res.status(400).send({ error: 'Username or password incorrect' });
-            } return res.status(404).send({ error: 'User not found.' });
-        },
+                    return res.status(400).send({ error: 'Username or password incorrect' });
+                } 
+                
+                return res.status(404).send({ error: 'User not found.' });
+            },
         );
 
         console.log('Successfully retrieved user to compare.');
-        return res.status(200);
+
+        //return res.redirect('/login');
     } catch (err) {
         console.log(err);
 
@@ -68,7 +81,7 @@ const verifyAdmin = async (req, res) => {
 };
 
 const addAdmin = async (req, res) => {
-     console.log(req);
+    console.log(req);
     const user = `${req.body.user}`;
     const pass = `${req.body.pass}`;
     const pass2 = `${req.body.pass2}`;

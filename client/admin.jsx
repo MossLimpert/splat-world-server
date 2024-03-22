@@ -54,7 +54,7 @@ const init = () => {
     // assigning event listeners
     addUserForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        loginAdmin(e);
+        handleLogin(e);
     });
 };
 
