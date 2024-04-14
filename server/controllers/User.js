@@ -926,5 +926,4 @@ module.exports = {
   changePassword,
   removePfp,
   removeHeader,
-  getIdByUsername,
 };
