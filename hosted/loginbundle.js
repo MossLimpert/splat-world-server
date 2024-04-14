@@ -31,7 +31,7 @@ const displayInfo = res => {
 */
 const sendPost = async (url, data, handler) => {
   let body = JSON.stringify(data);
-  //console.log(body);
+  console.log(body);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -59,6 +59,7 @@ const sendGet = async (url, data, handler) => {
   //let params = new URLSearchParams(JSON.parse(data));
   let params = new URLSearchParams(data);
   let fullUrl = url + '?' + params;
+  console.log(fullUrl);
   const response = await fetch(fullUrl + params, {
     method: 'GET',
     headers: {
@@ -241,6 +242,25 @@ const addLocation = e => {
     longitude: parseFloat(longitude)
   });
 };
+const signup = e => {
+  e.preventDefault();
+  helper.hideError();
+  let username = null;
+  let pass1 = null;
+  let pass2 = null;
+  username = e.target.querySelector('#username').value;
+  pass1 = e.target.querySelector('#pass1').value;
+  pass2 = e.target.querySelector('#pass2').value;
+  if (!username || !pass1 || !pass2) {
+    helper.handleError('one or more fields are empty!');
+    return false;
+  }
+  helper.sendPost(e.target.action, {
+    username: username,
+    pass: pass1,
+    pass2: pass2
+  });
+};
 
 // set up event listeners
 const init = () => {
@@ -250,6 +270,7 @@ const init = () => {
   const addTagForm = document.getElementById('add-tag-form');
   const flagTagForm = document.getElementById('flag-tag-form');
   const addLocationForm = document.getElementById('add-location-form');
+  const signupForm = document.getElementById('signup-form');
 
   // assigning event listeners
   addUserForm.addEventListener('submit', e => {
@@ -271,6 +292,10 @@ const init = () => {
   addLocationForm.addEventListener('submit', e => {
     e.preventDefault();
     addLocation(e);
+  });
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    signup(e);
   });
 };
 window.onload = init;

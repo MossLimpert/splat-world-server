@@ -388,7 +388,9 @@ const signup = async (req, res) => {
   }
 
   try {
-    const hash = Account.generateHash(pass);
+    const hash = await Account.generateHash(pass);
+
+    console.log(hash);
 
     db.query(
       `INSERT INTO ${process.env.DATABASE}.user SET ?`,
@@ -906,6 +908,27 @@ const removeHeader = async (req, res) => {
   }
 };
 
+const getIdByUsername = async (req, res) => {
+  const name = req.query.name;
+  console.log("name: ", name);
+  try {
+    db.query(
+      `SELECT id FROM ${process.env.DATABASE}.user WHERE username = ?`,
+      [name],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+        console.log(results);
+        return res.json({results: results[0]});
+      }
+    );
+  } catch(err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   loginPage,
   signup,
@@ -924,4 +947,5 @@ module.exports = {
   changePassword,
   removePfp,
   removeHeader,
+  getIdByUsername,
 };

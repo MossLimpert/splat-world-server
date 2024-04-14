@@ -27,7 +27,8 @@ const displayInfo = (res) => {
 */
 const sendPost = async (url, data, handler) => {
     let body = JSON.stringify(data);
-    //console.log(body);
+    console.log(body);
+
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -58,6 +59,8 @@ const sendGet = async (url, data, handler) => {
     //let params = new URLSearchParams(JSON.parse(data));
     let params = new URLSearchParams(data);
     let fullUrl = url + '?' + params;
+
+    console.log(fullUrl);
 
     const response = await fetch (fullUrl + params, {
         method: 'GET',

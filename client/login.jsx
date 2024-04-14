@@ -128,6 +128,29 @@ const addLocation = (e) => {
     });
 }
 
+const signup = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    let username = null;
+    let pass1 = null;
+    let pass2 = null;
+    username = e.target.querySelector('#username').value;
+    pass1 = e.target.querySelector('#pass1').value;
+    pass2 = e.target.querySelector('#pass2').value;
+
+    if (!username || !pass1 || !pass2) {
+        helper.handleError('one or more fields are empty!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {
+       username: username,
+       pass: pass1,
+       pass2: pass2 
+    });
+}
+
 // set up event listeners
 const init = () => {
     // form references
@@ -136,6 +159,8 @@ const init = () => {
     const addTagForm = document.getElementById('add-tag-form');
     const flagTagForm = document.getElementById('flag-tag-form');
     const addLocationForm = document.getElementById('add-location-form');
+
+    const signupForm = document.getElementById('signup-form');
 
     // assigning event listeners
     addUserForm.addEventListener('submit', (e) => {
@@ -157,6 +182,10 @@ const init = () => {
     addLocationForm.addEventListener('submit', (e) => {
         e.preventDefault();
         addLocation(e);
+    });
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        signup(e);
     });
 
 };
