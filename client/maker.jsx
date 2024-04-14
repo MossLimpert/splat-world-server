@@ -305,27 +305,6 @@ const getUserCrews = (e) => {
     );
 }
 
-const getIdByUsername = (e) => {
-    e.preventDefault();
-    helper.hideError();
-
-    //const username = e.target.querySelector('#get-id-by-name-username').value;
-
-    const name = e.target.querySelector('input[name=get-id-by-name-username]').value;
-
-    console.log(name);
-
-    if (!name) {
-        helper.handleError('No username!');
-        return false;
-    }
-
-    helper.sendGet(
-        e.target.action,
-        {name: name},
-        displayInfo
-    );
-}
 
 // connects event listeners
 const init = () => {
@@ -339,7 +318,6 @@ const init = () => {
     const getTagCountForm = document.getElementById('get-tag-count');
     const getPfpLinkForm = document.getElementById('get-pfp-link');
     const getUserCrewsForm = document.getElementById('get-user-crews');
-    const getIdByUsernameForm = document.getElementById('get-id-by-username');
 
     // assigning event listeners
     getUserForm.addEventListener('submit', (e) => {
@@ -377,10 +355,6 @@ const init = () => {
     getUserCrewsForm.addEventListener('submit', (e) => {
         e.preventDefault();
         getUserCrews(e);
-    });
-    getIdByUsernameForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        getIdByUsername(e);
     });
 };
 
