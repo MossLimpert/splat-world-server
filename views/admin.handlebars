@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+  {{!-- Author: Moss Limpert and Thomas Martinez--}}
+  <meta charset="utf-8"/>
+  <title>Splat World</title>
+
+  <link rel="shortcut icon" href="/assets/img/icon.png"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  
+</head>
+<body>
+  <nav>
+    <a href="/adminlogin"><img id="logo" src="/assets/img/icon.png" alt="face logo"/></a>
+    <div class="navlink"><a href="/home">Retrieval</a></div>
+    <div class="navlink"><a href="/reset">Minio Testing</a></div>
+    <div class="navlink"><a href="/admin">Admin Management</a></div>
+  </nav>
+  <main>
+    <div id="message" class='hidden'>
+        <h3><span id="errorMessage"></span></h3>
+    </div>
+
+    <h3>Admin Management</h3>
+
+    <h4>Add user to DB</h4>
+    <form name="add admin" action="/add-admin" method="post" id="add-admin-form">
+        <span><label htmlFor="username">Admin Username: </label>
+        <input type="text" name="user" id="username" placeholder="user"></span>
+        <br>
+        <span><label htmlFor="pass">Password: </label><input type="pass" name="pass" id="pass"></span>
+        <br>
+        <span><label htmlFor="pass2">Repeat Password: </label><input type="pass" name="pass2" id="pass2"></span>
+        <br>
+        <input className="formSubmit" type="submit" value="Create New Admin" id="add-user-button">
+    </form>
+  </main>
+  
+  
+  <script crossorigin="anonymous" src="/assets/adminBundle.js"></script>
+</body>
+</html>

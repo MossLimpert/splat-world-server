@@ -1,0 +1,37 @@
+<html lang="en">
+<head>
+  {{!-- Author: Moss Limpert and Thomas Martinez--}}
+  <meta charset="utf-8"/>
+  <title>Splat World</title>
+
+  <link rel="shortcut icon" href="/assets/img/icon.png"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  
+</head>
+<body>
+  <nav>
+    <a href="/adminlogin"><img id="logo" src="/assets/img/icon.png" alt="face logo"/></a>
+  </nav>
+  <main>
+    <div id="message" class='hidden'>
+        <h3><span id="errorMessage"></span></h3>
+    </div>
+
+    <h3>Admin Login</h3>
+
+    <form name="admin-login-form" method="post" action="/login-admin" id="admin-login-form">
+      <span><label for="user">Username: </label><input type="text" name="user" id="user"></span>
+      <br>
+      <span><label for="pass">Password: </label><input type="password" name="pass" id="pass"></span>
+      <br>
+      <input type="submit" value="Login">
+    </form>
+
+    <!-- temporary link to site while login isnt implemented fully -->
+    <a href="/login">debug bypass</a>
+  </main>
+  
+  
+  <script crossorigin="anonymous" src="/assets/adminBundle.js"></script>
+</body>
+</html>

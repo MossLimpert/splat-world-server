@@ -53,15 +53,25 @@ const router = (app) => {
   app.post('/save-tag', controllers.Tag.saveTag);
 
   //
+  // ADMIN LOGIN
+  //
+  app.post('/login-admin', controllers.Admin.verifyAdmin);
+  app.post('/add-admin', controllers.Admin.addAdmin);
+
+  //
   // ADMIN PAGE NAV
   //
+  // admin login
+  app.get('/', controllers.Admin.loginPage);
+  app.get('/adminlogin', controllers.Admin.loginPage);
   // homepage
   app.get('/home', controllers.Tag.home);
-  app.get('/', controllers.User.loginPage);
   // login
   app.get('/login', controllers.User.loginPage);
   // change password
   // app.get('/reset', controllers.User.changePassPage);
+  // admin management
+  app.get('/admin', controllers.Admin.adminPage)
 
   // minio
   app.post('/user-pfp', upload.single('image'), controllers.User.uploadPfp);
