@@ -101,9 +101,6 @@ const router = (app) => {
 
   // draw scene
   app.post('/add-location', controllers.Tag.addLocation);
-
-  // user state
-  app.get('/get-id-by-username', controllers.User.getIdByUsername);
 };
 
 module.exports = router;
