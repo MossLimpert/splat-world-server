@@ -339,7 +339,7 @@ const verifyUser = async (req, res) => {
           console.log(results);
 
           if (match) {
-            return res.status(202).json({
+            return res.json({
               user: {
                 username: results[0].username,
                 id: results[0].id,
@@ -365,6 +365,10 @@ const verifyUser = async (req, res) => {
 const loginPage = (req, res) => {
   res.render('login');
 }; // login page
+
+const resetPage = (req,res) => {
+  res.render('reset');
+}
 
 // allows a user to sign up for Bubbles
 const signup = async (req, res) => {
@@ -926,4 +930,5 @@ module.exports = {
   changePassword,
   removePfp,
   removeHeader,
+  resetPage,
 };

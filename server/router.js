@@ -85,6 +85,7 @@ const router = (app) => {
   app.post('/signup', controllers.User.signup);
   // logout - doesnt work bc of redis session removal
   app.get('/logout', controllers.User.loginPage);
+  app.get('/reset', controllers.User.resetPage);
 
   // user / profile scene
   app.get('/get-tag-count', controllers.User.getUserTagCount);
