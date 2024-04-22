@@ -246,18 +246,18 @@ const signup = e => {
   e.preventDefault();
   helper.hideError();
   let username = null;
-  let pass1 = null;
+  let pass = null;
   let pass2 = null;
   username = e.target.querySelector('#username').value;
-  pass1 = e.target.querySelector('#pass1').value;
+  pass = e.target.querySelector('#pass').value;
   pass2 = e.target.querySelector('#pass2').value;
-  if (!username || !pass1 || !pass2) {
+  if (!username || !pass || !pass2) {
     helper.handleError('one or more fields are empty!');
     return false;
   }
   helper.sendPost(e.target.action, {
     username: username,
-    pass: pass1,
+    pass: pass,
     pass2: pass2
   });
 };
